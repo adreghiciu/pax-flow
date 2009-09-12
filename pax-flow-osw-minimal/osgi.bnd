@@ -1,0 +1,33 @@
+Bundle-Version>:\
+  ${pom.version}
+
+Bundle-SymbolicName:\
+  ${bundle.symbolicName}; singleton:=true
+
+Import-Package:\
+  ${bundle.namespace}; version="${os.workflow.version}",\
+  javax.xml.parsers, \
+  org.apache.commons.logging; version="1.0.4"; resolution:=optional,\
+  org.w3c.dom, \
+  org.xml.sax, \
+  !*
+
+Export-Package:\
+  ${bundle.namespace}; version="${os.workflow.version}", \
+  ${bundle.namespace}.config; version="${os.workflow.version}", \
+  ${bundle.namespace}.loader; version="${os.workflow.version}", \
+  ${bundle.namespace}.query; version="${os.workflow.version}", \
+  ${bundle.namespace}.spi; version="${os.workflow.version}", \
+  ${bundle.namespace}.util; version="${os.workflow.version}"
+
+Private-Package:\
+  ${os.namespace}.util, \
+  ${os.namespace}.module.propertyset,\
+  ${os.namespace}.module.propertyset.config,\
+  ${os.namespace}.module.propertyset.verifiers,\
+
+-removeheaders:\
+  Include-Resource,\
+  Private-Package,\
+  Embed-Dependency,\
+  Embed-Transitive

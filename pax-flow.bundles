@@ -1,0 +1,4 @@
+mvn:org.ops4j.pax.flow/pax-flow-osw-complete
+mvn:org.ops4j.pax.flow/pax-flow-osq-complete
+mvn:org.ops4j.pax.flow/pax-flow-api
+mvn:org.ops4j.pax.flow/pax-flow-runtime

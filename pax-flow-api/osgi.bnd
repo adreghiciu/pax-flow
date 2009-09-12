@@ -1,0 +1,22 @@
+Bundle-Version>:\
+  ${pom.version}
+
+Bundle-SymbolicName:\
+  ${bundle.symbolicName}; singleton:=true
+
+Import-Package:\
+  ${bundle.namespace}; version="${pom.version}", \
+  ${bundle.namespace}.base; version="${pom.version}", \
+  ${bundle.namespace}.helper; version="${pom.version}", \
+  ${os.workflow.namespace}.*; version="2.7"
+
+Export-Package:\
+  ${bundle.namespace}; version="${pom.version}", \
+  ${bundle.namespace}.base; version="${pom.version}", \
+  ${bundle.namespace}.helper; version="${pom.version}"
+
+-removeheaders:\
+  Include-Resource,\
+  Private-Package,\
+  Embed-Dependency,\
+  Embed-Transitive
