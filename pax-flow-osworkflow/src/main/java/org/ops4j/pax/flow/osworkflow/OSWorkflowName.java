@@ -15,5 +15,10 @@ public class OSWorkflowName
     {
         super( name );
     }
-    
+
+    public static OSWorkflowName osWorkflowName( final String name )
+    {
+        return new OSWorkflowName( name );
+    }
+
 }

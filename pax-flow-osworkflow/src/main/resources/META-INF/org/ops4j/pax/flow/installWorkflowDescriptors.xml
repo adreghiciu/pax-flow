@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE workflow PUBLIC
+    "-//OpenSymphony Group//DTD OSWorkflow 2.7//EN"
+    "http://www.opensymphony.com/osworkflow/workflow_2_7.dtd">
+
+<workflow>
+  <initial-actions>
+    <action id="1" name="Start Workflow">
+      <results>
+        <unconditional-result old-status="Finished" status="Scanning Directory" step="1"/>
+      </results>
+    </action>
+  </initial-actions>
+  <steps>
+    <step id="1" name="Scanning Directory">
+      <actions>
+        <action id="101" name="Finish Scanning">
+          <results>
+            <unconditional-result old-status="Finished" status="Processing Workflows" step="2"/>
+          </results>
+        </action>
+      </actions>
+    </step>
+    <step id="2" name="Processing Workflows">
+      <actions>
+        <action id="201" name="Finish Processing">
+          <results>
+            <unconditional-result old-status="Finished" status="Installing Workflows" step="3"/>
+          </results>
+        </action>
+      </actions>
+    </step>
+    <step id="3" name="Installing Workflows">
+      <actions>
+        <action id="301" name="Finish Installing">
+          <results>
+            <unconditional-result old-status="Finished" status="Finished" step="400"/>
+          </results>
+        </action>
+      </actions>
+    </step>
+    <step id="4" name="Finished Installing Workflows"/>
+  </steps>
+</workflow>

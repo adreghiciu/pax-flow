@@ -83,7 +83,7 @@
 
     <dependency>
       <groupId>org.ops4j.pax.flow</groupId>
-      <artifactId>pax-flow-osw-minimal</artifactId>
+      <artifactId>pax-flow-osw-complete</artifactId>
       <version>0.1.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>

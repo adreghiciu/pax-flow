@@ -47,29 +47,17 @@ import static org.ops4j.peaberry.util.TypeLiterals.*;
  * @author Alin Dreghiciu
  */
 @RunWith( JUnit4TestRunner.class )
-@Configuration( extend = { BasicConfiguration.class /**, DebugConfiguration.class**/ } )
-public class Test002OSWorkflowFlowFactory
+@Configuration( extend = { BasicConfiguration.class, DebugConfiguration.class } )
+public class Test002BasicFlows
 {
 
     @org.ops4j.pax.exam.Inject
     private BundleContext m_bundleContext;
 
-    private OSWorkflowDescriptor m_oswDescriptor;
-    private WorkflowDescriptor m_descriptor;
-
-    @Inject
-    private Export<OSWorkflowDescriptor> m_descriptorExport;
-
     @Test
     public void testMethod()
         throws Exception
     {
-        m_oswDescriptor = mock( OSWorkflowDescriptor.class );
-        m_descriptor = mock( WorkflowDescriptor.class );
-        
-        when( m_oswDescriptor.name() ).thenReturn( osWorkflowName( "testFlow" ) );
-        when( m_oswDescriptor.descriptor() ).thenReturn( m_descriptor );
-
         final Injector injector = createInjector( osgiModule( m_bundleContext ), new Module() );
 
         injector.injectMembers( this );
@@ -77,7 +65,7 @@ public class Test002OSWorkflowFlowFactory
         final OSWorkflowFlowFactory osWorkflowFlowFactory = injector.getInstance( OSWorkflowFlowFactory.class );
 
         osWorkflowFlowFactory.create(
-            FlowName.flowName( "testFlow" ),
+            FlowName.flowName( "installWorkflowDescriptors" ),
             new DefaultExecutionContext()
         ).execute();
     }
@@ -89,7 +77,6 @@ public class Test002OSWorkflowFlowFactory
         @Override
         protected void configure()
         {
-            bind( export( OSWorkflowDescriptor.class ) ).toProvider( service( m_oswDescriptor ).export() );
             bind( Workflow.class ).toProvider( service( Workflow.class ).single() );
         }
 

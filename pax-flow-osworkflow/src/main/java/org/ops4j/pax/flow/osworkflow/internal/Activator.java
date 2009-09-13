@@ -20,8 +20,17 @@ package org.ops4j.pax.flow.osworkflow.internal;
 import com.google.inject.AbstractModule;
 import static com.google.inject.Guice.*;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import com.google.inject.name.Names;
+import com.opensymphony.workflow.Workflow;
+import com.opensymphony.workflow.basic.BasicWorkflow;
+import com.opensymphony.workflow.config.Configuration;
+import com.opensymphony.workflow.loader.AbstractWorkflowFactory;
+import com.opensymphony.workflow.spi.WorkflowStore;
+import com.opensymphony.workflow.spi.memory.MemoryWorkflowStore;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.ops4j.pax.flow.osworkflow.OSWorkflowDescriptor;
 import org.ops4j.pax.flow.osworkflow.OSWorkflowDescriptorRegistry;
 import org.ops4j.peaberry.Export;
 import static org.ops4j.peaberry.Peaberry.*;
@@ -36,33 +45,76 @@ public class Activator
     implements BundleActivator
 {
 
+    private Workflow m_workflow;
+
     @Inject
-    private Export<OSWorkflowDescriptorRegistry> m_registryExport;
+    private Configuration m_configuration;
+    @Inject
+    private Export<Workflow> m_workflowExport;
+    @Inject
+    @Named( "serviceRegistry" )
+    private Export<OSWorkflowDescriptorRegistry> m_srExport;
+    @Inject
+    @Named( "basic" )
+    private Export<OSWorkflowDescriptorRegistry> m_basicExport;
 
     public void start( final BundleContext bundleContext )
         throws Exception
     {
+        m_workflow = new BasicWorkflow( "Pax Flow" );
         createInjector( osgiModule( bundleContext ), new Module() ).injectMembers( this );
+        m_workflow.setConfiguration( m_configuration );
     }
 
     public void stop( final BundleContext bundleContext )
         throws Exception
     {
-        if( m_registryExport != null )
+        if( m_workflowExport != null )
         {
-            m_registryExport.unput();
-            m_registryExport = null;
+            m_workflowExport.unput();
+            m_workflowExport = null;
+        }
+        if( m_srExport != null )
+        {
+            m_srExport.unput();
+            m_srExport = null;
+        }
+        if( m_basicExport != null )
+        {
+            m_basicExport.unput();
+            m_basicExport = null;
         }
     }
 
-    private static class Module extends AbstractModule
+    private class Module
+        extends AbstractModule
     {
 
         @Override
         protected void configure()
         {
+            bind( WorkflowStore.class ).to( MemoryWorkflowStore.class );
+            bind( AbstractWorkflowFactory.class ).to( DefaultOSWorkflowFactory.class );
+            bind( Configuration.class ).to( DefaultOSWorkflowConfiguration.class );
+
+            bind( iterable( OSWorkflowDescriptor.class ) ).toProvider(
+                service( OSWorkflowDescriptor.class ).multiple()
+            );
             bind( export( OSWorkflowDescriptorRegistry.class ) )
-                .toProvider( service( DefaultOSWorkflowDescriptorRegistry.class ).export() );
+                .annotatedWith( Names.named( "serviceRegistry" ) )
+                .toProvider( service( ServiceRegistryOSWorkflowDescriptorRegistry.class ).export()
+                );
+            bind( export( OSWorkflowDescriptorRegistry.class ) )
+                .annotatedWith( Names.named( "basic" ) )
+                .toProvider( service( BasicOSWorkflowDescriptorRegistry.class ).export()
+                );
+
+            bind( OSWorkflowDescriptorRegistry.class ).to( CompositeOSWorkflowDescriptorRegistry.class );
+
+            bind( iterable( OSWorkflowDescriptorRegistry.class ) ).toProvider(
+                service( OSWorkflowDescriptorRegistry.class ).multiple()
+            );
+            bind( export( Workflow.class ) ).toProvider( service( m_workflow ).export() );
         }
 
     }

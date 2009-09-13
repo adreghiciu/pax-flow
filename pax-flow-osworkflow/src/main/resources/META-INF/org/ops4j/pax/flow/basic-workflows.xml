@@ -1,0 +1,9 @@
+<workflows>
+
+  <workflow
+      name="installWorkflowDescriptors"
+      type="resource"
+      location="META-INF/org/ops4j/pax/flow/installWorkflowDescriptors.xml"
+      />
+
+</workflows>

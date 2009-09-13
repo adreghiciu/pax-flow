@@ -16,7 +16,8 @@ Import-Package:\
   org.ops4j.peaberry.*; version="1.1"
 
 Export-Package:\
-  ${bundle.namespace}; version="${pom.version}"  
+  ${bundle.namespace}; version="${pom.version}", \
+  ${bundle.namespace}.helper; version="${pom.version}"
 
 Private-Package:\
   ${bundle.namespace}.internal.*

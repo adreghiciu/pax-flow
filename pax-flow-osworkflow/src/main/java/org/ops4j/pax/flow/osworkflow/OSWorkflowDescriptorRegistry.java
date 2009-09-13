@@ -10,6 +10,8 @@ import com.opensymphony.workflow.loader.WorkflowDescriptor;
 public interface OSWorkflowDescriptorRegistry
 {
 
-    WorkflowDescriptor get( OSWorkflowName name );
-    
+    OSWorkflowDescriptor get( OSWorkflowName name );
+
+    Iterable<OSWorkflowName> getNames();
+
 }

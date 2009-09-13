@@ -25,7 +25,10 @@ import com.google.inject.Inject;
 import com.opensymphony.workflow.FactoryException;
 import com.opensymphony.workflow.loader.AbstractWorkflowFactory;
 import com.opensymphony.workflow.loader.WorkflowDescriptor;
-import org.ops4j.pax.flow.api.FlowFactory;
+import org.ops4j.pax.flow.osworkflow.OSWorkflowDescriptor;
+import org.ops4j.pax.flow.osworkflow.OSWorkflowDescriptorRegistry;
+import org.ops4j.pax.flow.osworkflow.OSWorkflowName;
+import static org.ops4j.pax.flow.osworkflow.OSWorkflowName.*;
 
 /**
  * JAVADOC
@@ -36,22 +39,25 @@ public class DefaultOSWorkflowFactory
     extends AbstractWorkflowFactory
 {
 
-    private final Iterable<FlowFactory> m_references;
+    private final OSWorkflowDescriptorRegistry m_registry;
 
     @Inject
-    public DefaultOSWorkflowFactory( final Iterable<FlowFactory> references )
+    public DefaultOSWorkflowFactory( final OSWorkflowDescriptorRegistry registry )
     {
-        m_references = references;
+        // VALIDATE
+        m_registry = registry;
     }
 
     @Override
     public WorkflowDescriptor getWorkflow( final String name )
         throws FactoryException
     {
-        if( name != null && name.trim().length() > 0 )
+        final OSWorkflowDescriptor descriptor = m_registry.get( osWorkflowName( name ) );
+        if( descriptor == null )
         {
+            throw new FactoryException( format( "Unknown workflow name: [%s]", name ) );
         }
-        throw new FactoryException( format( "Unknown workflow name: [%s]", name ) );
+        return descriptor.descriptor();
     }
 
     @Override
@@ -59,6 +65,10 @@ public class DefaultOSWorkflowFactory
         throws FactoryException
     {
         final Collection<String> names = new ArrayList<String>();
+        for( OSWorkflowName name : m_registry.getNames() )
+        {
+            names.add( name.stringValue() );
+        }
         return names.toArray( new String[names.size()] );
     }
 

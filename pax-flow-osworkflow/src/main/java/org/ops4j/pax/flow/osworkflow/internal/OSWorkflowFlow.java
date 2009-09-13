@@ -27,6 +27,7 @@ public class OSWorkflowFlow
                            final FlowName name,
                            final ExecutionContext context )
     {
+        // VALIDATE
         m_workflow = workflow;
         m_name = name;
         m_context = context;

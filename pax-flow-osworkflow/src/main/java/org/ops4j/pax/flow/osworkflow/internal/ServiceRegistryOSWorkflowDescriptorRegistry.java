@@ -1,7 +1,8 @@
 package org.ops4j.pax.flow.osworkflow.internal;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import com.google.inject.Inject;
-import com.opensymphony.workflow.loader.WorkflowDescriptor;
 import org.ops4j.pax.flow.osworkflow.OSWorkflowDescriptor;
 import org.ops4j.pax.flow.osworkflow.OSWorkflowDescriptorRegistry;
 import org.ops4j.pax.flow.osworkflow.OSWorkflowName;
@@ -11,20 +12,20 @@ import org.ops4j.pax.flow.osworkflow.OSWorkflowName;
  *
  * @author Alin Dreghiciu
  */
-public class DefaultOSWorkflowDescriptorRegistry
+public class ServiceRegistryOSWorkflowDescriptorRegistry
     implements OSWorkflowDescriptorRegistry
 {
 
     private final Iterable<OSWorkflowDescriptor> m_descriptors;
 
     @Inject
-    public DefaultOSWorkflowDescriptorRegistry( final Iterable<OSWorkflowDescriptor> descriptors )
+    public ServiceRegistryOSWorkflowDescriptorRegistry( final Iterable<OSWorkflowDescriptor> descriptors )
     {
         // VALIDATE
         m_descriptors = descriptors;
     }
 
-    public WorkflowDescriptor get( final OSWorkflowName name )
+    public OSWorkflowDescriptor get( final OSWorkflowName name )
     {
         if( name == null )
         {
@@ -35,11 +36,21 @@ public class DefaultOSWorkflowDescriptorRegistry
         {
             if( name.equals( descriptor.name() ) )
             {
-                return descriptor.descriptor();
+                return descriptor;
             }
         }
 
         return null;
+    }
+
+    public Iterable<OSWorkflowName> getNames()
+    {
+        final Collection<OSWorkflowName> names = new ArrayList<OSWorkflowName>();
+        for( OSWorkflowDescriptor descriptor : m_descriptors )
+        {
+            names.add( descriptor.name() );
+        }
+        return names;
     }
 
 

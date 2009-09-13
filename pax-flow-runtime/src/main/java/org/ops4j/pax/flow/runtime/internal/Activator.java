@@ -25,7 +25,6 @@ import org.osgi.framework.BundleContext;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
-import org.ops4j.pax.flow.api.SchedulerAdmin;
 import org.ops4j.peaberry.Export;
 import static org.ops4j.peaberry.Peaberry.*;
 import static org.ops4j.peaberry.util.TypeLiterals.*;
@@ -41,8 +40,6 @@ public class Activator
 
     @Inject
     private Export<Scheduler> m_schedulerHandler;
-    @Inject
-    private Export<SchedulerAdmin> m_schedulerAdminHandler;
 
     public void start( final BundleContext bundleContext )
         throws Exception
@@ -53,11 +50,6 @@ public class Activator
     public void stop( final BundleContext bundleContext )
         throws Exception
     {
-        if( m_schedulerAdminHandler != null )
-        {
-            m_schedulerAdminHandler.unput();
-            m_schedulerAdminHandler = null;
-        }
         if( m_schedulerHandler != null )
         {
             m_schedulerHandler.unput();
@@ -83,7 +75,6 @@ public class Activator
         protected void configure()
         {
             bind( export( Scheduler.class ) ).toProvider( service( m_scheduler ).export() );
-            bind( export( SchedulerAdmin.class ) ).toProvider( service( DefaultSchedulerAdmin.class ).export() );
         }
 
     }

@@ -1,7 +1,9 @@
 package org.ops4j.pax.flow.osworkflow.internal;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import com.google.inject.Inject;
-import com.opensymphony.workflow.loader.WorkflowDescriptor;
+import org.ops4j.pax.flow.osworkflow.OSWorkflowDescriptor;
 import org.ops4j.pax.flow.osworkflow.OSWorkflowDescriptorRegistry;
 import org.ops4j.pax.flow.osworkflow.OSWorkflowName;
 
@@ -23,7 +25,7 @@ public class CompositeOSWorkflowDescriptorRegistry
         m_registries = registries;
     }
 
-    public WorkflowDescriptor get( final OSWorkflowName name )
+    public OSWorkflowDescriptor get( final OSWorkflowName name )
     {
         if( name == null )
         {
@@ -32,7 +34,7 @@ public class CompositeOSWorkflowDescriptorRegistry
 
         for( OSWorkflowDescriptorRegistry registry : m_registries )
         {
-            final WorkflowDescriptor descriptor = registry.get( name );
+            final OSWorkflowDescriptor descriptor = registry.get( name );
             if( descriptor != null )
             {
                 return descriptor;
@@ -40,6 +42,23 @@ public class CompositeOSWorkflowDescriptorRegistry
         }
 
         return null;
+    }
+
+    public Iterable<OSWorkflowName> getNames()
+    {
+        final Collection<OSWorkflowName> allNames = new ArrayList<OSWorkflowName>();
+        for( OSWorkflowDescriptorRegistry registry : m_registries )
+        {
+            final Iterable<OSWorkflowName> names = registry.getNames();
+            if( names != null )
+            {
+                for( OSWorkflowName name : names )
+                {
+                    allNames.add( name );
+                }
+            }
+        }
+        return allNames;
     }
 
 

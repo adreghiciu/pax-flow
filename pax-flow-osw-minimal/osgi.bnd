@@ -14,10 +14,12 @@ Import-Package:\
 
 Export-Package:\
   ${bundle.namespace}; version="${os.workflow.version}", \
+  ${bundle.namespace}.basic; version="${os.workflow.version}", \
   ${bundle.namespace}.config; version="${os.workflow.version}", \
   ${bundle.namespace}.loader; version="${os.workflow.version}", \
   ${bundle.namespace}.query; version="${os.workflow.version}", \
   ${bundle.namespace}.spi; version="${os.workflow.version}", \
+  ${bundle.namespace}.spi.memory; version="${os.workflow.version}", \
   ${bundle.namespace}.util; version="${os.workflow.version}"
 
 Private-Package:\
@@ -25,7 +27,8 @@ Private-Package:\
   ${os.namespace}.module.propertyset, \
   ${os.namespace}.module.propertyset.config, \
   ${os.namespace}.module.propertyset.verifiers, \
-  org.apache.commons.logging
+  org.apache.commons.logging, \
+  META-INF
 
 -removeheaders:\
   Include-Resource,\

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.runtime.internal;
+package org.ops4j.pax.flow.api.helper;
 
 import java.util.Collections;
 import java.util.HashMap;

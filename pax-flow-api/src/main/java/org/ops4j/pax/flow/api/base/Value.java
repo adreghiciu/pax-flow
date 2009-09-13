@@ -25,6 +25,7 @@ package org.ops4j.pax.flow.api.base;
  */
 public class Value
 {
+
     private final String m_value;
 
     public Value( final String value )
@@ -38,6 +39,42 @@ public class Value
         return m_value;
     }
 
-    // TODO equals / hashcode
+    @Override
+    public boolean equals( final Object o )
+    {
+        if( o == null )
+        {
+            return false;
+        }
+        if( !( this.getClass().isAssignableFrom( o.getClass() ) ) )
+        {
+            return false;
+        }
+        if( this == o )
+        {
+            return true;
+        }
+
+        final Value value = (Value) o;
+
+        if( !m_value.equals( value.m_value ) )
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return m_value.hashCode();
+    }
+
+    @Override
+    public String toString()
+    {
+        return stringValue();
+    }
 
 }
