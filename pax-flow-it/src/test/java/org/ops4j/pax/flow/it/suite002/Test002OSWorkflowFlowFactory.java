@@ -47,7 +47,7 @@ import static org.ops4j.peaberry.util.TypeLiterals.*;
  * @author Alin Dreghiciu
  */
 @RunWith( JUnit4TestRunner.class )
-@Configuration( extend = { BasicConfiguration.class /**, DebugConfiguration.class**/ } )
+@Configuration( extend = { BasicConfiguration.class/**, DebugConfiguration.class**/ } )
 public class Test002OSWorkflowFlowFactory
 {
 

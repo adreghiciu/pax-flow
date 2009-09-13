@@ -6,7 +6,7 @@
 
 <workflow>
   <initial-actions>
-    <action id="1" name="Start Workflow">
+    <action id="1" name="Start Workflow" auto="true">
       <results>
         <unconditional-result old-status="Finished" status="Scanning Directory" step="1"/>
       </results>
@@ -15,7 +15,7 @@
   <steps>
     <step id="1" name="Scanning Directory">
       <actions>
-        <action id="101" name="Finish Scanning">
+        <action id="101" name="Finish Scanning" auto="true">
           <results>
             <unconditional-result old-status="Finished" status="Processing Workflows" step="2"/>
           </results>
@@ -24,7 +24,7 @@
     </step>
     <step id="2" name="Processing Workflows">
       <actions>
-        <action id="201" name="Finish Processing">
+        <action id="201" name="Finish Processing" auto="true">
           <results>
             <unconditional-result old-status="Finished" status="Installing Workflows" step="3"/>
           </results>
@@ -33,9 +33,9 @@
     </step>
     <step id="3" name="Installing Workflows">
       <actions>
-        <action id="301" name="Finish Installing">
+        <action id="301" name="Finish Installing" auto="true">
           <results>
-            <unconditional-result old-status="Finished" status="Finished" step="400"/>
+            <unconditional-result old-status="Finished" status="Finished" step="4"/>
           </results>
         </action>
       </actions>
