@@ -25,9 +25,9 @@ import org.ops4j.pax.flow.api.base.TriggerName;
  *
  * @author Alin Dreghiciu
  */
-public interface TriggerFactory
+public interface TriggerFactory<T extends Trigger>
 {
 
-    Trigger create( TriggerName name, ExecutionContext context, ExecutionTarget target );
+    T create( TriggerName name, ExecutionContext context, Flow target );
 
 }

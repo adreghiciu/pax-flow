@@ -58,6 +58,11 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <optional>true</optional>
+    </dependency>    
+    <dependency>
       <groupId>org.ops4j.pax.swissbox</groupId>
       <artifactId>pax-swissbox-optional-jcl</artifactId>
       <scope>compile</scope>

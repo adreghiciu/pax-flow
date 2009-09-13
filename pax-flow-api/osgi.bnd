@@ -7,8 +7,7 @@ Bundle-SymbolicName:\
 Import-Package:\
   ${bundle.namespace}; version="${pom.version}", \
   ${bundle.namespace}.base; version="${pom.version}", \
-  ${bundle.namespace}.helper; version="${pom.version}", \
-  ${os.workflow.namespace}.*; version="2.7"
+  ${bundle.namespace}.helper; version="${pom.version}"
 
 Export-Package:\
   ${bundle.namespace}; version="${pom.version}", \

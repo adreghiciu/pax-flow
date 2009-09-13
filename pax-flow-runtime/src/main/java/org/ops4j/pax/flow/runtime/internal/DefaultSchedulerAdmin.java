@@ -21,11 +21,13 @@ package org.ops4j.pax.flow.runtime.internal;
 import java.util.HashMap;
 import java.util.Map;
 import org.ops4j.pax.flow.api.ExecutionContext;
-import org.ops4j.pax.flow.api.ExecutionTarget;
+import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.Job;
 import org.ops4j.pax.flow.api.SchedulerAdmin;
 import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.base.JobName;
+import org.ops4j.pax.flow.api.base.FlowName;
+import static org.ops4j.pax.flow.api.base.FlowName.*;
 import static org.ops4j.pax.flow.api.base.TriggerName.*;
 
 /**
@@ -55,17 +57,22 @@ public class DefaultSchedulerAdmin
         // VALIDATE
 
         final JobContext jobContext = new JobContext();
+
         jobContext.job = job;
         jobContext.executionContext = executionContext;
-        jobContext.executionTarget = new WorkflowStarter( job.workflow() );
 
-        m_jobs.put( job.name(), jobContext );
+        jobContext.flow = job.flowFactory().create(
+            flowName( job.name().stringValue() ),
+            jobContext.executionContext
+        );
 
-        jobContext.trigger = job.factory().create(
+        jobContext.trigger = job.triggerFactory().create(
             triggerName( job.name().stringValue() ),
             jobContext.executionContext,
-            jobContext.executionTarget
+            jobContext.flow
         );
+
+        m_jobs.put( job.name(), jobContext );
 
         return this;
     }
@@ -74,9 +81,9 @@ public class DefaultSchedulerAdmin
     {
 
         Job job;
-        Trigger trigger;
         ExecutionContext executionContext;
-        ExecutionTarget executionTarget;
+        Trigger trigger;
+        Flow flow;
     }
 
 }

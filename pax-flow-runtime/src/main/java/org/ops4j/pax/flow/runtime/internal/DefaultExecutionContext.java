@@ -18,6 +18,7 @@
 
 package org.ops4j.pax.flow.runtime.internal;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.ops4j.pax.flow.api.ExecutionContext;
@@ -52,6 +53,11 @@ public class DefaultExecutionContext
             return defaultValue;
         }
         return (T) attribute;
+    }
+
+    public Map<AttributeName, Object> getAll()
+    {
+        return Collections.unmodifiableMap( m_attributes );
     }
 
 }

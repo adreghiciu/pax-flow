@@ -30,8 +30,8 @@ public interface Job
 
     JobName name();
 
-    TriggerFactory factory();
+    TriggerFactory triggerFactory();
 
-    Workflow workflow();
+    FlowFactory flowFactory();
 
 }

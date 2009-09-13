@@ -63,11 +63,6 @@
     </dependency>
     <dependency>
       <groupId>opensymphony</groupId>
-      <artifactId>osworkflow</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>opensymphony</groupId>
       <artifactId>quartz</artifactId>
       <scope>provided</scope>
     </dependency>

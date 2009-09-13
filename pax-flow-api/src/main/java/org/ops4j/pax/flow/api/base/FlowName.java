@@ -16,25 +16,25 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.it.tests001;
-
-import com.google.inject.AbstractModule;
-import org.ops4j.pax.flow.api.SchedulerAdmin;
-import static org.ops4j.peaberry.Peaberry.*;
+package org.ops4j.pax.flow.api.base;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public class T001Module
-    extends AbstractModule
+public class FlowName
+    extends Value
 {
 
-    @Override
-    protected void configure()
+    public FlowName( final String name )
     {
-        bind( SchedulerAdmin.class ).toProvider( service( SchedulerAdmin.class ).single() );
+        super( name );
+    }
+
+    public static FlowName flowName( final String name )
+    {
+        return new FlowName( name );
     }
 
 }

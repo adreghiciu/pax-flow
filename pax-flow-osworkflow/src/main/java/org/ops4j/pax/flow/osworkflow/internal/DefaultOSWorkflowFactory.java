@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.runtime.internal;
+package org.ops4j.pax.flow.osworkflow.internal;
 
 import static java.lang.String.*;
 import java.util.ArrayList;
@@ -25,21 +25,21 @@ import com.google.inject.Inject;
 import com.opensymphony.workflow.FactoryException;
 import com.opensymphony.workflow.loader.AbstractWorkflowFactory;
 import com.opensymphony.workflow.loader.WorkflowDescriptor;
-import org.ops4j.pax.flow.api.Workflow;
+import org.ops4j.pax.flow.api.FlowFactory;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public class DefaultWorkflowFactory
+public class DefaultOSWorkflowFactory
     extends AbstractWorkflowFactory
 {
 
-    private final Iterable<Workflow> m_references;
+    private final Iterable<FlowFactory> m_references;
 
     @Inject
-    public DefaultWorkflowFactory( final Iterable<Workflow> references )
+    public DefaultOSWorkflowFactory( final Iterable<FlowFactory> references )
     {
         m_references = references;
     }
@@ -50,13 +50,6 @@ public class DefaultWorkflowFactory
     {
         if( name != null && name.trim().length() > 0 )
         {
-            for( Workflow reference : m_references )
-            {
-                if( name.equals( reference.name().asString() ) )
-                {
-                    return reference.descriptor();
-                }
-            }
         }
         throw new FactoryException( format( "Unknown workflow name: [%s]", name ) );
     }
@@ -66,10 +59,6 @@ public class DefaultWorkflowFactory
         throws FactoryException
     {
         final Collection<String> names = new ArrayList<String>();
-        for( Workflow reference : m_references )
-        {
-            names.add( reference.name().asString() );
-        }
         return names.toArray( new String[names.size()] );
     }
 

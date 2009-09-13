@@ -23,7 +23,7 @@ import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.ops4j.pax.flow.api.ExecutionContext;
-import org.ops4j.pax.flow.api.ExecutionTarget;
+import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.base.TriggerName;
 
@@ -32,13 +32,13 @@ import org.ops4j.pax.flow.api.base.TriggerName;
  *
  * @author Alin Dreghiciu
  */
-public abstract class AbstractTrigger
+public abstract class AbstractTrigger<T extends Trigger>
     implements Trigger
 {
 
     private final TriggerName m_name;
     private final ExecutionContext m_context;
-    private final ExecutionTarget m_target;
+    private final Flow m_target;
 
     private boolean m_started;
 
@@ -47,7 +47,7 @@ public abstract class AbstractTrigger
 
     public AbstractTrigger( final TriggerName name,
                             final ExecutionContext context,
-                            final ExecutionTarget target )
+                            final Flow target )
     {
         m_name = name;
         m_target = target;
@@ -59,17 +59,17 @@ public abstract class AbstractTrigger
         return m_name;
     }
 
-    public Trigger start()
+    public T start()
         throws Exception
     {
         m_started = true;
-        return this;
+        return itself();
     }
 
-    public Trigger stop()
+    public T stop()
     {
         m_started = false;
-        return this;
+        return itself();
     }
 
     protected ExecutionContext context()
@@ -77,7 +77,7 @@ public abstract class AbstractTrigger
         return m_context;
     }
 
-    protected ExecutionTarget target()
+    protected Flow target()
     {
         return m_target;
     }
@@ -92,12 +92,15 @@ public abstract class AbstractTrigger
     {
         final JobDataMap dataMap = new JobDataMap();
         dataMap.put( ExecutionContext.class.getName(), context() );
-        dataMap.put( ExecutionTarget.class.getName(), target() );
+        dataMap.put( Flow.class.getName(), target() );
 
         final JobDetail jobDetail = new JobDetail();
+        jobDetail.setName( name().stringValue() );
         jobDetail.setJobDataMap( dataMap );
-        jobDetail.setJobClass( ExecutionTargetAdapter.class );
+        jobDetail.setJobClass( FlowAdapter.class );
         return jobDetail;
     }
+
+    protected abstract T itself();
 
 }

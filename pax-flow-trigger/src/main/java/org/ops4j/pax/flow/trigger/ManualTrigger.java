@@ -21,9 +21,9 @@ package org.ops4j.pax.flow.trigger;
 import com.google.inject.Inject;
 import org.quartz.Scheduler;
 import org.quartz.TriggerUtils;
-import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.ExecutionContext;
-import org.ops4j.pax.flow.api.ExecutionTarget;
+import org.ops4j.pax.flow.api.Flow;
+import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.api.base.TriggerName;
 import org.ops4j.pax.flow.trigger.internal.AbstractTrigger;
@@ -34,18 +34,19 @@ import org.ops4j.pax.flow.trigger.internal.AbstractTrigger;
  * @author Alin Dreghiciu
  */
 public class ManualTrigger
-    extends AbstractTrigger
+    extends AbstractTrigger<ManualTrigger>
     implements Trigger
 {
 
-    @Inject
     private Scheduler m_scheduler;
 
-    public ManualTrigger( final TriggerName name,
+    public ManualTrigger( final Scheduler scheduler,
+                          final TriggerName name,
                           final ExecutionContext context,
-                          final ExecutionTarget target )
+                          final Flow target )
     {
         super( name, context, target );
+        m_scheduler = scheduler;
     }
 
     public Trigger fire()
@@ -61,20 +62,34 @@ public class ManualTrigger
         return this;
     }
 
+    @Override
+    protected ManualTrigger itself()
+    {
+        return this;
+    }
+
     /**
      * JAVADOC
      *
      * @author Alin Dreghiciu
      */
     public static class Factory
-        implements TriggerFactory
+        implements TriggerFactory<ManualTrigger>
     {
 
-        public Trigger create( final TriggerName name,
-                               final ExecutionContext context,
-                               final ExecutionTarget target )
+        private final Scheduler m_scheduler;
+
+        @Inject
+        public Factory( final Scheduler scheduler )
         {
-            return new ManualTrigger( name, context, target );
+            m_scheduler = scheduler;
+        }
+
+        public ManualTrigger create( final TriggerName name,
+                                     final ExecutionContext context,
+                                     final Flow target )
+        {
+            return new ManualTrigger( m_scheduler, name, context, target );
         }
 
     }

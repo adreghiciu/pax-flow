@@ -28,18 +28,18 @@
   </parent>
 
   <groupId>org.ops4j.pax.flow</groupId>
-  <artifactId>pax-flow-api</artifactId>
+  <artifactId>pax-flow-osworkflow</artifactId>
   <version>0.1.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>OPS4J Pax Flow :: API</name>
+  <name>OPS4J Pax Flow :: OSWorkflow Flows</name>
   <description>
-    Pax Flow - API
+    Pax Flow - OS Workflow Flows
   </description>
 
   <properties>
-    <bundle.symbolicName>${pax.flow.namespace}.pax-flow-api</bundle.symbolicName>
-    <bundle.namespace>${pax.flow.namespace}.api</bundle.namespace>
+    <bundle.symbolicName>${pax.flow.namespace}.pax-flow-osworkflow</bundle.symbolicName>
+    <bundle.namespace>${pax.flow.namespace}.osworkflow</bundle.namespace>
   </properties>
 
   <build>
@@ -49,6 +49,33 @@
         <artifactId>maven-bundle-plugin</artifactId>
       </plugin>
     </plugins>
-  </build>  
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.ops4j.pax.flow</groupId>
+      <artifactId>pax-flow-api</artifactId>
+      <version>0.1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>opensymphony</groupId>
+      <artifactId>osworkflow</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j</groupId>
+      <artifactId>peaberry</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 
 </project>

@@ -21,25 +21,35 @@ package org.ops4j.pax.flow.trigger.internal;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.ops4j.pax.flow.api.ExecutionContext;
-import org.ops4j.pax.flow.api.ExecutionTarget;
+import org.ops4j.pax.flow.api.Flow;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public class ExecutionTargetAdapter
+public class FlowAdapter
     implements Job
 {
 
     public void execute( final JobExecutionContext jobExecutionContext )
         throws JobExecutionException
     {
-        final ExecutionContext context = (ExecutionContext) jobExecutionContext.get( ExecutionContext.class.getName() );
-        final ExecutionTarget target = (ExecutionTarget) jobExecutionContext.get( ExecutionTarget.class.getName() );
+        final Flow target = (Flow) jobExecutionContext.getJobDetail().getJobDataMap().get( Flow.class.getName() );
 
-        target.fire( context );
+        if( target == null )
+        {
+            throw new JobExecutionException( "Could not determine the flow to be run" );
+        }
+
+        try
+        {
+            target.execute();
+        }
+        catch( Exception e )
+        {
+            throw new JobExecutionException( e );
+        }
     }
 
 }

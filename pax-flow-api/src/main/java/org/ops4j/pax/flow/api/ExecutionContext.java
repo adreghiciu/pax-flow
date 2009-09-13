@@ -18,6 +18,7 @@
 
 package org.ops4j.pax.flow.api;
 
+import java.util.Map;
 import org.ops4j.pax.flow.api.base.AttributeName;
 
 /**
@@ -31,5 +32,7 @@ public interface ExecutionContext
     <T> T get( AttributeName name );
 
     <T> T get( AttributeName name, T defaultValue );
+
+    Map<AttributeName,Object> getAll();
 
 }

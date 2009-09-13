@@ -22,7 +22,7 @@ import com.google.inject.Inject;
 import org.quartz.CronTrigger;
 import org.quartz.Scheduler;
 import org.ops4j.pax.flow.api.ExecutionContext;
-import org.ops4j.pax.flow.api.ExecutionTarget;
+import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.api.base.AttributeName;
@@ -35,7 +35,7 @@ import org.ops4j.pax.flow.trigger.internal.AbstractTrigger;
  * @author Alin Dreghiciu
  */
 public class QuartzCronTrigger
-    extends AbstractTrigger
+    extends AbstractTrigger<QuartzCronTrigger>
     implements Trigger
 {
 
@@ -46,13 +46,13 @@ public class QuartzCronTrigger
 
     public QuartzCronTrigger( final TriggerName name,
                               final ExecutionContext context,
-                              final ExecutionTarget target )
+                              final Flow target )
     {
         super( name, context, target );
     }
 
     @Override
-    public Trigger start()
+    public QuartzCronTrigger start()
         throws Exception
     {
         if( isStarted() )
@@ -69,18 +69,24 @@ public class QuartzCronTrigger
         return this;
     }
 
+    @Override
+    protected QuartzCronTrigger itself()
+    {
+        return this;
+    }
+
     /**
      * JAVADOC
      *
      * @author Alin Dreghiciu
      */
     public static class Factory
-        implements TriggerFactory
+        implements TriggerFactory<QuartzCronTrigger>
     {
 
-        public Trigger create( final TriggerName name,
+        public QuartzCronTrigger create( final TriggerName name,
                                final ExecutionContext context,
-                               final ExecutionTarget target )
+                               final Flow target )
         {
             return new QuartzCronTrigger( name, context, target );
         }

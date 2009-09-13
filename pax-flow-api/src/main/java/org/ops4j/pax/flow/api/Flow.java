@@ -16,33 +16,24 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.runtime.internal;
+package org.ops4j.pax.flow.api;
 
-import org.ops4j.pax.flow.api.ExecutionContext;
-import org.ops4j.pax.flow.api.ExecutionTarget;
-import org.ops4j.pax.flow.api.Workflow;
+import org.ops4j.pax.flow.api.base.FlowName;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public class WorkflowStarter
-    implements ExecutionTarget
+public interface Flow
 {
 
-    private final Workflow m_workflow;
+    FlowName name();
 
-    public WorkflowStarter( final Workflow workflow )
-    {
+    void execute()
+        throws Exception;
 
-        m_workflow = workflow;
-    }
-
-    public void fire( final ExecutionContext context )
-    {
-        // TODO implement method
-        throw new UnsupportedOperationException();
-    }
+    void cancel()
+        throws Exception;
 
 }

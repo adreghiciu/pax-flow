@@ -15,17 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.flow.runtime.internal;
+package org.ops4j.pax.flow.osworkflow.internal;
 
 import com.google.inject.AbstractModule;
 import static com.google.inject.Guice.*;
 import com.google.inject.Inject;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.impl.StdSchedulerFactory;
-import org.ops4j.pax.flow.api.SchedulerAdmin;
+import org.ops4j.pax.flow.osworkflow.OSWorkflowDescriptorRegistry;
 import org.ops4j.peaberry.Export;
 import static org.ops4j.peaberry.Peaberry.*;
 import static org.ops4j.peaberry.util.TypeLiterals.*;
@@ -40,9 +37,7 @@ public class Activator
 {
 
     @Inject
-    private Export<Scheduler> m_schedulerHandler;
-    @Inject
-    private Export<SchedulerAdmin> m_schedulerAdminHandler;
+    private Export<OSWorkflowDescriptorRegistry> m_registryExport;
 
     public void start( final BundleContext bundleContext )
         throws Exception
@@ -53,37 +48,21 @@ public class Activator
     public void stop( final BundleContext bundleContext )
         throws Exception
     {
-        if( m_schedulerAdminHandler != null )
+        if( m_registryExport != null )
         {
-            m_schedulerAdminHandler.unput();
-            m_schedulerAdminHandler = null;
+            m_registryExport.unput();
+            m_registryExport = null;
         }
-        if( m_schedulerHandler != null )
-        {
-            m_schedulerHandler.unput();
-            m_schedulerHandler = null;
-        }
-
     }
 
     private static class Module extends AbstractModule
     {
 
-        private final Scheduler m_scheduler;
-
-        Module()
-            throws SchedulerException
-        {
-            m_scheduler = new StdSchedulerFactory().getScheduler();
-            // TODO this should be in start so it can be stopped
-            m_scheduler.start();
-        }
-
         @Override
         protected void configure()
         {
-            bind( export( Scheduler.class ) ).toProvider( service( m_scheduler ).export() );
-            bind( export( SchedulerAdmin.class ) ).toProvider( service( DefaultSchedulerAdmin.class ).export() );
+            bind( export( OSWorkflowDescriptorRegistry.class ) )
+                .toProvider( service( DefaultOSWorkflowDescriptorRegistry.class ).export() );
         }
 
     }

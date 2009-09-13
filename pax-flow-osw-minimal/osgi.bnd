@@ -22,9 +22,10 @@ Export-Package:\
 
 Private-Package:\
   ${os.namespace}.util, \
-  ${os.namespace}.module.propertyset,\
-  ${os.namespace}.module.propertyset.config,\
-  ${os.namespace}.module.propertyset.verifiers,\
+  ${os.namespace}.module.propertyset, \
+  ${os.namespace}.module.propertyset.config, \
+  ${os.namespace}.module.propertyset.verifiers, \
+  org.apache.commons.logging
 
 -removeheaders:\
   Include-Resource,\

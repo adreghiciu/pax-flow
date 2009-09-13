@@ -18,16 +18,17 @@
 
 package org.ops4j.pax.flow.api;
 
-import org.ops4j.pax.flow.api.ExecutionContext;
+import org.ops4j.pax.flow.api.base.FlowName;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public interface ExecutionTarget
+public interface FlowFactory
 {
 
-    void fire( ExecutionContext context);
+    Flow create( FlowName name, ExecutionContext context )
+        throws Exception;
 
 }

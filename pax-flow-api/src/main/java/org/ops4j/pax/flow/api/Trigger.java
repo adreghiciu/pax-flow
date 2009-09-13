@@ -33,6 +33,7 @@ public interface Trigger
     Trigger start()
         throws Exception;
 
-    Trigger stop();
+    Trigger stop()
+        throws Exception;
 
 }
