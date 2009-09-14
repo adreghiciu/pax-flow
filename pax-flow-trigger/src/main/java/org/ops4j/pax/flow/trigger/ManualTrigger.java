@@ -18,14 +18,11 @@
 
 package org.ops4j.pax.flow.trigger;
 
-import com.google.inject.Inject;
-import org.quartz.Scheduler;
-import org.quartz.TriggerUtils;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.TriggerFactory;
-import org.ops4j.pax.flow.api.base.TriggerName;
+import org.ops4j.pax.flow.api.TriggerName;
 import org.ops4j.pax.flow.trigger.internal.AbstractTrigger;
 
 /**
@@ -38,15 +35,11 @@ public class ManualTrigger
     implements Trigger
 {
 
-    private Scheduler m_scheduler;
-
-    public ManualTrigger( final Scheduler scheduler,
-                          final TriggerName name,
+    public ManualTrigger( final TriggerName name,
                           final ExecutionContext context,
                           final Flow target )
     {
         super( name, context, target );
-        m_scheduler = scheduler;
     }
 
     public Trigger fire()
@@ -54,10 +47,6 @@ public class ManualTrigger
     {
         if( isStarted() )
         {
-            m_scheduler.scheduleJob(
-                createJobDetail(),
-                TriggerUtils.makeImmediateTrigger( name().stringValue(), 0, 0 )
-            );
         }
         return this;
     }
@@ -77,19 +66,11 @@ public class ManualTrigger
         implements TriggerFactory<ManualTrigger>
     {
 
-        private final Scheduler m_scheduler;
-
-        @Inject
-        public Factory( final Scheduler scheduler )
-        {
-            m_scheduler = scheduler;
-        }
-
         public ManualTrigger create( final TriggerName name,
                                      final ExecutionContext context,
                                      final Flow target )
         {
-            return new ManualTrigger( m_scheduler, name, context, target );
+            return new ManualTrigger( name, context, target );
         }
 
     }

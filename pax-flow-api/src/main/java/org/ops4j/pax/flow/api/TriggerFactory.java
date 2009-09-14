@@ -18,16 +18,16 @@
 
 package org.ops4j.pax.flow.api;
 
-import org.ops4j.pax.flow.api.base.TriggerName;
-
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public interface TriggerFactory<T extends Trigger>
+public interface TriggerFactory
 {
 
-    T create( TriggerName name, ExecutionContext context, Flow target );
+    TriggerType type();
+
+    Trigger create( TriggerName name, Configuration configuration );
 
 }

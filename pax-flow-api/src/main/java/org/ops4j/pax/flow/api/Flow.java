@@ -18,8 +18,6 @@
 
 package org.ops4j.pax.flow.api;
 
-import org.ops4j.pax.flow.api.base.FlowName;
-
 /**
  * JAVADOC
  *
@@ -30,7 +28,7 @@ public interface Flow
 
     FlowName name();
 
-    void execute()
+    void execute( ExecutionContext context )
         throws Exception;
 
     void cancel()

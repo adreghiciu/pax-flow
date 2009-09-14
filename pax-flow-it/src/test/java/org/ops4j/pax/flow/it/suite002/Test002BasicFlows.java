@@ -20,26 +20,18 @@ package org.ops4j.pax.flow.it.suite002;
 
 import com.google.inject.AbstractModule;
 import static com.google.inject.Guice.*;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.opensymphony.workflow.Workflow;
-import com.opensymphony.workflow.loader.WorkflowDescriptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.mockito.Mockito.*;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
-import org.ops4j.pax.flow.api.base.FlowName;
-import org.ops4j.pax.flow.api.helper.DefaultExecutionContext;
+import org.ops4j.pax.flow.api.FlowName;
+import org.ops4j.pax.flow.runtime.internal.DefaultExecutionContext;
 import org.ops4j.pax.flow.it.BasicConfiguration;
-import org.ops4j.pax.flow.it.DebugConfiguration;
-import org.ops4j.pax.flow.osworkflow.OSWorkflowDescriptor;
 import org.ops4j.pax.flow.osworkflow.OSWorkflowFlowFactory;
-import static org.ops4j.pax.flow.osworkflow.OSWorkflowName.*;
-import org.ops4j.peaberry.Export;
 import static org.ops4j.peaberry.Peaberry.*;
-import static org.ops4j.peaberry.util.TypeLiterals.*;
 
 /**
  * JAVADOC

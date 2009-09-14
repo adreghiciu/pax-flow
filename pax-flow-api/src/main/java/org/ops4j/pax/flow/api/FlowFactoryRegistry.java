@@ -16,25 +16,16 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.api.base;
+package org.ops4j.pax.flow.api;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public class JobName
-    extends Name
+public interface FlowFactoryRegistry
 {
 
-    public JobName( final String name )
-    {
-        super( name );
-    }
-
-    public static JobName jobName( final String name )
-    {
-        return new JobName( name );
-    }
+    FlowFactory get( FlowType type );
 
 }

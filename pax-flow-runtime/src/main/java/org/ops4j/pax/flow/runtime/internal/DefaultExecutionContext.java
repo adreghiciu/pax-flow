@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.api.helper;
+package org.ops4j.pax.flow.runtime.internal;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.ops4j.pax.flow.api.AttributeName;
 import org.ops4j.pax.flow.api.ExecutionContext;
-import org.ops4j.pax.flow.api.base.AttributeName;
 
 /**
  * JAVADOC
@@ -55,9 +55,9 @@ public class DefaultExecutionContext
         return (T) attribute;
     }
 
-    public Map<AttributeName, Object> getAll()
+    public Iterable<AttributeName> getNames()
     {
-        return Collections.unmodifiableMap( m_attributes );
+        return Collections.unmodifiableSet( m_attributes.keySet() );
     }
 
 }

@@ -16,65 +16,61 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.api.base;
+package org.ops4j.pax.flow.api;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public class Value
+public class TriggerType
 {
 
-    private final String m_value;
+    private final String m_type;
 
-    public Value( final String value )
+    public TriggerType( final String type )
     {
         // VALIDATE
-        m_value = value;
+        m_type = type;
     }
 
-    public String stringValue()
+    public String value()
     {
-        return m_value;
+        return m_type;
     }
 
     @Override
     public boolean equals( final Object o )
     {
-        if( o == null )
-        {
-            return false;
-        }
-        if( !( this.getClass().isAssignableFrom( o.getClass() ) ) )
-        {
-            return false;
-        }
         if( this == o )
         {
             return true;
         }
-
-        final Value value = (Value) o;
-
-        if( !m_value.equals( value.m_value ) )
+        if( !( o instanceof TriggerType ) )
         {
             return false;
         }
 
-        return true;
+        final TriggerType that = (TriggerType) o;
+
+        return m_type.equals( that.m_type );
     }
 
     @Override
     public int hashCode()
     {
-        return m_value.hashCode();
+        return m_type.hashCode();
     }
 
     @Override
     public String toString()
     {
-        return stringValue();
+        return value();
+    }
+
+    public static TriggerType flowType( final String type )
+    {
+        return new TriggerType( type );
     }
 
 }

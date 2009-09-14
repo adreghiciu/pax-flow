@@ -19,11 +19,8 @@ public class BasicConfiguration
     {
         return options(
             profile( "peaberry" ).version( "1.1.1" ),
-            mavenBundle( "org.ops4j.pax.flow", "pax-flow-osw-complete" ).versionAsInProject(),
-            mavenBundle( "org.ops4j.pax.flow", "pax-flow-osq-complete" ).versionAsInProject(),
             mavenBundle( "org.ops4j.pax.flow", "pax-flow-api" ).versionAsInProject(),
             mavenBundle( "org.ops4j.pax.flow", "pax-flow-trigger" ).versionAsInProject(),
-            mavenBundle( "org.ops4j.pax.flow", "pax-flow-osworkflow" ).versionAsInProject(),
             mavenBundle( "org.ops4j.pax.flow", "pax-flow-runtime" ).versionAsInProject(),
             mockitoBundles(),
             logProfile()

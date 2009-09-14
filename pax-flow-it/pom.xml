@@ -70,42 +70,10 @@
     </dependency>
     <dependency>
       <groupId>org.ops4j.pax.flow</groupId>
-      <artifactId>pax-flow-osworkflow</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.ops4j.pax.flow</groupId>
       <artifactId>pax-flow-runtime</artifactId>
       <version>0.1.0-SNAPSHOT</version>
       <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.ops4j.pax.flow</groupId>
-      <artifactId>pax-flow-osw-complete</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.ops4j.pax.flow</groupId>
-      <artifactId>pax-flow-osq-complete</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- TODO: remove this dep as it should already be there from pax-flow-osw-minimal, but IDEA sucks here -->
-    <dependency>
-      <groupId>opensymphony</groupId>
-      <artifactId>osworkflow</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <!-- TODO: remove this dep as it should already be there from pax-flow-osq-complete, but IDEA sucks here -->
-    <dependency>
-      <groupId>opensymphony</groupId>
-      <artifactId>quartz</artifactId>
-      <scope>provided</scope>
-    </dependency>    
+    </dependency> 
 
     <dependency>
       <groupId>org.ops4j</groupId>

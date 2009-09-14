@@ -16,25 +16,16 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.api.base;
+package org.ops4j.pax.flow.api;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public class AttributeName
-    extends Name
+public interface TriggerFactoryRegistry
 {
 
-    public AttributeName( final String name )
-    {
-        super( name );
-    }
-
-    public static AttributeName attributeName(final String name)
-    {
-        return new AttributeName( name );
-    }
+    TriggerFactory get( TriggerType type );
 
 }

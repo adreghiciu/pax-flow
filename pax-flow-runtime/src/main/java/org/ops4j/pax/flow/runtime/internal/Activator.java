@@ -18,16 +18,16 @@
 package org.ops4j.pax.flow.runtime.internal;
 
 import com.google.inject.AbstractModule;
-import static com.google.inject.Guice.*;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import static com.google.inject.Guice.*;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.impl.StdSchedulerFactory;
-import org.ops4j.peaberry.Export;
+import org.ops4j.pax.flow.api.FlowFactoryRegistry;
+import org.ops4j.pax.flow.api.TriggerFactoryRegistry;
 import static org.ops4j.peaberry.Peaberry.*;
 import static org.ops4j.peaberry.util.TypeLiterals.*;
+import org.ops4j.peaberry.Export;
 
 /**
  * JAVADOC
@@ -39,7 +39,9 @@ public class Activator
 {
 
     @Inject
-    private Export<Scheduler> m_schedulerHandler;
+    private Export<TriggerFactoryRegistry> m_tfrExport;
+    @Inject
+    private Export<FlowFactoryRegistry> m_ffrExport;
 
     public void start( final BundleContext bundleContext )
         throws Exception
@@ -50,31 +52,33 @@ public class Activator
     public void stop( final BundleContext bundleContext )
         throws Exception
     {
-        if( m_schedulerHandler != null )
+        if( m_tfrExport != null )
         {
-            m_schedulerHandler.unput();
-            m_schedulerHandler = null;
+            m_tfrExport.unput();
+            m_tfrExport = null;
         }
-
+        if( m_ffrExport != null )
+        {
+            m_ffrExport.unput();
+            m_ffrExport = null;
+        }
     }
 
     private static class Module extends AbstractModule
     {
 
-        private final Scheduler m_scheduler;
-
-        Module()
-            throws SchedulerException
-        {
-            m_scheduler = new StdSchedulerFactory().getScheduler();
-            // TODO this should be in start so it can be stopped
-            m_scheduler.start();
-        }
-
         @Override
         protected void configure()
         {
-            bind( export( Scheduler.class ) ).toProvider( service( m_scheduler ).export() );
+            bind( TriggerFactoryRegistry.class )
+                .toProvider( service( CompositeTriggerFactoryRegistry.class ).single() );
+            bind( FlowFactoryRegistry.class )
+                .toProvider( service( CompositeFlowFactoryRegistry.class ).single() );
+
+            bind( export( TriggerFactoryRegistry.class ) )
+                .toProvider( service( SRTriggerFactoryRegistry.class ).export() );
+            bind( export( FlowFactoryRegistry.class ) )
+                .toProvider( service( SRFlowFactoryRegistry.class ).export() );
         }
 
     }

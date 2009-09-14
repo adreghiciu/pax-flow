@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.api.base;
+package org.ops4j.pax.flow.api;
 
 /**
  * JAVADOC
@@ -24,12 +24,48 @@ package org.ops4j.pax.flow.api.base;
  * @author Alin Dreghiciu
  */
 public class FlowName
-    extends Value
 {
+
+    private final String m_name;
 
     public FlowName( final String name )
     {
-        super( name );
+        // VALIDATE
+        m_name = name;
+    }
+
+    public String value()
+    {
+        return m_name;
+    }
+
+    @Override
+    public boolean equals( final Object o )
+    {
+        if( this == o )
+        {
+            return true;
+        }
+        if( !( o instanceof FlowName ) )
+        {
+            return false;
+        }
+
+        final FlowName that = (FlowName) o;
+
+        return m_name.equals( that.m_name );
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return m_name.hashCode();
+    }
+
+    @Override
+    public String toString()
+    {
+        return value();
     }
 
     public static FlowName flowName( final String name )

@@ -40,14 +40,6 @@
     <peaberry.version>1.1.1</peaberry.version>
     <guice.version>2.0</guice.version>
 
-    <os.core.version>2.2.6</os.core.version>
-    <os.propertyset.version>1.3</os.propertyset.version>
-    <os.workflow.version>2.7.0</os.workflow.version>
-    <os.quartz.version>1.6.3</os.quartz.version>
-
-    <os.namespace>com.opensymphony</os.namespace>
-    <os.workflow.namespace>${os.namespace}.workflow</os.workflow.namespace>
-    <os.quartz.namespace>org.quartz</os.quartz.namespace>
     <pax.flow.namespace>org.ops4j.pax.flow</pax.flow.namespace>
 
   </properties>
@@ -89,33 +81,6 @@
         <artifactId>pax-swissbox-optional-jcl</artifactId>
         <version>${pax.swissbox.version}</version>
       </dependency>
-      <!-- OpenSymphony -->
-      <dependency>
-        <groupId>opensymphony</groupId>
-        <artifactId>oscore</artifactId>
-        <version>${os.core.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>opensymphony</groupId>
-        <artifactId>propertyset</artifactId>
-        <version>${os.propertyset.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>opensymphony</groupId>
-        <artifactId>osworkflow</artifactId>
-        <version>${os.workflow.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>opensymphony</groupId>
-        <artifactId>quartz</artifactId>
-        <version>${os.quartz.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>commons-collections</groupId>
-        <artifactId>commons-collections</artifactId>
-        <version>3.2.1</version>
-      </dependency>
-
       <!-- Peaberry / Guice -->
       <dependency>
         <groupId>org.ops4j</groupId>
@@ -158,11 +123,6 @@
   </developers>
 
   <modules>
-    <module>pax-flow-osw-complete</module>
-    <module>pax-flow-osw-minimal</module>
-
-    <module>pax-flow-osq-complete</module>
-
     <module>pax-flow-api</module>
     <module>pax-flow-trigger</module>
     <module>pax-flow-osworkflow</module>

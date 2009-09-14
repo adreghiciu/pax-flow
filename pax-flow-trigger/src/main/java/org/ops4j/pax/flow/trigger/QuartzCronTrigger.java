@@ -25,8 +25,8 @@ import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.TriggerFactory;
-import org.ops4j.pax.flow.api.base.AttributeName;
-import org.ops4j.pax.flow.api.base.TriggerName;
+import org.ops4j.pax.flow.api.TriggerName;
+import org.ops4j.pax.flow.api.AttributeName;
 import org.ops4j.pax.flow.trigger.internal.AbstractTrigger;
 
 /**

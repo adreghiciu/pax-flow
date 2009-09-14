@@ -18,8 +18,6 @@
 
 package org.ops4j.pax.flow.api;
 
-import org.ops4j.pax.flow.api.base.TriggerName;
-
 /**
  * JAVADOC
  *
@@ -30,10 +28,14 @@ public interface Trigger
 
     TriggerName name();
 
-    Trigger start()
+    Trigger start( )
         throws Exception;
 
     Trigger stop()
         throws Exception;
+
+    Trigger attach( Flow flow );
+
+    Trigger detach( Flow target );
 
 }

@@ -16,22 +16,20 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.api.base;
-
-import org.ops4j.pax.flow.api.base.Value;
+package org.ops4j.pax.flow.api;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public class Name
-    extends Value
+public interface Configuration
 {
 
-    public Name( final String name )
-    {
-        super( name );
-    }
+    <T> T get( AttributeName name );
+
+    <T> T get( AttributeName name, T defaultValue );
+
+    Iterable<AttributeName> getNames();
 
 }

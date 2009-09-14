@@ -25,7 +25,7 @@ import org.quartz.Scheduler;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.Trigger;
-import org.ops4j.pax.flow.api.base.TriggerName;
+import org.ops4j.pax.flow.api.TriggerName;
 
 /**
  * JAVADOC

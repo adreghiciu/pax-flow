@@ -18,8 +18,6 @@
 
 package org.ops4j.pax.flow.api;
 
-import org.ops4j.pax.flow.api.base.FlowName;
-
 /**
  * JAVADOC
  *
@@ -28,7 +26,8 @@ import org.ops4j.pax.flow.api.base.FlowName;
 public interface FlowFactory
 {
 
-    Flow create( FlowName name, ExecutionContext context )
-        throws Exception;
+    FlowType type();
+
+    Flow create( FlowName name, Configuration configuration );
 
 }
