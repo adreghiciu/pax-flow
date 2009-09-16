@@ -18,11 +18,11 @@
 
 package org.ops4j.pax.flow.trigger;
 
-import org.ops4j.pax.flow.api.ExecutionContext;
-import org.ops4j.pax.flow.api.Flow;
+import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.api.TriggerName;
+import org.ops4j.pax.flow.api.TriggerType;
 import org.ops4j.pax.flow.trigger.internal.AbstractTrigger;
 
 /**
@@ -35,20 +35,15 @@ public class ManualTrigger
     implements Trigger
 {
 
-    public ManualTrigger( final TriggerName name,
-                          final ExecutionContext context,
-                          final Flow target )
+    public ManualTrigger( final TriggerName name )
     {
-        super( name, context, target );
+        super( name );
     }
 
-    public Trigger fire()
-        throws Exception
+    @Override
+    public ManualTrigger fire()
     {
-        if( isStarted() )
-        {
-        }
-        return this;
+        return super.fire();
     }
 
     @Override
@@ -66,12 +61,16 @@ public class ManualTrigger
         implements TriggerFactory<ManualTrigger>
     {
 
-        public ManualTrigger create( final TriggerName name,
-                                     final ExecutionContext context,
-                                     final Flow target )
+        public TriggerType type()
         {
-            return new ManualTrigger( name, context, target );
+            return TriggerType.triggerType( ManualTrigger.class.getSimpleName() );
         }
 
+        public ManualTrigger create( final TriggerName name,
+                                     final Configuration configuration )
+        {
+            return new ManualTrigger( name );
+        }
     }
+
 }

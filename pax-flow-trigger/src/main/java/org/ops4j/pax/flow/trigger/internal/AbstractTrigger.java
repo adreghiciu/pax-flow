@@ -18,12 +18,8 @@
 
 package org.ops4j.pax.flow.trigger.internal;
 
-import com.google.inject.Inject;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.ops4j.pax.flow.api.ExecutionContext;
-import org.ops4j.pax.flow.api.Flow;
+import java.util.Collection;
+import java.util.HashSet;
 import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.TriggerName;
 
@@ -37,21 +33,14 @@ public abstract class AbstractTrigger<T extends Trigger>
 {
 
     private final TriggerName m_name;
-    private final ExecutionContext m_context;
-    private final Flow m_target;
+    private final Collection<Runnable> m_targets;
 
     private boolean m_started;
 
-    @Inject
-    private Scheduler m_scheduler;
-
-    public AbstractTrigger( final TriggerName name,
-                            final ExecutionContext context,
-                            final Flow target )
+    public AbstractTrigger( final TriggerName name )
     {
         m_name = name;
-        m_target = target;
-        m_context = context;
+        m_targets = new HashSet<Runnable>();
     }
 
     public TriggerName name()
@@ -72,35 +61,38 @@ public abstract class AbstractTrigger<T extends Trigger>
         return itself();
     }
 
-    protected ExecutionContext context()
+    public T attach( final Runnable target )
     {
-        return m_context;
+        m_targets.add( target );
+        return itself();
     }
 
-    protected Flow target()
+    public T detach( final Runnable target )
     {
-        return m_target;
+        m_targets.remove( target );
+        return itself();
     }
 
     protected boolean isStarted()
     {
         return m_started;
     }
-    
-
-    protected JobDetail createJobDetail()
-    {
-        final JobDataMap dataMap = new JobDataMap();
-        dataMap.put( ExecutionContext.class.getName(), context() );
-        dataMap.put( Flow.class.getName(), target() );
-
-        final JobDetail jobDetail = new JobDetail();
-        jobDetail.setName( name().stringValue() );
-        jobDetail.setJobDataMap( dataMap );
-        jobDetail.setJobClass( FlowAdapter.class );
-        return jobDetail;
-    }
 
     protected abstract T itself();
 
+    protected T fire()
+    {
+        for( Runnable target : m_targets )
+        {
+            try
+            {
+                target.run();
+            }
+            catch( Throwable ignore )
+            {
+                // ignore
+            }
+        }
+        return itself();
+    }
 }

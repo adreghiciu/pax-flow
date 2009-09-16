@@ -23,11 +23,10 @@ package org.ops4j.pax.flow.api;
  *
  * @author Alin Dreghiciu
  */
-public interface TriggerFactory<T extends Trigger>
+public interface Transformer
 {
 
-    TriggerType type();
-
-    T create( TriggerName name, Configuration configuration );
+    void schedule( Flow flow, Trigger trigger )
+        throws Exception;
 
 }

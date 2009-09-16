@@ -18,6 +18,8 @@
 
 package org.ops4j.pax.flow.api;
 
+import java.util.concurrent.Callable;
+
 /**
  * JAVADOC
  *
@@ -34,8 +36,8 @@ public interface Trigger
     Trigger stop()
         throws Exception;
 
-    Trigger attach( Flow flow );
+    Trigger attach( Runnable target );
 
-    Trigger detach( Flow target );
+    Trigger detach( Runnable target );
 
 }

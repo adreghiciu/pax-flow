@@ -18,16 +18,17 @@
 package org.ops4j.pax.flow.runtime.internal;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import static com.google.inject.Guice.*;
+import com.google.inject.Inject;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.FlowFactoryRegistry;
+import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.api.TriggerFactoryRegistry;
+import org.ops4j.peaberry.Export;
 import static org.ops4j.peaberry.Peaberry.*;
 import static org.ops4j.peaberry.util.TypeLiterals.*;
-import org.ops4j.peaberry.Export;
 
 /**
  * JAVADOC
@@ -74,6 +75,11 @@ public class Activator
                 .toProvider( service( CompositeTriggerFactoryRegistry.class ).single() );
             bind( FlowFactoryRegistry.class )
                 .toProvider( service( CompositeFlowFactoryRegistry.class ).single() );
+
+            bind( iterable( FlowFactory.class ) )
+                .toProvider( service( FlowFactory.class ).multiple() );
+            bind( iterable( TriggerFactory.class ) )
+                .toProvider( service( TriggerFactory.class ).multiple() );
 
             bind( export( TriggerFactoryRegistry.class ) )
                 .toProvider( service( SRTriggerFactoryRegistry.class ).export() );

@@ -68,7 +68,7 @@ public class TriggerType
         return value();
     }
 
-    public static TriggerType flowType( final String type )
+    public static TriggerType triggerType( final String type )
     {
         return new TriggerType( type );
     }

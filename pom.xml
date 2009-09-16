@@ -125,7 +125,6 @@
   <modules>
     <module>pax-flow-api</module>
     <module>pax-flow-trigger</module>
-    <module>pax-flow-osworkflow</module>
     <module>pax-flow-runtime</module>
   </modules>
 

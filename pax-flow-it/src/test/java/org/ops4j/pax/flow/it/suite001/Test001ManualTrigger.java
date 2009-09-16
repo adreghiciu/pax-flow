@@ -20,20 +20,16 @@ package org.ops4j.pax.flow.it.suite001;
 
 import com.google.inject.AbstractModule;
 import static com.google.inject.Guice.*;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.Mockito.*;
 import org.osgi.framework.BundleContext;
-import org.quartz.Scheduler;
-import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
-import org.ops4j.pax.flow.api.Flow;
+import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import static org.ops4j.pax.flow.api.TriggerName.*;
 import org.ops4j.pax.flow.it.BasicConfiguration;
-import static org.ops4j.pax.flow.it.Wait.*;
 import org.ops4j.pax.flow.trigger.ManualTrigger;
 import static org.ops4j.peaberry.Peaberry.*;
 
@@ -43,15 +39,12 @@ import static org.ops4j.peaberry.Peaberry.*;
  * @author Alin Dreghiciu
  */
 @RunWith( JUnit4TestRunner.class )
-@Configuration( extend = { BasicConfiguration.class } )
+@org.ops4j.pax.exam.junit.Configuration( extend = { BasicConfiguration.class } )
 public class Test001ManualTrigger
 {
 
     @org.ops4j.pax.exam.Inject
     private BundleContext m_bundleContext;
-
-    @Inject
-    private Scheduler m_scheduler;
 
     @Test
     public void testMethod()
@@ -63,17 +56,17 @@ public class Test001ManualTrigger
 
         final TriggerFactory<ManualTrigger> manualTriggerFactory = injector.getInstance( ManualTrigger.Factory.class );
 
-        final Flow flow = mock( Flow.class );
+        final Configuration config = mock( Configuration.class );
+        final Runnable target = mock( Runnable.class );
 
         manualTriggerFactory.create(
             triggerName( "test" ),
-            null,
-            flow
-        ).start().fire();
+            config
+        ).attach(
+            target
+        ).fire();
 
-        waitFor( 2 );
-        
-        verify( flow ).execute();
+        verify( target ).run();
     }
 
     public static class Module
@@ -83,7 +76,7 @@ public class Test001ManualTrigger
         @Override
         protected void configure()
         {
-            bind( Scheduler.class ).toProvider( service( Scheduler.class ).single() );
+            // nothing to bind
         }
 
     }

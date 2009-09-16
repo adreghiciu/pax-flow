@@ -62,11 +62,6 @@
       <artifactId>org.osgi.core</artifactId>
     </dependency>
     <dependency>
-      <groupId>opensymphony</groupId>
-      <artifactId>quartz</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>org.ops4j</groupId>
       <artifactId>peaberry</artifactId>
       <scope>provided</scope>
