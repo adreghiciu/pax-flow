@@ -23,19 +23,9 @@ package org.ops4j.pax.flow.api;
  *
  * @author Alin Dreghiciu
  */
-public interface Trigger
+public interface ExecutionTarget
 {
 
-    TriggerName name();
-
-    Trigger start()
-        throws Exception;
-
-    Trigger stop()
-        throws Exception;
-
-    Trigger attach( ExecutionTarget target );
-
-    Trigger detach( ExecutionTarget target );
+    void execute( ExecutionContext executionContext );
 
 }

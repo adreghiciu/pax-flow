@@ -35,7 +35,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <pax.swissbox.version>1.1.0</pax.swissbox.version>
-    <pax.exam.version>1.1.0</pax.exam.version>
+    <pax.exam.version>1.2.0-SNAPSHOT</pax.exam.version>
 
     <peaberry.version>1.1.1</peaberry.version>
     <guice.version>2.0</guice.version>
@@ -103,7 +103,7 @@
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-all</artifactId>
-        <version>1.7</version>
+        <version>1.8.0</version>
         <scope>test</scope>
       </dependency>
     </dependencies>

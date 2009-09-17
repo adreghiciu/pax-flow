@@ -18,9 +18,6 @@
 
 package org.ops4j.pax.flow.api;
 
-import java.util.Map;
-import org.ops4j.pax.flow.api.AttributeName;
-
 /**
  * JAVADOC
  *
@@ -34,5 +31,7 @@ public interface ExecutionContext
     <T> T get( AttributeName name, T defaultValue );
 
     Iterable<AttributeName> getNames();
+
+    ExecutionContext set( AttributeName name, Object value );
 
 }

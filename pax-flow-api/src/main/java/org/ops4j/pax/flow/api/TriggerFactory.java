@@ -28,6 +28,7 @@ public interface TriggerFactory<T extends Trigger>
 
     TriggerType type();
 
-    T create( TriggerName name, Configuration configuration );
+    T create( TriggerName name, Configuration configuration )
+        throws Exception;
 
 }

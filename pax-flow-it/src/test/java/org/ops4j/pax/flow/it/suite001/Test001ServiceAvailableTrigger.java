@@ -21,8 +21,10 @@ package org.ops4j.pax.flow.it.suite001;
 import com.google.inject.AbstractModule;
 import static com.google.inject.Guice.*;
 import com.google.inject.Injector;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
@@ -32,7 +34,7 @@ import org.ops4j.pax.flow.api.ExecutionTarget;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import static org.ops4j.pax.flow.api.TriggerName.*;
 import org.ops4j.pax.flow.it.BasicConfiguration;
-import org.ops4j.pax.flow.trigger.ManualTrigger;
+import org.ops4j.pax.flow.trigger.ServiceAvailableTrigger;
 import static org.ops4j.peaberry.Peaberry.*;
 
 /**
@@ -42,7 +44,7 @@ import static org.ops4j.peaberry.Peaberry.*;
  */
 @RunWith( JUnit4TestRunner.class )
 @org.ops4j.pax.exam.junit.Configuration( extend = { BasicConfiguration.class } )
-public class Test001ManualTrigger
+public class Test001ServiceAvailableTrigger
 {
 
     @org.ops4j.pax.exam.Inject
@@ -56,19 +58,31 @@ public class Test001ManualTrigger
 
         injector.injectMembers( this );
 
-        final TriggerFactory<ManualTrigger> factory = injector.getInstance(
-            ManualTrigger.Factory.class
+        final TriggerFactory<ServiceAvailableTrigger> factory = injector.getInstance(
+            ServiceAvailableTrigger.Factory.class
         );
 
         final Configuration config = mock( Configuration.class );
+        when( config.<Object>get( ServiceAvailableTrigger.Factory.WATCHED_SERVICE_TYPE ) )
+            .thenReturn( TestService.class.getName() );
+
         final ExecutionTarget target = mock( ExecutionTarget.class );
 
         factory.create(
             triggerName( "test" ),
             config
-        ).attach( target ).fire();
+        ).attach( target );
 
-        verify( target ).execute( any( ExecutionContext.class ) );
+        m_bundleContext.registerService( TestService.class.getName(), mock( TestService.class ), null );
+
+        final ArgumentCaptor<ExecutionContext> usedExecutionContext = ArgumentCaptor.forClass( ExecutionContext.class );
+
+        verify( target ).execute( usedExecutionContext.capture() );
+
+        assertNotNull(
+            "There a 'service' attribute",
+            usedExecutionContext.getValue().get( ServiceAvailableTrigger.SERVICE )
+        );
     }
 
     public static class Module
@@ -80,6 +94,11 @@ public class Test001ManualTrigger
         {
             // nothing to bind
         }
+
+    }
+
+    public static interface TestService
+    {
 
     }
 

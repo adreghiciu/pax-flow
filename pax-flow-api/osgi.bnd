@@ -5,10 +5,12 @@ Bundle-SymbolicName:\
   ${bundle.symbolicName}; singleton:=true
 
 Import-Package:\
-  ${bundle.namespace}; version="${pom.version}"
+  ${bundle.namespace}; version="${pom.version}", \
+  ${bundle.namespace}.helpers; version="${pom.version}"
 
 Export-Package:\
-  ${bundle.namespace}; version="${pom.version}"
+  ${bundle.namespace}; version="${pom.version}", \
+  ${bundle.namespace}.helpers; version="${pom.version}"
 
 -removeheaders:\
   Include-Resource,\
