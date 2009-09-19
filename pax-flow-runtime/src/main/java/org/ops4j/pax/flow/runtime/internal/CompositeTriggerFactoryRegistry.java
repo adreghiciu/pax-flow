@@ -14,7 +14,7 @@ public class CompositeTriggerFactoryRegistry
     implements TriggerFactoryRegistry
 {
 
-    private final Iterable<TriggerFactoryRegistry> m_registries;
+    private Iterable<TriggerFactoryRegistry> m_registries;
 
     @Inject
     public CompositeTriggerFactoryRegistry( final Iterable<TriggerFactoryRegistry> registries )

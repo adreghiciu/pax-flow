@@ -1,4 +1,0 @@
-mvn:org.ops4j.pax.flow/pax-flow-api
-mvn:org.ops4j.pax.flow/pax-flow-runtime
-mvn:org.ops4j.pax.flow/pax-flow-runtime-setup
-mvn:org.ops4j.pax.flow/pax-flow-triggers

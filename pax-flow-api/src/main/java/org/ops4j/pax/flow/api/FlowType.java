@@ -73,4 +73,12 @@ public class FlowType
         return new FlowType( type );
     }
 
+    public static FlowType flowType( final Class type )
+    {
+        // VALIDATE
+        String name = type.getSimpleName();
+        name = name.substring( 0, 1 ).toLowerCase() + name.substring( 1 );
+        return new FlowType( name );
+    }
+
 }

@@ -57,7 +57,7 @@ public class Activator
         throws Exception
     {
         LOG.debug( "Starting Pax Flow Runtime" );
-        
+
         createInjector( osgiModule( bundleContext ), new Module() ).injectMembers( this );
 
         LOG.info( "Started Pax Flow Runtime" );
@@ -90,22 +90,27 @@ public class Activator
         @Override
         protected void configure()
         {
-            // TODO make thread pool configurable
-            bind( ExecutorService.class ).toInstance( Executors.newFixedThreadPool( 10 ) );
-            bind( export( Transformer.class ) ).toProvider( service( DefaultTransformer.class ).export() );
-
-            bind( TriggerFactoryRegistry.class )
-                .toProvider( service( CompositeTriggerFactoryRegistry.class ).single() );
-
             bind( iterable( FlowFactory.class ) )
                 .toProvider( service( FlowFactory.class ).multiple() );
             bind( iterable( TriggerFactory.class ) )
                 .toProvider( service( TriggerFactory.class ).multiple() );
 
-            bind( export( TriggerFactoryRegistry.class ) )
-                .toProvider( service( SRTriggerFactoryRegistry.class ).export() );
             bind( export( FlowFactoryRegistry.class ) )
                 .toProvider( service( SRFlowFactoryRegistry.class ).export() );
+            bind( export( TriggerFactoryRegistry.class ) )
+                .toProvider( service( SRTriggerFactoryRegistry.class ).export() );
+
+            bind( iterable( FlowFactoryRegistry.class ) )
+                .toProvider( service( FlowFactoryRegistry.class ).multiple() );
+            bind( iterable( TriggerFactoryRegistry.class ) )
+                .toProvider( service( TriggerFactoryRegistry.class ).multiple() );
+
+            bind( FlowFactoryRegistry.class ).to( CompositeFlowFactoryRegistry.class );
+            bind( TriggerFactoryRegistry.class ).to( CompositeTriggerFactoryRegistry.class );
+
+            // TODO make thread pool configurable
+            bind( ExecutorService.class ).toInstance( Executors.newFixedThreadPool( 10 ) );
+            bind( export( Transformer.class ) ).toProvider( service( DefaultTransformer.class ).export() );
         }
 
     }

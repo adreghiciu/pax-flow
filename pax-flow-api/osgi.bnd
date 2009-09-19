@@ -6,12 +6,18 @@ Bundle-SymbolicName:\
 
 Import-Package:\
   ${bundle.namespace}; version="${pom.version}", \
-  ${bundle.namespace}.helpers; version="${pom.version}"
+  ${bundle.namespace}.helpers; version="${pom.version}", \
+  org.apache.commons.logging; version="[1.0.4,2.0.0)"; resolution:=optional
 
 Export-Package:\
   ${bundle.namespace}; version="${pom.version}", \
-  ${bundle.namespace}.helpers; version="${pom.version}", \
-  org.apache.commons.logging; version="[1.0.4,2.0.0)"
+  ${bundle.namespace}.helpers; version="${pom.version}"
+
+Embed-Dependency:\
+  *; scope=compile; type=!pom; inline=true
+
+Embed-Transitive:\
+  true    
 
 -removeheaders:\
   Include-Resource,\

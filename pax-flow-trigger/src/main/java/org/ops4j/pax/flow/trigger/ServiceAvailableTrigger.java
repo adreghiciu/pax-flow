@@ -29,6 +29,7 @@ import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.api.TriggerName;
 import static org.ops4j.pax.flow.api.TriggerName.*;
 import org.ops4j.pax.flow.api.TriggerType;
+import static org.ops4j.pax.flow.api.TriggerType.*;
 import org.ops4j.pax.flow.api.helpers.DefaultExecutionContext;
 import static org.ops4j.pax.flow.api.helpers.DefaultExecutionContext.*;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
@@ -117,7 +118,7 @@ public class ServiceAvailableTrigger
 
         public TriggerType type()
         {
-            return TriggerType.triggerType( ServiceAvailableTrigger.class.getSimpleName() );
+            return triggerType( ServiceAvailableTrigger.class );
         }
 
         public ServiceAvailableTrigger create( final Configuration configuration,

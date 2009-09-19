@@ -14,7 +14,7 @@ public class CompositeFlowFactoryRegistry
     implements FlowFactoryRegistry
 {
 
-    private final Iterable<FlowFactoryRegistry> m_registries;
+    private Iterable<FlowFactoryRegistry> m_registries;
 
     @Inject
     public CompositeFlowFactoryRegistry( final Iterable<FlowFactoryRegistry> registries )

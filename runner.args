@@ -1,0 +1,6 @@
+mvn:org.ops4j.pax.flow/pax-flow-api@update
+mvn:org.ops4j.pax.flow/pax-flow-runtime@update
+mvn:org.ops4j.pax.flow/pax-flow-trigger@update
+mvn:org.ops4j.pax.flow/pax-flow-runtime-setup@update
+
+peaberry/1.1.1

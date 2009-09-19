@@ -25,6 +25,7 @@ import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.api.TriggerName;
 import static org.ops4j.pax.flow.api.TriggerName.*;
 import org.ops4j.pax.flow.api.TriggerType;
+import static org.ops4j.pax.flow.api.TriggerType.*;
 import org.ops4j.pax.flow.trigger.internal.AbstractTrigger;
 
 /**
@@ -68,7 +69,7 @@ public class ManualTrigger
 
         public TriggerType type()
         {
-            return TriggerType.triggerType( ManualTrigger.class.getSimpleName() );
+            return triggerType( ManualTrigger.class );
         }
 
         public ManualTrigger create( final Configuration configuration,

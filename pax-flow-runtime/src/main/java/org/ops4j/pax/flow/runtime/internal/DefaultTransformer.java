@@ -29,6 +29,7 @@ public class DefaultTransformer
     private static final Log LOG = LogFactory.getLog( DefaultTransformer.class );
 
     private final ExecutorService m_executorService;
+    
     private final FlowFactoryRegistry m_flowFactoryRegistry;
     private final TriggerFactoryRegistry m_triggerFactoryRegistry;
 
