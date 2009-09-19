@@ -26,10 +26,10 @@ package org.ops4j.pax.flow.api;
 public interface Configuration
 {
 
-    <T> T get( AttributeName name );
+    <T> T get( PropertyName name );
 
-    <T> T get( AttributeName name, T defaultValue );
+    <T> T get( PropertyName name, T defaultValue );
 
-    Iterable<AttributeName> getNames();
+    Iterable<PropertyName> getNames();
 
 }

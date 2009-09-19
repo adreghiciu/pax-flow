@@ -26,12 +26,12 @@ package org.ops4j.pax.flow.api;
 public interface ExecutionContext
 {
 
-    <T> T get( AttributeName name );
+    <T> T get( PropertyName name );
 
-    <T> T get( AttributeName name, T defaultValue );
+    <T> T get( PropertyName name, T defaultValue );
 
-    Iterable<AttributeName> getNames();
+    Iterable<PropertyName> getNames();
 
-    ExecutionContext set( AttributeName name, Object value );
+    ExecutionContext set( PropertyName name, Object value );
 
 }

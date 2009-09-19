@@ -32,7 +32,6 @@ import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.ExecutionTarget;
 import org.ops4j.pax.flow.api.TriggerFactory;
-import static org.ops4j.pax.flow.api.TriggerName.*;
 import org.ops4j.pax.flow.it.Cfg;
 import org.ops4j.pax.flow.trigger.ServiceAvailableTrigger;
 import static org.ops4j.peaberry.Peaberry.*;
@@ -68,10 +67,7 @@ public class Test001ServiceAvailableTrigger
 
         final ExecutionTarget target = mock( ExecutionTarget.class );
 
-        factory.create(
-            triggerName( "test" ),
-            config
-        ).attach( target );
+        factory.create( config, target ).start();
 
         m_bundleContext.registerService( TestService.class.getName(), mock( TestService.class ), null );
 
@@ -80,7 +76,7 @@ public class Test001ServiceAvailableTrigger
         verify( target ).execute( usedExecutionContext.capture() );
 
         assertNotNull(
-            "There a 'service' attribute",
+            "There a 'service' property",
             usedExecutionContext.getValue().get( ServiceAvailableTrigger.SERVICE )
         );
     }

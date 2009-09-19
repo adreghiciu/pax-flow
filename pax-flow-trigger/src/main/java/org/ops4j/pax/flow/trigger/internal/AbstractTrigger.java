@@ -18,13 +18,11 @@
 
 package org.ops4j.pax.flow.trigger.internal;
 
-import java.util.Collection;
-import java.util.HashSet;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.ExecutionTarget;
 import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.TriggerName;
-import org.ops4j.pax.flow.api.helpers.DefaultExecutionContext;
+import static org.ops4j.pax.flow.api.helpers.DefaultExecutionContext.*;
 
 /**
  * JAVADOC
@@ -36,15 +34,16 @@ public abstract class AbstractTrigger<T extends Trigger>
 {
 
     private final TriggerName m_name;
-    private final Collection<ExecutionTarget> m_targets;
+    private final ExecutionTarget m_target;
 
     private boolean m_started;
 
-    public AbstractTrigger( final TriggerName name )
+    public AbstractTrigger( final TriggerName name,
+                            final ExecutionTarget target )
     {
-        // VALIDATE name
+        // VALIDATE
         m_name = name;
-        m_targets = new HashSet<ExecutionTarget>();
+        m_target = target;
     }
 
     public TriggerName name()
@@ -67,22 +66,6 @@ public abstract class AbstractTrigger<T extends Trigger>
         return itself();
     }
 
-    public T attach( final ExecutionTarget target )
-    {
-        // VALIDATE target
-        m_targets.add( target );
-
-        return itself();
-    }
-
-    public T detach( final ExecutionTarget target )
-    {
-        // VALIDATE target
-        m_targets.remove( target );
-
-        return itself();
-    }
-
     protected boolean isStarted()
     {
         return m_started;
@@ -92,22 +75,19 @@ public abstract class AbstractTrigger<T extends Trigger>
 
     protected T fire()
     {
-        return fire( new DefaultExecutionContext() );
+        return fire( defaultExecutionContext() );
     }
 
     protected T fire( final ExecutionContext executionContext )
     {
         // VALIDATE executionContext
-        for( ExecutionTarget target : m_targets )
+        try
         {
-            try
-            {
-                target.execute( executionContext );
-            }
-            catch( Throwable ignore )
-            {
-                // ignore
-            }
+            m_target.execute( executionContext );
+        }
+        catch( Throwable ignore )
+        {
+            // TODO ignore?
         }
 
         return itself();

@@ -21,7 +21,7 @@ package org.ops4j.pax.flow.api.helpers;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.ops4j.pax.flow.api.ExecutionContext;
+import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.Property;
 import org.ops4j.pax.flow.api.PropertyName;
 
@@ -30,13 +30,13 @@ import org.ops4j.pax.flow.api.PropertyName;
  *
  * @author Alin Dreghiciu
  */
-public class DefaultExecutionContext
-    implements ExecutionContext
+public class ImmutableConfiguration
+    implements Configuration
 {
 
     private final Map<PropertyName, Object> m_properties;
 
-    private DefaultExecutionContext( final Property<?>... properties )
+    private ImmutableConfiguration( final Property<?>... properties )
     {
         m_properties = new HashMap<PropertyName, Object>();
         if( properties != null && properties.length > 0 )
@@ -68,16 +68,14 @@ public class DefaultExecutionContext
         return Collections.unmodifiableSet( m_properties.keySet() );
     }
 
-    public ExecutionContext set( final PropertyName name, final Object value )
+    public static ImmutableConfiguration immutableConfiguration( final Property<?>... properties )
     {
-        m_properties.put( name, value );
-
-        return this;
+        return new ImmutableConfiguration( properties );
     }
 
-    public static DefaultExecutionContext defaultExecutionContext( final Property... properties )
+    public static ImmutableConfiguration withoutConfiguration()
     {
-        return new DefaultExecutionContext( properties );
+        return new ImmutableConfiguration();
     }
 
 }

@@ -20,15 +20,19 @@ package org.ops4j.pax.flow.trigger;
 
 import com.google.inject.Inject;
 import org.osgi.framework.BundleContext;
-import org.ops4j.pax.flow.api.AttributeName;
-import static org.ops4j.pax.flow.api.AttributeName.*;
 import org.ops4j.pax.flow.api.Configuration;
+import org.ops4j.pax.flow.api.ExecutionTarget;
+import org.ops4j.pax.flow.api.PropertyName;
+import static org.ops4j.pax.flow.api.PropertyName.*;
 import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.api.TriggerName;
+import static org.ops4j.pax.flow.api.TriggerName.*;
 import org.ops4j.pax.flow.api.TriggerType;
 import org.ops4j.pax.flow.api.helpers.DefaultExecutionContext;
+import static org.ops4j.pax.flow.api.helpers.DefaultExecutionContext.*;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
+import static org.ops4j.pax.flow.api.helpers.TypedConfiguration.*;
 import org.ops4j.pax.flow.trigger.internal.AbstractTrigger;
 import org.ops4j.peaberry.Import;
 import org.ops4j.peaberry.ServiceRegistry;
@@ -45,16 +49,17 @@ public class ServiceAvailableTrigger
     implements Trigger
 {
 
-    public static final AttributeName SERVICE = attributeName( "service" );
+    public static final PropertyName SERVICE = propertyName( "service" );
 
     private final ServiceRegistry m_serviceRegistry;
 
     public ServiceAvailableTrigger( final TriggerName name,
+                                    final ExecutionTarget target,
                                     final ServiceRegistry serviceRegistry,
                                     final Class<?> serviceClass,
                                     final String serviceFilter )
     {
-        super( name );
+        super( name, target );
         // VALIDATE
         m_serviceRegistry = serviceRegistry;
         serviceRegistry.watch(
@@ -67,7 +72,7 @@ public class ServiceAvailableTrigger
                 {
                     final Object service = super.adding( anImport );
 
-                    final DefaultExecutionContext executionContext = new DefaultExecutionContext();
+                    final DefaultExecutionContext executionContext = defaultExecutionContext();
                     executionContext.set( SERVICE, service );
 
                     fire( executionContext );
@@ -93,11 +98,13 @@ public class ServiceAvailableTrigger
         implements TriggerFactory<ServiceAvailableTrigger>
     {
 
-        public static final AttributeName WATCHED_SERVICE_TYPE = attributeName( "watchedServiceType" );
-        public static final AttributeName WATCHED_SERVICE_FILTER = attributeName( "watchedServiceFilter" );
+        public static final PropertyName WATCHED_SERVICE_TYPE = propertyName( "watchedServiceType" );
+        public static final PropertyName WATCHED_SERVICE_FILTER = propertyName( "watchedServiceFilter" );
 
         private final BundleContext m_bundleContext;
         private final ServiceRegistry m_serviceRegistry;
+
+        private long m_counter;
 
         @Inject
         public Factory( final BundleContext bundleContext,
@@ -113,19 +120,25 @@ public class ServiceAvailableTrigger
             return TriggerType.triggerType( ServiceAvailableTrigger.class.getSimpleName() );
         }
 
-        public ServiceAvailableTrigger create( final TriggerName name,
-                                               final Configuration configuration )
+        public ServiceAvailableTrigger create( final Configuration configuration,
+                                               final ExecutionTarget target )
             throws ClassNotFoundException
         {
 
-            final TypedConfiguration config = new TypedConfiguration( configuration );
+            final TypedConfiguration config = typedConfiguration( configuration );
 
             final String serviceClassName = config.mandatory( WATCHED_SERVICE_TYPE, String.class );
             final String serviceFilter = config.optional( WATCHED_SERVICE_FILTER, String.class );
 
             final Class serviceClass = m_bundleContext.getBundle().loadClass( serviceClassName );
 
-            return new ServiceAvailableTrigger( name, m_serviceRegistry, serviceClass, serviceFilter );
+            return new ServiceAvailableTrigger(
+                triggerName( String.format( "%s::%d", type(), m_counter++ ) ),
+                target,
+                m_serviceRegistry,
+                serviceClass,
+                serviceFilter
+            );
         }
     }
 

@@ -63,10 +63,7 @@ public class Test001ManualTrigger
         final Configuration config = mock( Configuration.class );
         final ExecutionTarget target = mock( ExecutionTarget.class );
 
-        factory.create(
-            triggerName( "test" ),
-            config
-        ).attach( target ).fire();
+        factory.create(config,target).start().fire();
 
         verify( target ).execute( any( ExecutionContext.class ) );
     }

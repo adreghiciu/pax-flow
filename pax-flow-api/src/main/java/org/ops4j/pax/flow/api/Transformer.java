@@ -26,7 +26,7 @@ package org.ops4j.pax.flow.api;
 public interface Transformer
 {
 
-    void schedule( Flow flow, Trigger trigger )
+    void schedule( JobDescription jobDescription )
         throws Exception;
 
 }

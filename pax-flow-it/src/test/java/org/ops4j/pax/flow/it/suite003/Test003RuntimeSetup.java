@@ -16,23 +16,17 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.it.suite002;
+package org.ops4j.pax.flow.it.suite003;
 
 import com.google.inject.AbstractModule;
 import static com.google.inject.Guice.*;
 import com.google.inject.Injector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.mockito.Mockito.*;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
-import org.ops4j.pax.flow.api.ExecutionContext;
-import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.Transformer;
-import org.ops4j.pax.flow.api.helpers.ImmutableJobDescription;
-import static org.ops4j.pax.flow.api.TriggerName.*;
 import org.ops4j.pax.flow.it.Cfg;
-import org.ops4j.pax.flow.trigger.ManualTrigger;
 import static org.ops4j.peaberry.Peaberry.*;
 
 /**
@@ -41,25 +35,22 @@ import static org.ops4j.peaberry.Peaberry.*;
  * @author Alin Dreghiciu
  */
 @RunWith( JUnit4TestRunner.class )
-@org.ops4j.pax.exam.junit.Configuration( extend = { Cfg.Runtime.class, Cfg.Triggers.class } )
-public class Test002DefaultTransformer
+@org.ops4j.pax.exam.junit.Configuration( extend = { Cfg.RuntimeSetup.class } )
+public class Test003RuntimeSetup
 {
 
     @org.ops4j.pax.exam.Inject
     private BundleContext m_bundleContext;
 
     /**
-     * Tests that runtime bundle is activated without problems (exceptions) and a {@link Transformer} service gets
-     * registered.
+     * Tests that runtime setup bundle is activated without problems (exceptions).
      */
     @Test
-    public void runtimeStarts()
+    public void runtimeSetupStarts()
     {
         final Injector injector = createInjector( osgiModule( m_bundleContext ), new GuiceSetup() );
 
         injector.injectMembers( this );
-
-        injector.getInstance( Transformer.class );
     }
 
     public static class GuiceSetup

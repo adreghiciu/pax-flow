@@ -28,6 +28,7 @@ public interface FlowFactory
 
     FlowType type();
 
-    Flow create( FlowName name, Configuration configuration );
+    Flow create( Configuration configuration )
+        throws Exception;
 
 }

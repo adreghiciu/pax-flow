@@ -1,6 +1,6 @@
 package org.ops4j.pax.flow.api.helpers;
 
-import org.ops4j.pax.flow.api.Configuration;
+import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.PropertyName;
 
 /**
@@ -8,22 +8,22 @@ import org.ops4j.pax.flow.api.PropertyName;
  *
  * @author Alin Dreghiciu
  */
-public class TypedConfiguration
+public class TypedExecutionContext
 {
 
-    private final Configuration m_configuration;
+    private final ExecutionContext m_context;
 
-    private TypedConfiguration( final Configuration configuration )
+    private TypedExecutionContext( final ExecutionContext context )
     {
         // VALIDATE
-        m_configuration = configuration;
+        m_context = context;
     }
 
     public <T> T mandatory( final PropertyName propertyName,
                             final Class<T> propertyType )
     {
         // VALIDATE property name / type
-        final Object value = m_configuration.get( propertyName );
+        final Object value = m_context.get( propertyName );
         if( value == null )
         {
             throw new IllegalStateException(
@@ -44,7 +44,7 @@ public class TypedConfiguration
                            final Class<T> propertyType )
     {
         // VALIDATE property name / type
-        final Object value = m_configuration.get( propertyName );
+        final Object value = m_context.get( propertyName );
         if( value != null && !propertyType.isAssignableFrom( value.getClass() ) )
         {
             throw new IllegalStateException(
@@ -55,9 +55,9 @@ public class TypedConfiguration
         return (T) value;
     }
 
-    public static TypedConfiguration typedConfiguration( final Configuration configuration )
+    public static TypedExecutionContext typedExecutionContext( final ExecutionContext context )
     {
-        return new TypedConfiguration( configuration );
+        return new TypedExecutionContext( context );
     }
 
 }

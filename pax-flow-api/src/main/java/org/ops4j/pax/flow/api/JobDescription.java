@@ -23,12 +23,15 @@ package org.ops4j.pax.flow.api;
  *
  * @author Alin Dreghiciu
  */
-public interface TriggerFactory<T extends Trigger>
+public interface JobDescription
 {
 
-    TriggerType type();
+    FlowType flowType();
 
-    T create( Configuration configuration, ExecutionTarget target )
-        throws Exception;
+    Configuration flowConfiguration();
+
+    TriggerType triggerType();
+
+    Configuration triggerConfiguration();
 
 }

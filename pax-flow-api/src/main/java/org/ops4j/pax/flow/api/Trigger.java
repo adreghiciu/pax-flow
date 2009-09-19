@@ -34,8 +34,4 @@ public interface Trigger
     Trigger stop()
         throws Exception;
 
-    Trigger attach( ExecutionTarget target );
-
-    Trigger detach( ExecutionTarget target );
-
 }

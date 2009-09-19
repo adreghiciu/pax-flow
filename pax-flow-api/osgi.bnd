@@ -10,7 +10,8 @@ Import-Package:\
 
 Export-Package:\
   ${bundle.namespace}; version="${pom.version}", \
-  ${bundle.namespace}.helpers; version="${pom.version}"
+  ${bundle.namespace}.helpers; version="${pom.version}", \
+  org.apache.commons.logging; version="[1.0.4,2.0.0)"
 
 -removeheaders:\
   Include-Resource,\

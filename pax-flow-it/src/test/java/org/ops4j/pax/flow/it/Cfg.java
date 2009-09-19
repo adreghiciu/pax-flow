@@ -14,11 +14,6 @@ import static org.ops4j.pax.exam.options.WrappedUrlProvisionOption.OverwriteMode
 public class Cfg
 {
 
-    /**
-     * JAVADOC
-     *
-     * @author Alin Dreghiciu
-     */
     public static class Basic
         implements CompositeOption
     {
@@ -40,11 +35,6 @@ public class Cfg
 
     }
 
-    /**
-     * JAVADOC
-     *
-     * @author Alin Dreghiciu
-     */
     public static class Triggers
         implements CompositeOption
     {
@@ -59,11 +49,6 @@ public class Cfg
 
     }
 
-    /**
-     * JAVADOC
-     *
-     * @author Alin Dreghiciu
-     */
     public static class Runtime
         implements CompositeOption
     {
@@ -73,6 +58,21 @@ public class Cfg
             return options(
                 new Basic(),
                 mavenBundle( "org.ops4j.pax.flow", "pax-flow-runtime" ).versionAsInProject()
+            );
+        }
+
+    }
+
+    public static class RuntimeSetup
+        implements CompositeOption
+    {
+
+        public Option[] getOptions()
+        {
+            return options(
+                new Runtime(),
+                new Triggers(),
+                mavenBundle( "org.ops4j.pax.flow", "pax-flow-runtime-setup" ).versionAsInProject()
             );
         }
 

@@ -56,10 +56,11 @@ public class Activator
     public void start( final BundleContext bundleContext )
         throws Exception
     {
-        LOG.debug( "Starting Pax Transformers Runtime ..." );
+        LOG.debug( "Starting Pax Flow Runtime" );
+        
         createInjector( osgiModule( bundleContext ), new Module() ).injectMembers( this );
 
-        LOG.info( "Started Pax Transformers Runtime" );
+        LOG.info( "Started Pax Flow Runtime" );
     }
 
     public void stop( final BundleContext bundleContext )
@@ -80,7 +81,7 @@ public class Activator
             m_ffrExport.unput();
             m_ffrExport = null;
         }
-        LOG.info( "Stopped Pax Transformers Runtime" );
+        LOG.info( "Stopped Pax Flow Runtime" );
     }
 
     private static class Module extends AbstractModule

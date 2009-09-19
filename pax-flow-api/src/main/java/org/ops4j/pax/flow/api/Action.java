@@ -23,12 +23,13 @@ package org.ops4j.pax.flow.api;
  *
  * @author Alin Dreghiciu
  */
-public interface TriggerFactory<T extends Trigger>
+public interface Action
 {
 
-    TriggerType type();
+    void execute( ExecutionContext context )
+        throws Exception;
 
-    T create( Configuration configuration, ExecutionTarget target )
+    void cancel()
         throws Exception;
 
 }

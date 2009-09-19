@@ -23,20 +23,26 @@ package org.ops4j.pax.flow.api;
  *
  * @author Alin Dreghiciu
  */
-public class AttributeName
+public class Property<T>
 {
 
-    private final String m_name;
+    private final PropertyName m_name;
+    private final T m_value;
 
-    public AttributeName( final String name )
+    public Property( final PropertyName name, final T value )
     {
-        // VALIDATE
         m_name = name;
+        m_value = value;
     }
 
-    public String value()
+    public PropertyName name()
     {
         return m_name;
+    }
+
+    public T value()
+    {
+        return m_value;
     }
 
     @Override
@@ -46,31 +52,43 @@ public class AttributeName
         {
             return true;
         }
-        if( !( o instanceof AttributeName ) )
+        if( !( o instanceof Property ) )
         {
             return false;
         }
 
-        final AttributeName that = (AttributeName) o;
+        final Property property = (Property) o;
 
-        return m_name.equals( that.m_name );
+        if( !m_name.equals( property.m_name ) )
+        {
+            return false;
+        }
+        if( !m_value.equals( property.m_value ) )
+        {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
     public int hashCode()
     {
-        return m_name.hashCode();
+        int result = m_name.hashCode();
+        result = 31 * result + m_value.hashCode();
+        return result;
     }
 
     @Override
     public String toString()
     {
-        return value();
+        return String.format( "%s=%s", m_name, m_value );
     }
 
-    public static AttributeName attributeName(final String name)
+    public static <T> Property<T> property( final PropertyName name,
+                                            final T value )
     {
-        return new AttributeName( name );
+        return new Property<T>( name, value );
     }
 
 }
