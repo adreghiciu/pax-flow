@@ -54,7 +54,7 @@ public class Test001ServiceAvailableTrigger
     public void executeTrigger()
         throws Exception
     {
-        final Injector injector = createInjector( osgiModule( m_bundleContext ), new Module() );
+        final Injector injector = createInjector( osgiModule( m_bundleContext ), new GuiceSetup() );
 
         injector.injectMembers( this );
 
@@ -85,7 +85,7 @@ public class Test001ServiceAvailableTrigger
         );
     }
 
-    public static class Module
+    public static class GuiceSetup
         extends AbstractModule
     {
 

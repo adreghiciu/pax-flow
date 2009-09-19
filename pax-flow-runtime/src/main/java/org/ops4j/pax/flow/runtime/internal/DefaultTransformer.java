@@ -3,6 +3,8 @@ package org.ops4j.pax.flow.runtime.internal;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import com.google.inject.Inject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.ExecutionTarget;
 import org.ops4j.pax.flow.api.Flow;
@@ -18,6 +20,8 @@ public class DefaultTransformer
     implements Transformer
 {
 
+    private static final Log LOG = LogFactory.getLog( DefaultTransformer.class );
+    
     private final ExecutorService m_executorService;
 
     @Inject

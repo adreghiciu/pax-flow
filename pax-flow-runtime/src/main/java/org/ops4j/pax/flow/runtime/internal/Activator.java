@@ -18,15 +18,17 @@
 package org.ops4j.pax.flow.runtime.internal;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.Executors;
 import com.google.inject.AbstractModule;
 import static com.google.inject.Guice.*;
 import com.google.inject.Inject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.FlowFactoryRegistry;
+import org.ops4j.pax.flow.api.Transformer;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.api.TriggerFactoryRegistry;
 import org.ops4j.peaberry.Export;
@@ -42,20 +44,32 @@ public class Activator
     implements BundleActivator
 {
 
+    private static final Log LOG = LogFactory.getLog( Activator.class );
+
     @Inject
     private Export<TriggerFactoryRegistry> m_tfrExport;
     @Inject
     private Export<FlowFactoryRegistry> m_ffrExport;
+    @Inject
+    private Export<Transformer> m_transformerExport;
 
     public void start( final BundleContext bundleContext )
         throws Exception
     {
+        LOG.debug( "Starting Pax Transformers Runtime ..." );
         createInjector( osgiModule( bundleContext ), new Module() ).injectMembers( this );
+
+        LOG.info( "Started Pax Transformers Runtime" );
     }
 
     public void stop( final BundleContext bundleContext )
         throws Exception
     {
+        if( m_transformerExport != null )
+        {
+            m_transformerExport.unput();
+            m_transformerExport = null;
+        }
         if( m_tfrExport != null )
         {
             m_tfrExport.unput();
@@ -66,6 +80,7 @@ public class Activator
             m_ffrExport.unput();
             m_ffrExport = null;
         }
+        LOG.info( "Stopped Pax Transformers Runtime" );
     }
 
     private static class Module extends AbstractModule
@@ -76,11 +91,10 @@ public class Activator
         {
             // TODO make thread pool configurable
             bind( ExecutorService.class ).toInstance( Executors.newFixedThreadPool( 10 ) );
+            bind( export( Transformer.class ) ).toProvider( service( DefaultTransformer.class ).export() );
 
             bind( TriggerFactoryRegistry.class )
                 .toProvider( service( CompositeTriggerFactoryRegistry.class ).single() );
-            bind( FlowFactoryRegistry.class )
-                .toProvider( service( CompositeFlowFactoryRegistry.class ).single() );
 
             bind( iterable( FlowFactory.class ) )
                 .toProvider( service( FlowFactory.class ).multiple() );
