@@ -26,7 +26,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.ops4j.pax.flow.api.Transformer;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.trigger.ManualTrigger;
 import org.ops4j.pax.flow.trigger.ServiceAvailableTrigger;
@@ -87,11 +86,19 @@ public class Activator
         {
             bind( export( TriggerFactory.class ) )
                 .annotatedWith( named( "manual" ) )
-                .toProvider( service( ManualTrigger.Factory.class ).export() );
+                .toProvider(
+                    service( ManualTrigger.Factory.class )
+                        .attributes( ManualTrigger.Factory.attributes() )
+                        .export()
+                );
 
             bind( export( TriggerFactory.class ) )
                 .annotatedWith( named( "serviceAvailable" ) )
-                .toProvider( service( ServiceAvailableTrigger.Factory.class ).export() );
+                .toProvider(
+                    service( ServiceAvailableTrigger.Factory.class )
+                        .attributes( ServiceAvailableTrigger.Factory.attributes() )
+                        .export()
+                );
         }
 
     }

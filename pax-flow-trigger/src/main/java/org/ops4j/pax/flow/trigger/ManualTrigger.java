@@ -18,6 +18,8 @@
 
 package org.ops4j.pax.flow.trigger;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.ExecutionTarget;
 import org.ops4j.pax.flow.api.Trigger;
@@ -65,11 +67,13 @@ public class ManualTrigger
         implements TriggerFactory<ManualTrigger>
     {
 
+        public static final TriggerType TYPE = triggerType( ManualTrigger.class );
+
         private long m_counter;
 
         public TriggerType type()
         {
-            return triggerType( ManualTrigger.class );
+            return TYPE;
         }
 
         public ManualTrigger create( final Configuration configuration,
@@ -80,6 +84,22 @@ public class ManualTrigger
                 target
             );
         }
+
+        @Override
+        public String toString()
+        {
+            return String.format( "Trigger factory for type [%s] (%d instances)", type(), m_counter );
+        }
+
+        public static Map<String, String> attributes()
+        {
+            final Map<String, String> attributes = new HashMap<String, String>();
+
+            attributes.put( "triggerType", TYPE.toString() );
+
+            return attributes;
+        }
+        
     }
 
 }

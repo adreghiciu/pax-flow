@@ -1,5 +1,7 @@
 package org.ops4j.pax.flow.runtime.setup.internal;
 
+import java.util.Map;
+import java.util.HashMap;
 import com.google.inject.Inject;
 import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.Flow;
@@ -57,6 +59,21 @@ public class ScheduleJobFlow
                 flowName( String.format( "%s::%d", type(), m_counter++ ) ),
                 m_transformer
             );
+        }
+
+        @Override
+        public String toString()
+        {
+            return String.format( "Flow factory for type [%s] (%d instances)", type(), m_counter );
+        }
+
+        public static Map<String, String> attributes()
+        {
+            final Map<String, String> attributes = new HashMap<String, String>();
+
+            attributes.put( "flowType", TYPE.toString() );
+
+            return attributes;
         }
 
     }

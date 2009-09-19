@@ -18,6 +18,8 @@
 
 package org.ops4j.pax.flow.trigger;
 
+import java.util.Map;
+import java.util.HashMap;
 import com.google.inject.Inject;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.flow.api.Configuration;
@@ -99,6 +101,8 @@ public class ServiceAvailableTrigger
         implements TriggerFactory<ServiceAvailableTrigger>
     {
 
+        public static final TriggerType TYPE = triggerType( ServiceAvailableTrigger.class );
+
         public static final PropertyName WATCHED_SERVICE_TYPE = propertyName( "watchedServiceType" );
         public static final PropertyName WATCHED_SERVICE_FILTER = propertyName( "watchedServiceFilter" );
 
@@ -118,7 +122,7 @@ public class ServiceAvailableTrigger
 
         public TriggerType type()
         {
-            return triggerType( ServiceAvailableTrigger.class );
+            return TYPE;
         }
 
         public ServiceAvailableTrigger create( final Configuration configuration,
@@ -141,6 +145,22 @@ public class ServiceAvailableTrigger
                 serviceFilter
             );
         }
+
+        @Override
+        public String toString()
+        {
+            return String.format( "Trigger factory for type [%s] (%d instances)", type(), m_counter );
+        }
+
+        public static Map<String, String> attributes()
+        {
+            final Map<String, String> attributes = new HashMap<String, String>();
+
+            attributes.put( "triggerType", TYPE.toString() );
+
+            return attributes;
+        }
+        
     }
 
 }

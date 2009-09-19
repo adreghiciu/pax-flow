@@ -92,7 +92,12 @@ public class Activator
         protected void configure()
         {
             bind( Transformer.class ).toProvider( service( Transformer.class ).single() );
-            bind( export( FlowFactory.class ) ).toProvider( service( ScheduleJobFlow.Factory.class ).export() );
+            bind( export( FlowFactory.class ) )
+                .toProvider(
+                    service( ScheduleJobFlow.Factory.class )
+                        .attributes( ScheduleJobFlow.Factory.attributes() )
+                        .export()
+                );
         }
 
     }
