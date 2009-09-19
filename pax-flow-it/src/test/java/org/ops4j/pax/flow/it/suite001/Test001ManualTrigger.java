@@ -31,7 +31,7 @@ import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.ExecutionTarget;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import static org.ops4j.pax.flow.api.TriggerName.*;
-import org.ops4j.pax.flow.it.BasicConfiguration;
+import org.ops4j.pax.flow.it.Cfg;
 import org.ops4j.pax.flow.trigger.ManualTrigger;
 import static org.ops4j.peaberry.Peaberry.*;
 
@@ -41,7 +41,7 @@ import static org.ops4j.peaberry.Peaberry.*;
  * @author Alin Dreghiciu
  */
 @RunWith( JUnit4TestRunner.class )
-@org.ops4j.pax.exam.junit.Configuration( extend = { BasicConfiguration.class } )
+@org.ops4j.pax.exam.junit.Configuration( extend = { Cfg.Triggers.class } )
 public class Test001ManualTrigger
 {
 
@@ -49,7 +49,7 @@ public class Test001ManualTrigger
     private BundleContext m_bundleContext;
 
     @Test
-    public void testMethod()
+    public void executeTrigger()
         throws Exception
     {
         final Injector injector = createInjector( osgiModule( m_bundleContext ), new Module() );

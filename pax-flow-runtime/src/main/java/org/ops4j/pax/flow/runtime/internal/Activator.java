@@ -17,6 +17,9 @@
  */
 package org.ops4j.pax.flow.runtime.internal;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.Executors;
 import com.google.inject.AbstractModule;
 import static com.google.inject.Guice.*;
 import com.google.inject.Inject;
@@ -71,6 +74,9 @@ public class Activator
         @Override
         protected void configure()
         {
+            // TODO make thread pool configurable
+            bind( ExecutorService.class ).toInstance( Executors.newFixedThreadPool( 10 ) );
+
             bind( TriggerFactoryRegistry.class )
                 .toProvider( service( CompositeTriggerFactoryRegistry.class ).single() );
             bind( FlowFactoryRegistry.class )
