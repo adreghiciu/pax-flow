@@ -73,7 +73,13 @@
       <artifactId>pax-flow-runtime</artifactId>
       <version>0.1.0-SNAPSHOT</version>
       <scope>test</scope>
-    </dependency> 
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.flow</groupId>
+      <artifactId>pax-flow-runtime-setup</artifactId>
+      <version>0.1.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>    
 
     <dependency>
       <groupId>org.ops4j</groupId>
