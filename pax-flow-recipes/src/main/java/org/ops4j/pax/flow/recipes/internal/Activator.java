@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.flow.runtime.setup.internal;
+package org.ops4j.pax.flow.recipes.internal;
 
 import com.google.inject.AbstractModule;
 import static com.google.inject.Guice.*;
@@ -31,7 +31,8 @@ import org.ops4j.pax.flow.api.Transformer;
 import static org.ops4j.pax.flow.api.TriggerType.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableJobDescription.*;
-import static org.ops4j.pax.flow.runtime.setup.internal.Properties.*;
+import org.ops4j.pax.flow.recipes.flow.ScanDirectoryForJobDescriptionsFlow;
+import org.ops4j.pax.flow.recipes.flow.ScheduleJobFlow;
 import org.ops4j.peaberry.Export;
 import static org.ops4j.peaberry.Peaberry.*;
 import static org.ops4j.peaberry.util.TypeLiterals.*;
@@ -66,7 +67,19 @@ public class Activator
                 withoutConfiguration(),
                 triggerType( "serviceAvailableTrigger" ),
                 immutableConfiguration(
-                    property( WATCHED_SERVICE_TYPE, JobDescription.class.getName() )
+                    property( Properties.WATCHED_SERVICE_TYPE, JobDescription.class.getName() )
+                )
+            )
+        );
+
+        m_transformer.schedule(
+            immutableJobDescription(
+                ScanDirectoryForJobDescriptionsFlow.Factory.TYPE,
+                withoutConfiguration(),
+                triggerType( "timer" ),
+                immutableConfiguration(
+                    property( Properties.INITIAL_DELAY, "${initialDelay:5s}" ),
+                    property( Properties.REPEAT_PERIOD, "${repeatPeriod:1m}" )
                 )
             )
         );

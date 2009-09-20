@@ -34,6 +34,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+    <ops4j.base.version>1.2.1</ops4j.base.version>
     <pax.swissbox.version>1.1.0</pax.swissbox.version>
     <pax.exam.version>1.2.0-SNAPSHOT</pax.exam.version>
 
@@ -76,6 +77,11 @@
         <version>4.1.0</version>
       </dependency>
       <!-- OPS4J -->
+      <dependency>
+        <groupId>org.ops4j.base</groupId>
+        <artifactId>ops4j-base-io</artifactId>
+        <version>${ops4j.base.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.ops4j.pax.swissbox</groupId>
         <artifactId>pax-swissbox-optional-jcl</artifactId>
@@ -127,6 +133,7 @@
     <module>pax-flow-trigger</module>
     <module>pax-flow-runtime</module>
     <module>pax-flow-runtime-setup</module>
+    <module>pax-flow-recipes</module>
   </modules>
 
   <profiles>
