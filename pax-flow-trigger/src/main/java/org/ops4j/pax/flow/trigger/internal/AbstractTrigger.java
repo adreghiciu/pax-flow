@@ -18,6 +18,8 @@
 
 package org.ops4j.pax.flow.trigger.internal;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.ExecutionTarget;
 import org.ops4j.pax.flow.api.Trigger;
@@ -32,6 +34,8 @@ import static org.ops4j.pax.flow.api.helpers.DefaultExecutionContext.*;
 public abstract class AbstractTrigger<T extends Trigger>
     implements Trigger
 {
+
+    private final Log LOG = LogFactory.getLog( this.getClass() );
 
     private final TriggerName m_name;
     private final ExecutionTarget m_target;
@@ -83,6 +87,7 @@ public abstract class AbstractTrigger<T extends Trigger>
         // VALIDATE executionContext
         try
         {
+            LOG.debug( String.format( "[%s] fires now %2$tH:%2$tM:%2$tS:%2$tL", this, System.currentTimeMillis() ) );
             m_target.execute( executionContext );
         }
         catch( Throwable ignore )

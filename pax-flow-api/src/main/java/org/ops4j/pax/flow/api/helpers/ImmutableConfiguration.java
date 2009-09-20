@@ -21,9 +21,12 @@ package org.ops4j.pax.flow.api.helpers;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.Property;
 import org.ops4j.pax.flow.api.PropertyName;
+import static org.ops4j.pax.flow.api.PropertyName.*;
 
 /**
  * JAVADOC
@@ -33,6 +36,11 @@ import org.ops4j.pax.flow.api.PropertyName;
 public class ImmutableConfiguration
     implements Configuration
 {
+
+    /**
+     * Pattern used for replacing placeholders.
+     */
+    private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile( "(.*?\\$\\{)([.[^\\$]]+?)(\\}.*)" );
 
     private final Map<PropertyName, Object> m_properties;
 
@@ -50,7 +58,14 @@ public class ImmutableConfiguration
 
     public <T> T get( final PropertyName name )
     {
-        return (T) m_properties.get( name );
+        final Object value = m_properties.get( name );
+        if( value != null
+            && value instanceof String
+            && !name.value().equals( value ) )
+        {
+            return (T) replacePlaceholders( (String) value );
+        }
+        return (T) value;
     }
 
     public <T> T get( final PropertyName name, final T defaultValue )
@@ -76,6 +91,53 @@ public class ImmutableConfiguration
     public static ImmutableConfiguration withoutConfiguration()
     {
         return new ImmutableConfiguration();
+    }
+
+    /**
+     * Replaces placeholders = ${*}.
+     *
+     * @param value the string where the place holders should be replaced
+     *
+     * @return replaced place holders or the original if there are no place holders or a value for place holder could
+     *         not be found
+     */
+    private String replacePlaceholders( final String value )
+    {
+        if( value == null )
+        {
+            return null;
+        }
+        String replaced = value;
+        String rest = value;
+        while( rest != null && rest.length() != 0 )
+        {
+            final Matcher matcher = PLACEHOLDER_PATTERN.matcher( rest );
+            if( matcher.matches() && matcher.groupCount() == 3 )
+            {
+                // groups 2 contains the placeholder name
+                final String placeholderName = matcher.group( 2 );
+                final String[] segments = placeholderName.split( ":" );
+                final Object placeholderValue = get( propertyName( segments[ 0 ] ) );
+                if( placeholderValue != null )
+                {
+                    replaced = replaced.replace( "${" + placeholderName + "}", placeholderValue.toString() );
+                }
+                else if( segments.length > 1 )
+                {
+                    replaced = replaced.replace( "${" + placeholderName + "}", segments[ 1 ] );
+                }
+                rest = matcher.group( 3 );
+            }
+            else
+            {
+                rest = null;
+            }
+        }
+        if( replaced != null && !replaced.equals( value ) )
+        {
+            replaced = replacePlaceholders( replaced );
+        }
+        return replaced;
     }
 
 }

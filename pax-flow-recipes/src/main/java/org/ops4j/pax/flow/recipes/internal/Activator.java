@@ -150,8 +150,8 @@ public class Activator
                     withoutConfiguration(),
                     triggerType( "fixedRateTimerTrigger" ),
                     immutableConfiguration(
-                        property( Properties.INITIAL_DELAY, "${initialDelay:5s}" ),
-                        property( Properties.REPEAT_PERIOD, "${repeatPeriod:1m}" )
+                        property( Properties.INITIAL_DELAY, "${default.initialDelay:5s}" ),
+                        property( Properties.REPEAT_PERIOD, "${default.repeatPeriod:1m}" )
                     )
                 )
             );
