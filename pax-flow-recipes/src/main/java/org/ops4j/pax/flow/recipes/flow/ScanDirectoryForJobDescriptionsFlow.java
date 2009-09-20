@@ -1,8 +1,8 @@
 package org.ops4j.pax.flow.recipes.flow;
 
 import java.io.File;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.FlowFactory;
@@ -14,8 +14,6 @@ import org.ops4j.pax.flow.api.helpers.ImmutableFlow;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
 import static org.ops4j.pax.flow.api.helpers.TypedConfiguration.*;
 import org.ops4j.pax.flow.recipes.action.ListDirectory;
-import org.ops4j.pax.flow.recipes.internal.Properties;
-import static org.ops4j.pax.flow.recipes.internal.Properties.*;
 import static org.ops4j.pax.flow.recipes.internal.Properties.*;
 
 /**

@@ -13,7 +13,6 @@ import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.FlowFactoryRegistry;
 import org.ops4j.pax.flow.api.JobDescription;
 import org.ops4j.pax.flow.api.Transformer;
-import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.api.TriggerFactoryRegistry;
 
@@ -29,7 +28,7 @@ public class DefaultTransformer
     private static final Log LOG = LogFactory.getLog( DefaultTransformer.class );
 
     private final ExecutorService m_executorService;
-    
+
     private final FlowFactoryRegistry m_flowFactoryRegistry;
     private final TriggerFactoryRegistry m_triggerFactoryRegistry;
 
@@ -77,17 +76,31 @@ public class DefaultTransformer
                 new Callable<Object>()
                 {
                     public Object call()
-                        throws Exception
                     {
-                        final FlowFactory flowFactory = m_flowFactoryRegistry.get( m_description.flowType() );
-                        if( flowFactory == null )
+                        try
                         {
-                            throw new Exception(
-                                format( "Could noy find a flow factory of type [%s]", m_description.flowType() )
+                            LOG.debug( format( "Starting flow of type [%s]", m_description.flowType() ) );
+                            final FlowFactory flowFactory = m_flowFactoryRegistry.get( m_description.flowType() );
+                            if( flowFactory == null )
+                            {
+                                LOG.warn(
+                                    format( "Could noy find a flow factory of type [%s]", m_description.flowType() )
+                                );
+                            }
+                            else
+                            {
+                                final Flow flow = flowFactory.create( m_description.flowConfiguration() );
+                                flow.execute( executionContext );
+                                LOG.debug( format( "Finished execution of [%s]", flow ) );
+                            }
+                        }
+                        catch( Throwable ignore )
+                        {
+                            LOG.warn(
+                                format( "Execution of [%s] could not be completed.", m_description.flowType() ),
+                                ignore
                             );
                         }
-                        final Flow flow = flowFactory.create( m_description.flowConfiguration() );
-                        flow.execute( executionContext );
                         return null;
                     }
                 }

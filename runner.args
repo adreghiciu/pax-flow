@@ -3,4 +3,8 @@ mvn:org.ops4j.pax.flow/pax-flow-runtime@update
 mvn:org.ops4j.pax.flow/pax-flow-trigger@update
 mvn:org.ops4j.pax.flow/pax-flow-recipes@update
 
+compendium
 peaberry/1.1.1
+log
+
+--vmOptions=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005

@@ -61,7 +61,7 @@ public class ImmutableFlow
                         for( Action action : m_actions )
                         {
                             final long duration = System.currentTimeMillis() - startTime;
-                            LOG.trace(
+                            LOG.debug(
                                 format(
                                     "Executing action [%s:%s] after %d millis from start", name(), action, duration
                                 )
@@ -77,9 +77,18 @@ public class ImmutableFlow
                     final long duration = System.currentTimeMillis() - startTime;
                     LOG.info( format( "Flow [%s] executed successfully in %d millis", name(), duration ) );
                 }
-            }
+            },
+            this.toString()
         );
         m_thread.start();
+        try
+        {
+            m_thread.join();
+        }
+        catch( InterruptedException ignore )
+        {
+            // ignore
+        }
     }
 
     public void cancel()
@@ -89,4 +98,11 @@ public class ImmutableFlow
             m_thread.interrupt();
         }
     }
+
+    @Override
+    public String toString()
+    {
+        return name().value();
+    }
+
 }

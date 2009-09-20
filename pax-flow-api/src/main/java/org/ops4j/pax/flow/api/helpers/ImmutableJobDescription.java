@@ -53,7 +53,7 @@ public class ImmutableJobDescription
     @Override
     public String toString()
     {
-        return String.format( "Flow fo type [%s] executed by [%s]", m_flowType, m_triggerType );
+        return String.format( "Flow fo type [%s] fired by [%s]", m_flowType, m_triggerType );
     }
 
     public static ImmutableJobDescription immutableJobDescription( final FlowType flowType,

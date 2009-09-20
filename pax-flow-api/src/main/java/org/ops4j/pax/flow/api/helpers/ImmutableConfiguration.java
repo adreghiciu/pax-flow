@@ -115,16 +115,23 @@ public class ImmutableConfiguration
             if( matcher.matches() && matcher.groupCount() == 3 )
             {
                 // groups 2 contains the placeholder name
-                final String placeholderName = matcher.group( 2 );
-                final String[] segments = placeholderName.split( ":" );
-                final Object placeholderValue = get( propertyName( segments[ 0 ] ) );
+                final String fullPlaceholderName = matcher.group( 2 );
+                String placeHolderName = fullPlaceholderName;
+                String defaultValue = null;
+                int indexOfSeparator = fullPlaceholderName.indexOf( ":" );
+                if( indexOfSeparator > 0 )
+                {
+                    placeHolderName = fullPlaceholderName.substring( 0, indexOfSeparator );
+                    defaultValue = fullPlaceholderName.substring( indexOfSeparator + 1 );
+                }
+                final Object placeholderValue = get( propertyName( placeHolderName ) );
                 if( placeholderValue != null )
                 {
-                    replaced = replaced.replace( "${" + placeholderName + "}", placeholderValue.toString() );
+                    replaced = replaced.replace( "${" + fullPlaceholderName + "}", placeholderValue.toString() );
                 }
-                else if( segments.length > 1 )
+                else if( defaultValue != null )
                 {
-                    replaced = replaced.replace( "${" + placeholderName + "}", segments[ 1 ] );
+                    replaced = replaced.replace( "${" + fullPlaceholderName + "}", defaultValue );
                 }
                 rest = matcher.group( 3 );
             }

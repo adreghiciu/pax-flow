@@ -1,11 +1,15 @@
 package org.ops4j.pax.flow.recipes.action;
 
 import java.io.File;
+import static java.lang.String.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.regex.Pattern;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ops4j.io.DirectoryLister;
 import org.ops4j.io.ListerUtils;
 import org.ops4j.pax.flow.api.Action;
@@ -20,6 +24,8 @@ import org.ops4j.pax.flow.api.PropertyName;
 public class ListDirectory
     implements Action
 {
+
+    private static final Log LOG = LogFactory.getLog( ListDirectory.class );
 
     public static final PropertyName FILES = PropertyName.propertyName( "files" );
 
@@ -59,10 +65,23 @@ public class ListDirectory
         throws Exception
     {
         final Collection<File> files = new ArrayList<File>();
-        for( URL url : m_lister.list() )
+
+        if( m_directory.exists() )
         {
-            files.add( new File( url.toURI() ) );
+            final List<URL> foundUrls = m_lister.list();
+
+            LOG.debug( format( "Found %d files in [%s]", foundUrls.size(), m_directory ) );
+
+            for( URL url : foundUrls )
+            {
+                files.add( new File( url.toURI() ) );
+            }
         }
+        else
+        {
+            LOG.debug( format( "Directory [%s] does not exist, so it cannot be scanned", m_directory ) );
+        }
+        
         context.set( FILES, files );
     }
 
@@ -76,7 +95,7 @@ public class ListDirectory
     @Override
     public String toString()
     {
-        return String.format(
+        return format(
             "Lists directory [%s] including(%s) excluding (%s) ",
             m_directory, Arrays.deepToString( m_includes ), Arrays.deepToString( m_excludes )
         );

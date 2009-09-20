@@ -147,11 +147,13 @@ public class Activator
             m_transformer.schedule(
                 immutableJobDescription(
                     ScanDirectoryForJobDescriptionsFlow.Factory.TYPE,
-                    withoutConfiguration(),
+                    immutableConfiguration(
+                        property( Properties.DIRECTORY, "${default.directory.jobs:./conf/jobs}" )
+                    ),
                     triggerType( "fixedRateTimerTrigger" ),
                     immutableConfiguration(
                         property( Properties.INITIAL_DELAY, "${default.initialDelay:5s}" ),
-                        property( Properties.REPEAT_PERIOD, "${default.repeatPeriod:1m}" )
+                        property( Properties.REPEAT_PERIOD, "${default.repeatPeriod:10s}" )
                     )
                 )
             );
