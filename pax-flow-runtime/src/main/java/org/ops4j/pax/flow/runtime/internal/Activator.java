@@ -108,7 +108,7 @@ public class Activator
             bind( FlowFactoryRegistry.class ).to( CompositeFlowFactoryRegistry.class );
             bind( TriggerFactoryRegistry.class ).to( CompositeTriggerFactoryRegistry.class );
 
-            // TODO make thread pool configurable
+            // TODO make number of threads configurable
             bind( ExecutorService.class ).toInstance( Executors.newFixedThreadPool( 10 ) );
             bind( export( Transformer.class ) ).toProvider( service( DefaultTransformer.class ).export() );
         }
