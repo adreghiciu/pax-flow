@@ -5,12 +5,12 @@ Bundle-SymbolicName:\
   ${bundle.symbolicName}; singleton:=true
 
 Import-Package:\
-  ${bundle.namespace}; version="${pom.version}", \
-  ${bundle.namespace}.helpers; version="${pom.version}", \
+  ${bundle.namespace}; version="${pom.version}",\
+  ${bundle.namespace}.helpers; version="${pom.version}",\
   org.apache.commons.logging; version="[1.0.4,2.0.0)"; resolution:=optional
 
 Export-Package:\
-  ${bundle.namespace}; version="${pom.version}", \
+  ${bundle.namespace}; version="${pom.version}",\
   ${bundle.namespace}.helpers; version="${pom.version}"
 
 Embed-Dependency:\
