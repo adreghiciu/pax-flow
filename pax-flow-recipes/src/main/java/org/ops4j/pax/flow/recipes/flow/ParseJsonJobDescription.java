@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import javax.xml.transform.Source;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.JsonFactory;
@@ -13,18 +11,20 @@ import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.ExecutionContext;
+import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.FlowType;
+import static org.ops4j.pax.flow.api.FlowType.*;
 import org.ops4j.pax.flow.api.JobDescription;
 import org.ops4j.pax.flow.api.Property;
 import static org.ops4j.pax.flow.api.Property.*;
 import org.ops4j.pax.flow.api.PropertyName;
 import static org.ops4j.pax.flow.api.PropertyName.*;
 import org.ops4j.pax.flow.api.TriggerType;
-import org.ops4j.pax.flow.api.Flow;
+import static org.ops4j.pax.flow.api.TriggerType.*;
+import org.ops4j.pax.flow.api.helpers.CancelableFlow;
 import org.ops4j.pax.flow.api.helpers.ImmutableConfiguration;
 import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
 import org.ops4j.pax.flow.api.helpers.ImmutableJobDescription;
-import org.ops4j.pax.flow.api.helpers.CancelableFlow;
 import static org.ops4j.pax.flow.api.helpers.ImmutableJobDescription.*;
 import static org.ops4j.pax.flow.api.helpers.TypedExecutionContext.*;
 
@@ -61,7 +61,7 @@ public class ParseJsonJobDescription
         {
             throw new Exception( "Parsed file is not in JSON format" );
         }
-        final Collection<Source> sources = new HashSet<Source>();
+
         try
         {
             while( jp.nextToken() != JsonToken.END_OBJECT )
@@ -78,7 +78,7 @@ public class ParseJsonJobDescription
 
                         if( "trigger".equals( currentName ) || "triggerType".equals( currentName ) )
                         {
-                            triggerType = TriggerType.triggerType( jp.getText() );
+                            triggerType = triggerType( jp.getText() );
                         }
                         else if( "config".equals( currentName ) || "configuration".equals( currentName ) )
                         {
@@ -96,7 +96,7 @@ public class ParseJsonJobDescription
 
                         if( "flow".equals( currentName ) || "flow".equals( currentName ) )
                         {
-                            triggerType = TriggerType.triggerType( jp.getText() );
+                            flowType = flowType( jp.getText() );
                         }
                         else if( "config".equals( currentName ) || "configuration".equals( currentName ) )
                         {

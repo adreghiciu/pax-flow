@@ -55,6 +55,20 @@ public class TypedConfiguration
         return (T) value;
     }
 
+    public <T> T optional( final PropertyName propertyName,
+                           final Class<T> propertyType,
+                           final T defaultValue )
+    {
+        // VALIDATE property name / type
+        Object value = optional( propertyName, propertyType );
+        if( value == null )
+        {
+            value = defaultValue;
+        }
+
+        return (T) value;
+    }
+
     public static TypedConfiguration typedConfiguration( final Configuration configuration )
     {
         return new TypedConfiguration( configuration );

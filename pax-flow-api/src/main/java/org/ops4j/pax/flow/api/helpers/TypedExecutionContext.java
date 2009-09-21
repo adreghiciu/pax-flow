@@ -40,9 +40,12 @@ public class TypedExecutionContext
         if( !propertyType.isAssignableFrom( value.getClass() ) )
         {
             value = convert( value, propertyType );
-            throw new IllegalStateException(
-                String.format( "Property [%s] must be of type [%s].", propertyName, propertyType.getName() )
-            );
+            if( value != null && !propertyType.isAssignableFrom( value.getClass() ) )
+            {
+                throw new IllegalStateException(
+                    String.format( "Property [%s] must be of type [%s].", propertyName, propertyType.getName() )
+                );
+            }
         }
 
         return (T) value;
@@ -52,12 +55,17 @@ public class TypedExecutionContext
                            final Class<T> propertyType )
     {
         // VALIDATE property name / type
-        final Object value = m_context.get( propertyName );
+        Object value = m_context.get( propertyName );
         if( value != null && !propertyType.isAssignableFrom( value.getClass() ) )
         {
-            throw new IllegalStateException(
-                String.format( "Property [%s] must be of type [%s].", propertyName, propertyType.getName() )
-            );
+            value = convert( value, propertyType );
+            if( value != null && !propertyType.isAssignableFrom( value.getClass() ) )
+            {
+
+                throw new IllegalStateException(
+                    String.format( "Property [%s] must be of type [%s].", propertyName, propertyType.getName() )
+                );
+            }
         }
 
         return (T) value;

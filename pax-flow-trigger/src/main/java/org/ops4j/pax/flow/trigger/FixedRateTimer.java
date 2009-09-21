@@ -161,8 +161,8 @@ public class FixedRateTimer
 
             final TypedConfiguration config = typedConfiguration( configuration );
 
-            final String initialDelay = config.mandatory( INITIAL_DELAY, String.class );
-            final String repeatPeriod = config.optional( REPEAT_PERIOD, String.class );
+            final String initialDelay = config.optional( INITIAL_DELAY, String.class, "0s" );
+            final String repeatPeriod = config.optional( REPEAT_PERIOD, String.class, "10s" );
 
             return new FixedRateTimer(
                 triggerName( String.format( "%s::%d", type(), m_counter++ ) ),

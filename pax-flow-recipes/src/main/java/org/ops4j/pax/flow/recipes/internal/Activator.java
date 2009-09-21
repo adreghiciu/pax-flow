@@ -127,7 +127,7 @@ public class Activator
                 immutableJobDescription(
                     ScheduleJobFlow.Factory.TYPE,
                     withoutConfiguration(),
-                    triggerType( "serviceAvailableTrigger" ),
+                    triggerType( "serviceAvailable" ),
                     immutableConfiguration(
                         property( Properties.WATCHED_SERVICE_TYPE, JobDescription.class.getName() )
                     )
@@ -150,7 +150,7 @@ public class Activator
                     immutableConfiguration(
                         property( Properties.DIRECTORY, "${default.directory.jobs:./conf/jobs}" )
                     ),
-                    triggerType( "fixedRateTimerTrigger" ),
+                    triggerType( "fixedRateTimer" ),
                     immutableConfiguration(
                         property( Properties.INITIAL_DELAY, "${default.initialDelay:5s}" ),
                         property( Properties.REPEAT_PERIOD, "${default.repeatPeriod:10s}" )

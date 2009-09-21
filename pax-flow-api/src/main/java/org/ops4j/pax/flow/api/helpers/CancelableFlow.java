@@ -46,10 +46,6 @@ public abstract class CancelableFlow
                     {
                         CancelableFlow.this.run( context );
                     }
-                    catch( RuntimeException e )
-                    {
-                        throw e;
-                    }
                     catch( Exception e )
                     {
                         throw new CarryException( e );
@@ -57,8 +53,11 @@ public abstract class CancelableFlow
                 }
             }
         );
+        final ExceptionCaptor captor = new ExceptionCaptor();
         try
         {
+            m_thread.setName( name().value() );
+            m_thread.setUncaughtExceptionHandler( captor );
             m_thread.start();
             m_thread.join();
         }
@@ -66,9 +65,20 @@ public abstract class CancelableFlow
         {
             // ignore
         }
-        catch( CarryException e )
+        finally
         {
-            throw (Exception) e.getCause();
+            if( captor.throwable != null )
+            {
+                if( captor.throwable instanceof CarryException )
+                {
+                    throw (Exception) captor.throwable.getCause();
+                }
+                else
+                {
+                    throw new RuntimeException( captor.throwable );
+                }
+            }
+
         }
     }
 
@@ -84,15 +94,27 @@ public abstract class CancelableFlow
     protected abstract void run( ExecutionContext context )
         throws Exception;
 
+    private static class ExceptionCaptor
+        implements Thread.UncaughtExceptionHandler
+    {
+
+        Throwable throwable;
+
+        public void uncaughtException( final Thread thread, final Throwable throwable )
+        {
+            this.throwable = throwable;
+        }
+
+    }
+
     private static class CarryException
         extends RuntimeException
     {
 
-        private CarryException( final Exception exception )
+        private CarryException( final Throwable throwable )
         {
-            super( exception );
+            super( throwable );
         }
     }
-
 
 }
