@@ -16,11 +16,21 @@ public abstract class CancelableFlow
 
     private Thread m_thread;
 
-    private final FlowName FLOW_NAME = flowName( this.getClass().getSimpleName() );
+    private FlowName m_flowName;
+
+    public CancelableFlow()
+    {
+        m_flowName = flowName( this.getClass().getSimpleName() );
+    }
+
+    public CancelableFlow( final FlowName flowName )
+    {
+        m_flowName = flowName;
+    }
 
     public FlowName name()
     {
-        return FLOW_NAME;
+        return m_flowName;
     }
 
     public void execute( final ExecutionContext context )

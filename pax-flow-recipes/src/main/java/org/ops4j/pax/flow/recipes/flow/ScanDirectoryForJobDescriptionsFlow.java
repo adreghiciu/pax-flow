@@ -12,8 +12,11 @@ import org.ops4j.pax.flow.api.FlowType;
 import static org.ops4j.pax.flow.api.FlowType.*;
 import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
+import org.ops4j.pax.flow.api.helpers.ForEachFlow;
 import static org.ops4j.pax.flow.api.helpers.TypedConfiguration.*;
-import org.ops4j.pax.flow.recipes.action.ListDirectory;
+import org.ops4j.pax.flow.recipes.flow.ListDirectory;
+import org.ops4j.pax.flow.recipes.flow.ParseJsonJobDescription;
+import org.ops4j.pax.flow.recipes.flow.ScheduleJob;
 import static org.ops4j.pax.flow.recipes.internal.Properties.*;
 
 /**
@@ -33,7 +36,9 @@ public class ScanDirectoryForJobDescriptionsFlow
     {
         super(
             flowName,
-            new ListDirectory( directory, includes, excludes )
+            new ListDirectory( directory, includes, excludes ),
+            new ForEachFlow( new ParseJsonJobDescription(), ListDirectory.FILES, ParseJsonJobDescription.FILE),
+            new ScheduleJob( )
         );
     }
 

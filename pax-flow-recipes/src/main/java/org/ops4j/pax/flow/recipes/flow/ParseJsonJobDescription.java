@@ -1,4 +1,4 @@
-package org.ops4j.pax.flow.recipes.action;
+package org.ops4j.pax.flow.recipes.flow;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +41,6 @@ public class ParseJsonJobDescription
     private static final Log LOG = LogFactory.getLog( ParseJsonJobDescription.class );
 
     public static final PropertyName FILE = propertyName( "file" );
-    public static final PropertyName JOB_DESCRIPTION = propertyName( "jobDescription" );
 
     @Override
     protected void run( final ExecutionContext context )
@@ -117,7 +116,7 @@ public class ParseJsonJobDescription
             final ImmutableJobDescription description = immutableJobDescription(
                 flowType, flowConfig, triggerType, triggerConfig
             );
-            context.set( JOB_DESCRIPTION, description );
+            context.set( ScheduleJob.JOB_DESCRIPTION, description );
         }
         else
         {

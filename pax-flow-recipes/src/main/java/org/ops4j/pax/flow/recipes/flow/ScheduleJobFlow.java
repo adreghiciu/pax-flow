@@ -13,8 +13,8 @@ import org.ops4j.pax.flow.api.JobDescription;
 import org.ops4j.pax.flow.api.Transformer;
 import static org.ops4j.pax.flow.api.FlowType.*;
 import org.ops4j.pax.flow.api.helpers.SequentialFlow;
-import org.ops4j.pax.flow.recipes.action.CopyProperty;
-import org.ops4j.pax.flow.recipes.action.ScheduleJob;
+import org.ops4j.pax.flow.recipes.flow.CopyProperty;
+import org.ops4j.pax.flow.recipes.flow.ScheduleJob;
 import org.ops4j.pax.flow.recipes.internal.Properties;
 
 /**
