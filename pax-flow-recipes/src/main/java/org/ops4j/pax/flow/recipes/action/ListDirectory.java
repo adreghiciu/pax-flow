@@ -12,9 +12,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.io.DirectoryLister;
 import org.ops4j.io.ListerUtils;
-import org.ops4j.pax.flow.api.Action;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.PropertyName;
+import org.ops4j.pax.flow.api.Flow;
+import org.ops4j.pax.flow.api.helpers.CancelableFlow;
 
 /**
  * Lists a file system directory.
@@ -22,7 +23,8 @@ import org.ops4j.pax.flow.api.PropertyName;
  * @author Alin Dreghiciu
  */
 public class ListDirectory
-    implements Action
+    extends CancelableFlow
+    implements Flow
 {
 
     private static final Log LOG = LogFactory.getLog( ListDirectory.class );
@@ -47,21 +49,7 @@ public class ListDirectory
         m_lister = new DirectoryLister( m_directory, m_includes, m_excludes );
     }
 
-    private Pattern[] asPatterns( final String[] patterns )
-    {
-        if( patterns == null || patterns.length == 0 )
-        {
-            return new Pattern[0];
-        }
-        final Collection<Pattern> converted = new ArrayList<Pattern>();
-        for( String pattern : patterns )
-        {
-            converted.add( ListerUtils.parseFilter( pattern ) );
-        }
-        return converted.toArray( new Pattern[converted.size()] );
-    }
-
-    public void execute( final ExecutionContext context )
+    public void run( final ExecutionContext context )
         throws Exception
     {
         final Collection<File> files = new ArrayList<File>();
@@ -85,13 +73,6 @@ public class ListDirectory
         context.set( FILES, files );
     }
 
-    public void cancel()
-        throws Exception
-    {
-        // TODO implement method
-        throw new UnsupportedOperationException();
-    }
-
     @Override
     public String toString()
     {
@@ -100,4 +81,19 @@ public class ListDirectory
             m_directory, Arrays.deepToString( m_includes ), Arrays.deepToString( m_excludes )
         );
     }
+
+    private Pattern[] asPatterns( final String[] patterns )
+    {
+        if( patterns == null || patterns.length == 0 )
+        {
+            return new Pattern[0];
+        }
+        final Collection<Pattern> converted = new ArrayList<Pattern>();
+        for( String pattern : patterns )
+        {
+            converted.add( ListerUtils.parseFilter( pattern ) );
+        }
+        return converted.toArray( new Pattern[converted.size()] );
+    }
+
 }

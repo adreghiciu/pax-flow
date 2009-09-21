@@ -1,9 +1,10 @@
 package org.ops4j.pax.flow.recipes.action;
 
-import org.ops4j.pax.flow.api.Action;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.PropertyName;
+import org.ops4j.pax.flow.api.Flow;
 import static org.ops4j.pax.flow.api.helpers.TypedExecutionContext.*;
+import org.ops4j.pax.flow.api.helpers.CancelableFlow;
 
 /**
  * Copy a property (source), from {@link ExecutionContext} to another property (target).
@@ -11,7 +12,8 @@ import static org.ops4j.pax.flow.api.helpers.TypedExecutionContext.*;
  * @author Alin Dreghiciu
  */
 public class CopyProperty<T>
-    implements Action
+    extends CancelableFlow
+    implements Flow
 {
 
     private final PropertyName m_source;
@@ -28,18 +30,10 @@ public class CopyProperty<T>
         m_propertyType = propertyType;
     }
 
-    public void execute( final ExecutionContext context )
-        throws Exception
+    public void run( final ExecutionContext context )
     {
         final T source = typedExecutionContext( context ).mandatory( m_source, m_propertyType );
         context.set( m_target, source );
-    }
-
-    public void cancel()
-        throws Exception
-    {
-        // TODO implement method
-        throw new UnsupportedOperationException();
     }
 
     @Override

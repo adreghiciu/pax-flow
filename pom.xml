@@ -98,6 +98,12 @@
         <artifactId>guice</artifactId>
         <version>2.0</version>
       </dependency>
+      <!-- JSON parsing -->
+      <dependency>
+        <groupId>org.codehaus.jackson</groupId>
+        <artifactId>jackson-core-asl</artifactId>
+        <version>1.2.0</version>
+      </dependency>
 
       <!-- Test dependencies-->
       <dependency>

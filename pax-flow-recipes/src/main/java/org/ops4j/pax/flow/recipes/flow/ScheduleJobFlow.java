@@ -12,7 +12,7 @@ import org.ops4j.pax.flow.api.FlowType;
 import org.ops4j.pax.flow.api.JobDescription;
 import org.ops4j.pax.flow.api.Transformer;
 import static org.ops4j.pax.flow.api.FlowType.*;
-import org.ops4j.pax.flow.api.helpers.ImmutableFlow;
+import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.recipes.action.CopyProperty;
 import org.ops4j.pax.flow.recipes.action.ScheduleJob;
 import org.ops4j.pax.flow.recipes.internal.Properties;
@@ -23,7 +23,7 @@ import org.ops4j.pax.flow.recipes.internal.Properties;
  * @author Alin Dreghiciu
  */
 public class ScheduleJobFlow
-    extends ImmutableFlow
+    extends SequentialFlow
     implements Flow
 {
 

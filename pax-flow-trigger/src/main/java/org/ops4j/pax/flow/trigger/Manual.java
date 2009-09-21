@@ -35,25 +35,25 @@ import org.ops4j.pax.flow.trigger.internal.AbstractTrigger;
  *
  * @author Alin Dreghiciu
  */
-public class ManualTrigger
-    extends AbstractTrigger<ManualTrigger>
+public class Manual
+    extends AbstractTrigger<Manual>
     implements Trigger
 {
 
-    public ManualTrigger( final TriggerName name,
+    public Manual( final TriggerName name,
                           final ExecutionTarget target )
     {
         super( name, target );
     }
 
     @Override
-    public ManualTrigger fire()
+    public Manual fire()
     {
         return super.fire();
     }
 
     @Override
-    protected ManualTrigger itself()
+    protected Manual itself()
     {
         return this;
     }
@@ -64,10 +64,10 @@ public class ManualTrigger
      * @author Alin Dreghiciu
      */
     public static class Factory
-        implements TriggerFactory<ManualTrigger>
+        implements TriggerFactory<Manual>
     {
 
-        public static final TriggerType TYPE = triggerType( ManualTrigger.class );
+        public static final TriggerType TYPE = triggerType( Manual.class );
 
         private long m_counter;
 
@@ -76,10 +76,10 @@ public class ManualTrigger
             return TYPE;
         }
 
-        public ManualTrigger create( final Configuration configuration,
+        public Manual create( final Configuration configuration,
                                      final ExecutionTarget target )
         {
-            return new ManualTrigger(
+            return new Manual(
                 triggerName( String.format( "%s::%d", type(), m_counter++ ) ),
                 target
             );

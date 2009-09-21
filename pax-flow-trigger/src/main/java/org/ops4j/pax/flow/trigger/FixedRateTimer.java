@@ -46,12 +46,12 @@ import org.ops4j.pax.flow.trigger.internal.TimerUtils;
  *
  * @author Alin Dreghiciu
  */
-public class FixedRateTimerTrigger
-    extends AbstractTrigger<FixedRateTimerTrigger>
+public class FixedRateTimer
+    extends AbstractTrigger<FixedRateTimer>
     implements Trigger
 {
 
-    private static final Log LOG = LogFactory.getLog( FixedRateTimerTrigger.class );
+    private static final Log LOG = LogFactory.getLog( FixedRateTimer.class );
 
     private final ScheduledExecutorService m_executorService;
 
@@ -60,7 +60,7 @@ public class FixedRateTimerTrigger
 
     private ScheduledFuture<?> m_scheduledFuture;
 
-    public FixedRateTimerTrigger( final TriggerName name,
+    public FixedRateTimer( final TriggerName name,
                                   final ExecutionTarget target,
                                   final ScheduledExecutorService executorService,
                                   final long initialDelay,
@@ -74,7 +74,7 @@ public class FixedRateTimerTrigger
     }
 
     @Override
-    public FixedRateTimerTrigger start()
+    public FixedRateTimer start()
         throws Exception
     {
         if( !isStarted() )
@@ -98,7 +98,7 @@ public class FixedRateTimerTrigger
     }
 
     @Override
-    public FixedRateTimerTrigger stop()
+    public FixedRateTimer stop()
     {
         if( isStarted() )
         {
@@ -110,7 +110,7 @@ public class FixedRateTimerTrigger
     }
 
     @Override
-    protected FixedRateTimerTrigger itself()
+    protected FixedRateTimer itself()
     {
         return this;
     }
@@ -131,10 +131,10 @@ public class FixedRateTimerTrigger
      * @author Alin Dreghiciu
      */
     public static class Factory
-        implements TriggerFactory<FixedRateTimerTrigger>
+        implements TriggerFactory<FixedRateTimer>
     {
 
-        public static final TriggerType TYPE = triggerType( FixedRateTimerTrigger.class );
+        public static final TriggerType TYPE = triggerType( FixedRateTimer.class );
 
         public static final PropertyName INITIAL_DELAY = propertyName( "initialDelay" );
         public static final PropertyName REPEAT_PERIOD = propertyName( "repeatPeriod" );
@@ -155,7 +155,7 @@ public class FixedRateTimerTrigger
             return TYPE;
         }
 
-        public FixedRateTimerTrigger create( final Configuration configuration,
+        public FixedRateTimer create( final Configuration configuration,
                                              final ExecutionTarget target )
         {
 
@@ -164,7 +164,7 @@ public class FixedRateTimerTrigger
             final String initialDelay = config.mandatory( INITIAL_DELAY, String.class );
             final String repeatPeriod = config.optional( REPEAT_PERIOD, String.class );
 
-            return new FixedRateTimerTrigger(
+            return new FixedRateTimer(
                 triggerName( String.format( "%s::%d", type(), m_counter++ ) ),
                 target,
                 m_executorService,

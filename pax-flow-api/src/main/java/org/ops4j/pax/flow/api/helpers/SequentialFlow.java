@@ -3,7 +3,6 @@ package org.ops4j.pax.flow.api.helpers;
 import static java.lang.String.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ops4j.pax.flow.api.Action;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.FlowName;
@@ -13,30 +12,30 @@ import org.ops4j.pax.flow.api.FlowName;
  *
  * @author Alin Dreghiciu
  */
-public class ImmutableFlow
+public class SequentialFlow
     implements Flow
 {
 
-    private static final Log LOG = LogFactory.getLog( ImmutableFlow.class );
+    private static final Log LOG = LogFactory.getLog( SequentialFlow.class );
 
     private final FlowName m_flowName;
 
-    private final Action[] m_actions;
+    private final Flow[] m_flows;
 
     private Thread m_thread;
 
-    public ImmutableFlow( final FlowName flowName,
-                          final Action... actions )
+    public SequentialFlow( final FlowName flowName,
+                          final Flow... flows )
     {
         // VALIDATE
         m_flowName = flowName;
-        if( actions == null )
+        if( flows == null )
         {
-            m_actions = new Action[0];
+            m_flows = new Flow[0];
         }
         else
         {
-            m_actions = actions;
+            m_flows = flows;
         }
     }
 
@@ -58,15 +57,15 @@ public class ImmutableFlow
 
                     try
                     {
-                        for( Action action : m_actions )
+                        for( Flow flow : m_flows )
                         {
                             final long duration = System.currentTimeMillis() - startTime;
                             LOG.debug(
                                 format(
-                                    "Executing action [%s:%s] after %d millis from start", name(), action, duration
+                                    "Executing flow [%s:%s] after %d millis from start", name(), flow, duration
                                 )
                             );
-                            action.execute( context );
+                            flow.execute( context );
                         }
                     }
                     catch( Exception e )
@@ -80,10 +79,10 @@ public class ImmutableFlow
             },
             this.toString()
         );
-        m_thread.start();
         try
         {
             m_thread.join();
+            m_thread.start();
         }
         catch( InterruptedException ignore )
         {

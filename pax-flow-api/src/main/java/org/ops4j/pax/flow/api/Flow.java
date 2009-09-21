@@ -24,9 +24,14 @@ package org.ops4j.pax.flow.api;
  * @author Alin Dreghiciu
  */
 public interface Flow
-    extends Action
 {
 
     FlowName name();
+
+    void execute( ExecutionContext context )
+        throws Exception;
+
+    void cancel()
+        throws Exception;
 
 }

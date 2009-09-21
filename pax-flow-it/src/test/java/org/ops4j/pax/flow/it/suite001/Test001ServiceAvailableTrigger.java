@@ -33,7 +33,7 @@ import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.ExecutionTarget;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.it.Cfg;
-import org.ops4j.pax.flow.trigger.ServiceAvailableTrigger;
+import org.ops4j.pax.flow.trigger.ServiceAvailable;
 import static org.ops4j.peaberry.Peaberry.*;
 
 /**
@@ -57,12 +57,12 @@ public class Test001ServiceAvailableTrigger
 
         injector.injectMembers( this );
 
-        final TriggerFactory<ServiceAvailableTrigger> factory = injector.getInstance(
-            ServiceAvailableTrigger.Factory.class
+        final TriggerFactory<ServiceAvailable> factory = injector.getInstance(
+            ServiceAvailable.Factory.class
         );
 
         final Configuration config = mock( Configuration.class );
-        when( config.<Object>get( ServiceAvailableTrigger.Factory.WATCHED_SERVICE_TYPE ) )
+        when( config.<Object>get( ServiceAvailable.Factory.WATCHED_SERVICE_TYPE ) )
             .thenReturn( TestService.class.getName() );
 
         final ExecutionTarget target = mock( ExecutionTarget.class );
@@ -77,7 +77,7 @@ public class Test001ServiceAvailableTrigger
 
         assertNotNull(
             "There a 'service' property",
-            usedExecutionContext.getValue().get( ServiceAvailableTrigger.SERVICE )
+            usedExecutionContext.getValue().get( ServiceAvailable.SERVICE )
         );
     }
 

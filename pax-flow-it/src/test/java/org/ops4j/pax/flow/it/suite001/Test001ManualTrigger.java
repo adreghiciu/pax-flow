@@ -30,9 +30,8 @@ import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.ExecutionTarget;
 import org.ops4j.pax.flow.api.TriggerFactory;
-import static org.ops4j.pax.flow.api.TriggerName.*;
 import org.ops4j.pax.flow.it.Cfg;
-import org.ops4j.pax.flow.trigger.ManualTrigger;
+import org.ops4j.pax.flow.trigger.Manual;
 import static org.ops4j.peaberry.Peaberry.*;
 
 /**
@@ -56,8 +55,8 @@ public class Test001ManualTrigger
 
         injector.injectMembers( this );
 
-        final TriggerFactory<ManualTrigger> factory = injector.getInstance(
-            ManualTrigger.Factory.class
+        final TriggerFactory<Manual> factory = injector.getInstance(
+            Manual.Factory.class
         );
 
         final Configuration config = mock( Configuration.class );

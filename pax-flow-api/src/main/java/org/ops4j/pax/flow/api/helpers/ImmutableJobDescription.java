@@ -19,7 +19,7 @@ public class ImmutableJobDescription
     private final TriggerType m_triggerType;
     private final Configuration m_triggerConfiguration;
 
-    public ImmutableJobDescription( final FlowType flowType,
+    private ImmutableJobDescription( final FlowType flowType,
                                     final Configuration flowConfiguration,
                                     final TriggerType triggerType,
                                     final Configuration triggerConfiguration )

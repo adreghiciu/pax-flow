@@ -29,9 +29,9 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.flow.api.TriggerFactory;
-import org.ops4j.pax.flow.trigger.FixedRateTimerTrigger;
-import org.ops4j.pax.flow.trigger.ManualTrigger;
-import org.ops4j.pax.flow.trigger.ServiceAvailableTrigger;
+import org.ops4j.pax.flow.trigger.FixedRateTimer;
+import org.ops4j.pax.flow.trigger.Manual;
+import org.ops4j.pax.flow.trigger.ServiceAvailable;
 import org.ops4j.peaberry.Export;
 import static org.ops4j.peaberry.Peaberry.*;
 import static org.ops4j.peaberry.util.TypeLiterals.*;
@@ -106,24 +106,24 @@ public class Activator
             bind( export( TriggerFactory.class ) )
                 .annotatedWith( named( MANUAL ) )
                 .toProvider(
-                    service( ManualTrigger.Factory.class )
-                        .attributes( ManualTrigger.Factory.attributes() )
+                    service( Manual.Factory.class )
+                        .attributes( Manual.Factory.attributes() )
                         .export()
                 );
 
             bind( export( TriggerFactory.class ) )
                 .annotatedWith( named( SERVICE_AVAILABLE ) )
                 .toProvider(
-                    service( ServiceAvailableTrigger.Factory.class )
-                        .attributes( ServiceAvailableTrigger.Factory.attributes() )
+                    service( ServiceAvailable.Factory.class )
+                        .attributes( ServiceAvailable.Factory.attributes() )
                         .export()
                 );
 
             bind( export( TriggerFactory.class ) )
                 .annotatedWith( named( TIMER ) )
                 .toProvider(
-                    service( FixedRateTimerTrigger.Factory.class )
-                        .attributes( FixedRateTimerTrigger.Factory.attributes() )
+                    service( FixedRateTimer.Factory.class )
+                        .attributes( FixedRateTimer.Factory.attributes() )
                         .export()
                 );
         }

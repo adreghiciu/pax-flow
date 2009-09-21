@@ -23,16 +23,10 @@ import static com.google.inject.Guice.*;
 import com.google.inject.Injector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.mockito.Mockito.*;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
-import org.ops4j.pax.flow.api.ExecutionContext;
-import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.Transformer;
-import org.ops4j.pax.flow.api.helpers.ImmutableJobDescription;
-import static org.ops4j.pax.flow.api.TriggerName.*;
 import org.ops4j.pax.flow.it.Cfg;
-import org.ops4j.pax.flow.trigger.ManualTrigger;
 import static org.ops4j.peaberry.Peaberry.*;
 
 /**

@@ -47,8 +47,8 @@ import static org.ops4j.peaberry.util.Filters.*;
  *
  * @author Alin Dreghiciu
  */
-public class ServiceAvailableTrigger
-    extends AbstractTrigger<ServiceAvailableTrigger>
+public class ServiceAvailable
+    extends AbstractTrigger<ServiceAvailable>
     implements Trigger
 {
 
@@ -56,7 +56,7 @@ public class ServiceAvailableTrigger
 
     private final ServiceRegistry m_serviceRegistry;
 
-    public ServiceAvailableTrigger( final TriggerName name,
+    public ServiceAvailable( final TriggerName name,
                                     final ExecutionTarget target,
                                     final ServiceRegistry serviceRegistry,
                                     final Class<?> serviceClass,
@@ -87,7 +87,7 @@ public class ServiceAvailableTrigger
     }
 
     @Override
-    protected ServiceAvailableTrigger itself()
+    protected ServiceAvailable itself()
     {
         return this;
     }
@@ -98,10 +98,10 @@ public class ServiceAvailableTrigger
      * @author Alin Dreghiciu
      */
     public static class Factory
-        implements TriggerFactory<ServiceAvailableTrigger>
+        implements TriggerFactory<ServiceAvailable>
     {
 
-        public static final TriggerType TYPE = triggerType( ServiceAvailableTrigger.class );
+        public static final TriggerType TYPE = triggerType( ServiceAvailable.class );
 
         public static final PropertyName WATCHED_SERVICE_TYPE = propertyName( "watchedServiceType" );
         public static final PropertyName WATCHED_SERVICE_FILTER = propertyName( "watchedServiceFilter" );
@@ -125,7 +125,7 @@ public class ServiceAvailableTrigger
             return TYPE;
         }
 
-        public ServiceAvailableTrigger create( final Configuration configuration,
+        public ServiceAvailable create( final Configuration configuration,
                                                final ExecutionTarget target )
             throws ClassNotFoundException
         {
@@ -137,7 +137,7 @@ public class ServiceAvailableTrigger
 
             final Class serviceClass = m_bundleContext.getBundle().loadClass( serviceClassName );
 
-            return new ServiceAvailableTrigger(
+            return new ServiceAvailable(
                 triggerName( String.format( "%s::%d", type(), m_counter++ ) ),
                 target,
                 m_serviceRegistry,

@@ -11,8 +11,12 @@ import static org.ops4j.pax.flow.api.PropertyName.*;
 public class Properties
 {
 
+    // Execution environment
+
     public static final PropertyName SERVICE = propertyName( "service" );
     public static final PropertyName JOB = propertyName( "job" );
+
+    // Configuration properties
 
     public static final PropertyName WATCHED_SERVICE_TYPE = propertyName( "watchedServiceType" );
     public static final PropertyName WATCHED_SERVICE_FILTER = propertyName( "watchedServiceFilter" );

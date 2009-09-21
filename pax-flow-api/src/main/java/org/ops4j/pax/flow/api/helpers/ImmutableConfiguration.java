@@ -18,6 +18,7 @@
 
 package org.ops4j.pax.flow.api.helpers;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -86,6 +87,15 @@ public class ImmutableConfiguration
     public static ImmutableConfiguration immutableConfiguration( final Property<?>... properties )
     {
         return new ImmutableConfiguration( properties );
+    }
+
+    public static ImmutableConfiguration immutableConfiguration( final Collection<Property<?>> properties )
+    {
+        if( properties == null )
+        {
+            return new ImmutableConfiguration( null );
+        }
+        return new ImmutableConfiguration( properties.toArray( new Property<?>[properties.size()] ) );
     }
 
     public static ImmutableConfiguration withoutConfiguration()

@@ -10,7 +10,7 @@ import org.ops4j.pax.flow.api.FlowName;
 import static org.ops4j.pax.flow.api.FlowName.*;
 import org.ops4j.pax.flow.api.FlowType;
 import static org.ops4j.pax.flow.api.FlowType.*;
-import org.ops4j.pax.flow.api.helpers.ImmutableFlow;
+import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
 import static org.ops4j.pax.flow.api.helpers.TypedConfiguration.*;
 import org.ops4j.pax.flow.recipes.action.ListDirectory;
@@ -22,7 +22,7 @@ import static org.ops4j.pax.flow.recipes.internal.Properties.*;
  * @author Alin Dreghiciu
  */
 public class ScanDirectoryForJobDescriptionsFlow
-    extends ImmutableFlow
+    extends SequentialFlow
     implements Flow
 {
 
