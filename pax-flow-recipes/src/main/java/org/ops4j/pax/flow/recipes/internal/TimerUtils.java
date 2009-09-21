@@ -1,4 +1,4 @@
-package org.ops4j.pax.flow.trigger.internal;
+package org.ops4j.pax.flow.recipes.internal;
 
 /**
  * JAVADOC

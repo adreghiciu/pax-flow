@@ -33,7 +33,7 @@ import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.ExecutionTarget;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.it.Cfg;
-import org.ops4j.pax.flow.trigger.ServiceAvailable;
+import org.ops4j.pax.flow.recipes.trigger.ServiceAvailable;
 import static org.ops4j.peaberry.Peaberry.*;
 
 /**

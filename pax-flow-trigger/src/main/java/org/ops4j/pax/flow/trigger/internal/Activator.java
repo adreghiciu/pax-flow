@@ -17,24 +17,13 @@
  */
 package org.ops4j.pax.flow.trigger.internal;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import com.google.inject.AbstractModule;
 import static com.google.inject.Guice.*;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import static com.google.inject.name.Names.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.ops4j.pax.flow.api.TriggerFactory;
-import org.ops4j.pax.flow.trigger.FixedRateTimer;
-import org.ops4j.pax.flow.trigger.Manual;
-import org.ops4j.pax.flow.trigger.ServiceAvailable;
-import org.ops4j.peaberry.Export;
 import static org.ops4j.peaberry.Peaberry.*;
-import static org.ops4j.peaberry.util.TypeLiterals.*;
 
 /**
  * JAVADOC
@@ -46,18 +35,6 @@ public class Activator
 {
 
     private static final Log LOG = LogFactory.getLog( Activator.class );
-
-    @Inject
-    @Named( Module.MANUAL )
-    private Export<TriggerFactory> m_mtExport;
-
-    @Inject
-    @Named( Module.SERVICE_AVAILABLE )
-    private Export<TriggerFactory> m_satExport;
-
-    @Inject
-    @Named( Module.TIMER )
-    private Export<TriggerFactory> m_ttExport;
 
     public void start( final BundleContext bundleContext )
         throws Exception
@@ -72,60 +49,17 @@ public class Activator
     public void stop( final BundleContext bundleContext )
         throws Exception
     {
-        if( m_mtExport != null )
-        {
-            m_mtExport.unput();
-            m_mtExport = null;
-        }
-        if( m_satExport != null )
-        {
-            m_satExport.unput();
-            m_satExport = null;
-        }
-        if( m_ttExport != null )
-        {
-            m_ttExport.unput();
-            m_ttExport = null;
-        }
+
         LOG.info( "Default triggers un-installed" );
     }
 
     private static class Module extends AbstractModule
     {
 
-        private static final String SERVICE_AVAILABLE = "serviceAvailableTrigger";
-        private static final String MANUAL = "manualTriger";
-        private static final String TIMER = "fixedRateTimerTrigger";
-
         @Override
         protected void configure()
         {
-            // TODO make number of threads configurable
-            bind( ScheduledExecutorService.class ).toInstance( Executors.newScheduledThreadPool( 5 ) );
 
-            bind( export( TriggerFactory.class ) )
-                .annotatedWith( named( MANUAL ) )
-                .toProvider(
-                    service( Manual.Factory.class )
-                        .attributes( Manual.Factory.attributes() )
-                        .export()
-                );
-
-            bind( export( TriggerFactory.class ) )
-                .annotatedWith( named( SERVICE_AVAILABLE ) )
-                .toProvider(
-                    service( ServiceAvailable.Factory.class )
-                        .attributes( ServiceAvailable.Factory.attributes() )
-                        .export()
-                );
-
-            bind( export( TriggerFactory.class ) )
-                .annotatedWith( named( TIMER ) )
-                .toProvider(
-                    service( FixedRateTimer.Factory.class )
-                        .attributes( FixedRateTimer.Factory.attributes() )
-                        .export()
-                );
         }
 
     }

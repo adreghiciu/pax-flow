@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.trigger;
+package org.ops4j.pax.flow.recipes.trigger;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import com.google.inject.Inject;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.flow.api.Configuration;
@@ -36,7 +36,7 @@ import org.ops4j.pax.flow.api.helpers.DefaultExecutionContext;
 import static org.ops4j.pax.flow.api.helpers.DefaultExecutionContext.*;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
 import static org.ops4j.pax.flow.api.helpers.TypedConfiguration.*;
-import org.ops4j.pax.flow.trigger.internal.AbstractTrigger;
+import org.ops4j.pax.flow.recipes.internal.AbstractTrigger;
 import org.ops4j.peaberry.Import;
 import org.ops4j.peaberry.ServiceRegistry;
 import org.ops4j.peaberry.util.AbstractWatcher;
@@ -57,10 +57,10 @@ public class ServiceAvailable
     private final ServiceRegistry m_serviceRegistry;
 
     public ServiceAvailable( final TriggerName name,
-                                    final ExecutionTarget target,
-                                    final ServiceRegistry serviceRegistry,
-                                    final Class<?> serviceClass,
-                                    final String serviceFilter )
+                             final ExecutionTarget target,
+                             final ServiceRegistry serviceRegistry,
+                             final Class<?> serviceClass,
+                             final String serviceFilter )
     {
         super( name, target );
         // VALIDATE
@@ -126,7 +126,7 @@ public class ServiceAvailable
         }
 
         public ServiceAvailable create( final Configuration configuration,
-                                               final ExecutionTarget target )
+                                        final ExecutionTarget target )
             throws ClassNotFoundException
         {
 
@@ -160,7 +160,7 @@ public class ServiceAvailable
 
             return attributes;
         }
-        
+
     }
 
 }

@@ -17,6 +17,8 @@
  */
 package org.ops4j.pax.flow.recipes.internal;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import com.google.inject.AbstractModule;
 import static com.google.inject.Guice.*;
 import com.google.inject.Inject;
@@ -30,11 +32,15 @@ import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.JobDescription;
 import static org.ops4j.pax.flow.api.Property.*;
 import org.ops4j.pax.flow.api.Transformer;
+import org.ops4j.pax.flow.api.TriggerFactory;
 import static org.ops4j.pax.flow.api.TriggerType.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableJobDescription.*;
 import org.ops4j.pax.flow.recipes.flow.ScanDirectoryForJobDescriptionsFlow;
 import org.ops4j.pax.flow.recipes.flow.ScheduleJobFlow;
+import org.ops4j.pax.flow.recipes.trigger.FixedRateTimer;
+import org.ops4j.pax.flow.recipes.trigger.Manual;
+import org.ops4j.pax.flow.recipes.trigger.ServiceAvailable;
 import org.ops4j.peaberry.Export;
 import static org.ops4j.peaberry.Peaberry.*;
 import static org.ops4j.peaberry.util.TypeLiterals.*;
@@ -61,6 +67,18 @@ public class Activator
     @Named( Module.SCAN_DIRECTORY_FOR_JOB_DESCRIPTIONS )
     private Export<FlowFactory> m_sdfjdExport;
 
+    @Inject
+    @Named( Module.MANUAL )
+    private Export<TriggerFactory> m_mtExport;
+
+    @Inject
+    @Named( Module.SERVICE_AVAILABLE )
+    private Export<TriggerFactory> m_satExport;
+
+    @Inject
+    @Named( Module.TIMER )
+    private Export<TriggerFactory> m_ttExport;
+
     public void start( final BundleContext bundleContext )
     {
         LOG.debug( "Binding default flows to Pax Flow" );
@@ -76,6 +94,22 @@ public class Activator
     public void stop( final BundleContext bundleContext )
         throws Exception
     {
+        if( m_mtExport != null )
+        {
+            m_mtExport.unput();
+            m_mtExport = null;
+        }
+        if( m_satExport != null )
+        {
+            m_satExport.unput();
+            m_satExport = null;
+        }
+        if( m_ttExport != null )
+        {
+            m_ttExport.unput();
+            m_ttExport = null;
+        }
+
         if( m_sjffExport != null )
         {
             m_sjffExport.unput();
@@ -95,9 +129,41 @@ public class Activator
         private static final String SCHEDULE_JOB_FLOW = "ScheduleJobFlow";
         private static final String SCAN_DIRECTORY_FOR_JOB_DESCRIPTIONS = "ScanDirectoryForJobDescriptionsFlow";
 
+        private static final String SERVICE_AVAILABLE = "serviceAvailableTrigger";
+        private static final String MANUAL = "manualTriger";
+        private static final String TIMER = "fixedRateTimerTrigger";
+
         @Override
         protected void configure()
         {
+
+            // TODO make number of threads configurable
+            bind( ScheduledExecutorService.class ).toInstance( Executors.newScheduledThreadPool( 5 ) );
+
+            bind( export( TriggerFactory.class ) )
+                .annotatedWith( named( MANUAL ) )
+                .toProvider(
+                    service( Manual.Factory.class )
+                        .attributes( Manual.Factory.attributes() )
+                        .export()
+                );
+
+            bind( export( TriggerFactory.class ) )
+                .annotatedWith( named( SERVICE_AVAILABLE ) )
+                .toProvider(
+                    service( ServiceAvailable.Factory.class )
+                        .attributes( ServiceAvailable.Factory.attributes() )
+                        .export()
+                );
+
+            bind( export( TriggerFactory.class ) )
+                .annotatedWith( named( TIMER ) )
+                .toProvider(
+                    service( FixedRateTimer.Factory.class )
+                        .attributes( FixedRateTimer.Factory.attributes() )
+                        .export()
+                );
+
             bind( Transformer.class ).toProvider( service( Transformer.class ).single() );
 
             bind( export( FlowFactory.class ) )
@@ -115,6 +181,7 @@ public class Activator
                         .attributes( ScanDirectoryForJobDescriptionsFlow.Factory.attributes() )
                         .export()
                 );
+
         }
 
     }
@@ -129,7 +196,7 @@ public class Activator
                     withoutConfiguration(),
                     triggerType( "serviceAvailable" ),
                     immutableConfiguration(
-                        property( Properties.WATCHED_SERVICE_TYPE, JobDescription.class.getName() )
+                        property( ServiceAvailable.Factory.WATCHED_SERVICE_TYPE, JobDescription.class.getName() )
                     )
                 )
             );
@@ -148,12 +215,14 @@ public class Activator
                 immutableJobDescription(
                     ScanDirectoryForJobDescriptionsFlow.Factory.TYPE,
                     immutableConfiguration(
-                        property( Properties.DIRECTORY, "${default.directory.jobs:./conf/jobs}" )
+                        property( ScanDirectoryForJobDescriptionsFlow.Factory.DIRECTORY,
+                                  "${default.directory.jobs:./conf/jobs}"
+                        )
                     ),
                     triggerType( "fixedRateTimer" ),
                     immutableConfiguration(
-                        property( Properties.INITIAL_DELAY, "${default.initialDelay:5s}" ),
-                        property( Properties.REPEAT_PERIOD, "${default.repeatPeriod:10s}" )
+                        property( FixedRateTimer.Factory.INITIAL_DELAY, "${default.initialDelay:5s}" ),
+                        property( FixedRateTimer.Factory.REPEAT_PERIOD, "${default.repeatPeriod:10s}" )
                     )
                 )
             );

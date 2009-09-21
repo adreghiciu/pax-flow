@@ -9,13 +9,11 @@ import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.FlowName;
 import static org.ops4j.pax.flow.api.FlowName.*;
 import org.ops4j.pax.flow.api.FlowType;
+import static org.ops4j.pax.flow.api.FlowType.*;
 import org.ops4j.pax.flow.api.JobDescription;
 import org.ops4j.pax.flow.api.Transformer;
-import static org.ops4j.pax.flow.api.FlowType.*;
 import org.ops4j.pax.flow.api.helpers.SequentialFlow;
-import org.ops4j.pax.flow.recipes.flow.CopyProperty;
-import org.ops4j.pax.flow.recipes.flow.ScheduleJob;
-import org.ops4j.pax.flow.recipes.internal.Properties;
+import org.ops4j.pax.flow.recipes.trigger.ServiceAvailable;
 
 /**
  * JAVADOC
@@ -32,7 +30,9 @@ public class ScheduleJobFlow
     {
         super(
             flowName,
-            new CopyProperty<JobDescription>( Properties.JOB, ScheduleJob.JOB_DESCRIPTION, JobDescription.class ),
+            new CopyProperty<JobDescription>(
+                ServiceAvailable.SERVICE, ScheduleJob.JOB_DESCRIPTION, JobDescription.class
+            ),
             new ScheduleJob( transformer )
         );
     }

@@ -31,7 +31,7 @@ import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.ExecutionTarget;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.it.Cfg;
-import org.ops4j.pax.flow.trigger.Manual;
+import org.ops4j.pax.flow.recipes.trigger.Manual;
 import static org.ops4j.peaberry.Peaberry.*;
 
 /**
@@ -62,7 +62,7 @@ public class Test001ManualTrigger
         final Configuration config = mock( Configuration.class );
         final ExecutionTarget target = mock( ExecutionTarget.class );
 
-        factory.create(config,target).start().fire();
+        factory.create( config, target ).start().fire();
 
         verify( target ).execute( any( ExecutionContext.class ) );
     }

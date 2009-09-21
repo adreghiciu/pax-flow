@@ -64,13 +64,13 @@
     </dependency>
     <dependency>
       <groupId>org.ops4j.pax.flow</groupId>
-      <artifactId>pax-flow-trigger</artifactId>
+      <artifactId>pax-flow-runtime</artifactId>
       <version>0.1.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.ops4j.pax.flow</groupId>
-      <artifactId>pax-flow-runtime</artifactId>
+      <artifactId>pax-flow-recipes</artifactId>
       <version>0.1.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>

@@ -11,12 +11,13 @@ import org.ops4j.pax.flow.api.FlowName;
 import static org.ops4j.pax.flow.api.FlowName.*;
 import org.ops4j.pax.flow.api.FlowType;
 import static org.ops4j.pax.flow.api.FlowType.*;
+import org.ops4j.pax.flow.api.PropertyName;
+import static org.ops4j.pax.flow.api.PropertyName.*;
 import org.ops4j.pax.flow.api.Transformer;
 import org.ops4j.pax.flow.api.helpers.ForEachFlow;
 import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
 import static org.ops4j.pax.flow.api.helpers.TypedConfiguration.*;
-import static org.ops4j.pax.flow.recipes.internal.Properties.*;
 
 /**
  * JAVADOC
@@ -47,6 +48,10 @@ public class ScanDirectoryForJobDescriptionsFlow
     {
 
         public static final FlowType TYPE = flowType( ScanDirectoryForJobDescriptionsFlow.class );
+
+        public static final PropertyName DIRECTORY = propertyName( "directory" );
+        public static final PropertyName INCLUDES = propertyName( "includes" );
+        public static final PropertyName EXCLUDES = propertyName( "excludes" );
 
         private final Transformer m_transformer;
 

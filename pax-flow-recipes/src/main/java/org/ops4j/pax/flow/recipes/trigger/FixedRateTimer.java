@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.trigger;
+package org.ops4j.pax.flow.recipes.trigger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,8 +38,8 @@ import org.ops4j.pax.flow.api.TriggerType;
 import static org.ops4j.pax.flow.api.TriggerType.*;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
 import static org.ops4j.pax.flow.api.helpers.TypedConfiguration.*;
-import org.ops4j.pax.flow.trigger.internal.AbstractTrigger;
-import org.ops4j.pax.flow.trigger.internal.TimerUtils;
+import org.ops4j.pax.flow.recipes.internal.AbstractTrigger;
+import org.ops4j.pax.flow.recipes.internal.TimerUtils;
 
 /**
  * JAVADOC
@@ -61,10 +61,10 @@ public class FixedRateTimer
     private ScheduledFuture<?> m_scheduledFuture;
 
     public FixedRateTimer( final TriggerName name,
-                                  final ExecutionTarget target,
-                                  final ScheduledExecutorService executorService,
-                                  final long initialDelay,
-                                  final long repeatPeriod )
+                           final ExecutionTarget target,
+                           final ScheduledExecutorService executorService,
+                           final long initialDelay,
+                           final long repeatPeriod )
     {
         super( name, target );
         // VALIDATE
@@ -156,7 +156,7 @@ public class FixedRateTimer
         }
 
         public FixedRateTimer create( final Configuration configuration,
-                                             final ExecutionTarget target )
+                                      final ExecutionTarget target )
         {
 
             final TypedConfiguration config = typedConfiguration( configuration );

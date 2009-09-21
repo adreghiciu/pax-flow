@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.trigger;
+package org.ops4j.pax.flow.recipes.trigger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ import org.ops4j.pax.flow.api.TriggerName;
 import static org.ops4j.pax.flow.api.TriggerName.*;
 import org.ops4j.pax.flow.api.TriggerType;
 import static org.ops4j.pax.flow.api.TriggerType.*;
-import org.ops4j.pax.flow.trigger.internal.AbstractTrigger;
+import org.ops4j.pax.flow.recipes.internal.AbstractTrigger;
 
 /**
  * JAVADOC
