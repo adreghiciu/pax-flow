@@ -20,6 +20,7 @@ package org.ops4j.pax.flow.recipes.internal;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import com.google.inject.AbstractModule;
+import static com.google.inject.name.Names.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.flow.api.TriggerFactory;
@@ -40,6 +41,10 @@ public class GuiceConfig
 
     private static final Log LOG = LogFactory.getLog( GuiceConfig.class );
 
+    private static final String SERVICE_AVAILABLE = "serviceAvailableTrigger";
+    private static final String MANUAL = "manualTriger";
+    private static final String TIMER = "fixedRateTimerTrigger";
+
     @Override
     protected void configure()
     {
@@ -48,6 +53,7 @@ public class GuiceConfig
         bind( ScheduledExecutorService.class ).toInstance( Executors.newScheduledThreadPool( 5 ) );
 
         bind( export( TriggerFactory.class ) )
+            .annotatedWith( named( MANUAL ) )
             .toProvider(
                 service( Manual.Factory.class )
                     .attributes( Manual.Factory.attributes() )
@@ -55,6 +61,7 @@ public class GuiceConfig
             );
 
         bind( export( TriggerFactory.class ) )
+            .annotatedWith( named( SERVICE_AVAILABLE ) )
             .toProvider(
                 service( ServiceAvailable.Factory.class )
                     .attributes( ServiceAvailable.Factory.attributes() )
@@ -62,6 +69,7 @@ public class GuiceConfig
             );
 
         bind( export( TriggerFactory.class ) )
+            .annotatedWith( named( TIMER ) )
             .toProvider(
                 service( FixedRateTimer.Factory.class )
                     .attributes( FixedRateTimer.Factory.attributes() )
