@@ -60,14 +60,6 @@ public class Activator
     private Transformer m_transformer;
 
     @Inject
-    @Named( Module.SCHEDULE_JOB_FLOW )
-    private Export<FlowFactory> m_sjffExport;
-
-    @Inject
-    @Named( Module.SCAN_DIRECTORY_FOR_JOB_DESCRIPTIONS )
-    private Export<FlowFactory> m_sdfjdExport;
-
-    @Inject
     @Named( Module.MANUAL )
     private Export<TriggerFactory> m_mtExport;
 
@@ -81,14 +73,8 @@ public class Activator
 
     public void start( final BundleContext bundleContext )
     {
-        LOG.debug( "Binding default flows to Pax Flow" );
-
         createInjector( osgiModule( bundleContext ), new Module() ).injectMembers( this );
-
-        setupScheduleJobFlow();
-        setupJobDescriptionScanningFlow();
-
-        LOG.info( "Default flows bounded to Pax Flow" );
+        LOG.info( "Registered built in flows and triggers" );
     }
 
     public void stop( final BundleContext bundleContext )
@@ -110,25 +96,11 @@ public class Activator
             m_ttExport = null;
         }
 
-        if( m_sjffExport != null )
-        {
-            m_sjffExport.unput();
-            m_sjffExport = null;
-        }
-        if( m_sdfjdExport != null )
-        {
-            m_sdfjdExport.unput();
-            m_sdfjdExport = null;
-        }
-        LOG.info( "Default flows unbounded from Pax Flow" );
+        LOG.info( "Unregistered built in flows and triggers" );
     }
 
     private static class Module extends AbstractModule
     {
-
-        private static final String SCHEDULE_JOB_FLOW = "ScheduleJobFlow";
-        private static final String SCAN_DIRECTORY_FOR_JOB_DESCRIPTIONS = "ScanDirectoryForJobDescriptionsFlow";
-
         private static final String SERVICE_AVAILABLE = "serviceAvailableTrigger";
         private static final String MANUAL = "manualTriger";
         private static final String TIMER = "fixedRateTimerTrigger";
@@ -163,74 +135,8 @@ public class Activator
                         .attributes( FixedRateTimer.Factory.attributes() )
                         .export()
                 );
-
-            bind( Transformer.class ).toProvider( service( Transformer.class ).single() );
-
-            bind( export( FlowFactory.class ) )
-                .annotatedWith( named( SCHEDULE_JOB_FLOW ) )
-                .toProvider(
-                    service( ScheduleJobFlow.Factory.class )
-                        .attributes( ScheduleJobFlow.Factory.attributes() )
-                        .export()
-                );
-
-            bind( export( FlowFactory.class ) )
-                .annotatedWith( named( SCAN_DIRECTORY_FOR_JOB_DESCRIPTIONS ) )
-                .toProvider(
-                    service( ScanDirectoryForJobDescriptionsFlow.Factory.class )
-                        .attributes( ScanDirectoryForJobDescriptionsFlow.Factory.attributes() )
-                        .export()
-                );
-
         }
 
-    }
-
-    private void setupScheduleJobFlow()
-    {
-        try
-        {
-            m_transformer.schedule(
-                immutableJobDescription(
-                    ScheduleJobFlow.Factory.TYPE,
-                    withoutConfiguration(),
-                    triggerType( "serviceAvailable" ),
-                    immutableConfiguration(
-                        property( ServiceAvailable.Factory.WATCHED_SERVICE_TYPE, JobDescription.class.getName() )
-                    )
-                )
-            );
-        }
-        catch( Exception ignore )
-        {
-            LOG.warn( "Setup of 'Schedule Job Flow' failed.", ignore );
-        }
-    }
-
-    private void setupJobDescriptionScanningFlow()
-    {
-        try
-        {
-            m_transformer.schedule(
-                immutableJobDescription(
-                    ScanDirectoryForJobDescriptionsFlow.Factory.TYPE,
-                    immutableConfiguration(
-                        property( ScanDirectoryForJobDescriptionsFlow.Factory.DIRECTORY,
-                                  "${default.directory.jobs:./conf/jobs}"
-                        )
-                    ),
-                    triggerType( "fixedRateTimer" ),
-                    immutableConfiguration(
-                        property( FixedRateTimer.Factory.INITIAL_DELAY, "${default.initialDelay:5s}" ),
-                        property( FixedRateTimer.Factory.REPEAT_PERIOD, "${default.repeatPeriod:10s}" )
-                    )
-                )
-            );
-        }
-        catch( Exception ignore )
-        {
-            LOG.warn( "Setup of 'Job Description Scanning Flow' failed.", ignore );
-        }
     }
 
 }
