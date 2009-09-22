@@ -57,9 +57,6 @@ public class Activator
     private static final Log LOG = LogFactory.getLog( Activator.class );
 
     @Inject
-    private Transformer m_transformer;
-
-    @Inject
     @Named( Module.MANUAL )
     private Export<TriggerFactory> m_mtExport;
 

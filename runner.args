@@ -1,7 +1,7 @@
 mvn:org.ops4j.pax.flow/pax-flow-api@update
 mvn:org.ops4j.pax.flow/pax-flow-runtime@update
-#mvn:org.ops4j.pax.flow/pax-flow-trigger@update
 mvn:org.ops4j.pax.flow/pax-flow-recipes@update
+mvn:org.ops4j.pax.flow/pax-flow-setup@update
 
 compendium
 peaberry/1.1.1
