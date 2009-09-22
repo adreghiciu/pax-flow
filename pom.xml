@@ -136,9 +136,9 @@
 
   <modules>
     <module>pax-flow-api</module>
-    <module>pax-flow-trigger</module>
     <module>pax-flow-runtime</module>
     <module>pax-flow-recipes</module>
+    <module>pax-flow-setup</module>
   </modules>
 
   <profiles>
