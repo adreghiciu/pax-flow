@@ -56,8 +56,6 @@ public class Activator
     public void start( final BundleContext bundleContext )
         throws Exception
     {
-        LOG.debug( "Starting Pax Flow Runtime" );
-
         createInjector( osgiModule( bundleContext ), new Module() ).injectMembers( this );
 
         LOG.info( "Started Pax Flow Runtime" );

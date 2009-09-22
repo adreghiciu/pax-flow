@@ -7,4 +7,6 @@ compendium
 peaberry/1.1.1
 log
 
+mvn:org.ops4j/peaberry.activation/1.2-SNAPSHOT
+
 --vmOptions=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
