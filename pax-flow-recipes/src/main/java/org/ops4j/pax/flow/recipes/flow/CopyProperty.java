@@ -1,10 +1,10 @@
 package org.ops4j.pax.flow.recipes.flow;
 
 import org.ops4j.pax.flow.api.ExecutionContext;
-import org.ops4j.pax.flow.api.PropertyName;
 import org.ops4j.pax.flow.api.Flow;
-import static org.ops4j.pax.flow.api.helpers.TypedExecutionContext.*;
+import org.ops4j.pax.flow.api.PropertyName;
 import org.ops4j.pax.flow.api.helpers.CancelableFlow;
+import static org.ops4j.pax.flow.api.helpers.TypedExecutionContext.*;
 
 /**
  * Copy a property (source), from {@link ExecutionContext} to another property (target).
@@ -41,5 +41,5 @@ public class CopyProperty<T>
     {
         return String.format( "Copy property [%s] -> [%s]", m_source, m_target );
     }
-    
+
 }

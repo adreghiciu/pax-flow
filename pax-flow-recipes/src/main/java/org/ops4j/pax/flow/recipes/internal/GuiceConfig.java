@@ -50,7 +50,7 @@ public class GuiceConfig
     private static final String TIMER = "fixedRateTimerTrigger";
 
     private static final String SCHEDULE_JOB_FLOW = "ScheduleJobFlow";
-    private static final String SCAN_DIRECTORY_FOR_JOB_DESCRIPTIONS = "ScanDirectoryForJobDescriptionsFlow";    
+    private static final String SCAN_DIRECTORY_FOR_JOB_DESCRIPTIONS = "ScanDirectoryForJobDescriptionsFlow";
 
     @Override
     protected void configure()

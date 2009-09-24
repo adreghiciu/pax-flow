@@ -41,7 +41,7 @@ public class Manual
 {
 
     public Manual( final TriggerName name,
-                          final ExecutionTarget target )
+                   final ExecutionTarget target )
     {
         super( name, target );
     }
@@ -77,7 +77,7 @@ public class Manual
         }
 
         public Manual create( final Configuration configuration,
-                                     final ExecutionTarget target )
+                              final ExecutionTarget target )
         {
             return new Manual(
                 triggerName( String.format( "%s::%d", type(), m_counter++ ) ),
@@ -99,7 +99,7 @@ public class Manual
 
             return attributes;
         }
-        
+
     }
 
 }

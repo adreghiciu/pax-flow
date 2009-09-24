@@ -6,8 +6,8 @@ import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.JobDescription;
 import org.ops4j.pax.flow.api.PropertyName;
 import org.ops4j.pax.flow.api.Transformer;
-import static org.ops4j.pax.flow.api.helpers.TypedExecutionContext.*;
 import org.ops4j.pax.flow.api.helpers.CancelableFlow;
+import static org.ops4j.pax.flow.api.helpers.TypedExecutionContext.*;
 
 /**
  * Takes a job description from {@link ExecutionContext} and schedules it.

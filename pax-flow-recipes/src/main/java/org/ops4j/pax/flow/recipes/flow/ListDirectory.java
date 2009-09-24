@@ -13,8 +13,8 @@ import org.apache.commons.logging.LogFactory;
 import org.ops4j.io.DirectoryLister;
 import org.ops4j.io.ListerUtils;
 import org.ops4j.pax.flow.api.ExecutionContext;
-import org.ops4j.pax.flow.api.PropertyName;
 import org.ops4j.pax.flow.api.Flow;
+import org.ops4j.pax.flow.api.PropertyName;
 import org.ops4j.pax.flow.api.helpers.CancelableFlow;
 
 /**
@@ -69,7 +69,7 @@ public class ListDirectory
         {
             LOG.debug( format( "Directory [%s] does not exist, so it cannot be scanned", m_directory ) );
         }
-        
+
         context.set( FILES, files );
     }
 

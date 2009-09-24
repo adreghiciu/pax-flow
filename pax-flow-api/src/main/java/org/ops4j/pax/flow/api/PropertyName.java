@@ -68,7 +68,7 @@ public class PropertyName
         return value();
     }
 
-    public static PropertyName propertyName(final String name)
+    public static PropertyName propertyName( final String name )
     {
         return new PropertyName( name );
     }

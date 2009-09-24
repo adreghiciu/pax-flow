@@ -25,7 +25,7 @@ public class SequentialFlow
     private Thread m_thread;
 
     public SequentialFlow( final FlowName flowName,
-                          final Flow... flows )
+                           final Flow... flows )
     {
         // VALIDATE
         m_flowName = flowName;

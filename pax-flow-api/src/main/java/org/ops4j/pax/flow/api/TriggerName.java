@@ -68,7 +68,7 @@ public class TriggerName
         return value();
     }
 
-    public static TriggerName triggerName(final String name)
+    public static TriggerName triggerName( final String name )
     {
         return new TriggerName( name );
     }
