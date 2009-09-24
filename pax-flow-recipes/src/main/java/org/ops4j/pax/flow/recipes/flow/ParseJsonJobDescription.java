@@ -10,13 +10,14 @@ import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 import org.ops4j.pax.flow.api.Configuration;
+import org.ops4j.pax.flow.api.ConfigurationProperty;
+import static org.ops4j.pax.flow.api.ConfigurationProperty.*;
 import org.ops4j.pax.flow.api.ExecutionContext;
+import org.ops4j.pax.flow.api.ExecutionProperty;
 import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.FlowType;
 import static org.ops4j.pax.flow.api.FlowType.*;
 import org.ops4j.pax.flow.api.JobDescription;
-import org.ops4j.pax.flow.api.Property;
-import static org.ops4j.pax.flow.api.Property.*;
 import org.ops4j.pax.flow.api.PropertyName;
 import static org.ops4j.pax.flow.api.PropertyName.*;
 import org.ops4j.pax.flow.api.TriggerType;
@@ -116,7 +117,7 @@ public class ParseJsonJobDescription
             final ImmutableJobDescription description = immutableJobDescription(
                 flowType, flowConfig, triggerType, triggerConfig
             );
-            context.set( ScheduleJob.JOB_DESCRIPTION, description );
+            context.add( ExecutionProperty.executionProperty( ScheduleJob.JOB_DESCRIPTION, description ) );
         }
         else
         {
@@ -133,14 +134,14 @@ public class ParseJsonJobDescription
     private Configuration parseConfig( final JsonParser jp )
         throws IOException
     {
-        final Collection<Property<?>> properties = new ArrayList<Property<?>>();
+        final Collection<ConfigurationProperty<?>> properties = new ArrayList<ConfigurationProperty<?>>();
 
         while( jp.nextToken() != JsonToken.END_OBJECT )
         {
             final String currentName = jp.getCurrentName();
             jp.nextToken();
 
-            properties.add( property( propertyName( currentName ), jp.getText() ) );
+            properties.add( configurationProperty( propertyName( currentName ), jp.getText() ) );
         }
         return immutableConfiguration( properties );
     }

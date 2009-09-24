@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.ops4j.pax.flow.api.ExecutionContext;
-import org.ops4j.pax.flow.api.Property;
+import org.ops4j.pax.flow.api.ExecutionProperty;
 import org.ops4j.pax.flow.api.PropertyName;
 
 /**
@@ -34,48 +34,55 @@ public class DefaultExecutionContext
     implements ExecutionContext
 {
 
-    private final Map<PropertyName, Object> m_properties;
+    private final Map<PropertyName, ExecutionProperty<?>> m_properties;
 
-    private DefaultExecutionContext( final Property<?>... properties )
+    protected DefaultExecutionContext( final ExecutionProperty<?>... properties )
     {
-        m_properties = new HashMap<PropertyName, Object>();
+        m_properties = new HashMap<PropertyName, ExecutionProperty<?>>();
         if( properties != null && properties.length > 0 )
         {
-            for( Property<?> property : properties )
+            for( ExecutionProperty<?> property : properties )
             {
-                m_properties.put( property.name(), property.value() );
+                m_properties.put( property.name(), property );
             }
         }
     }
 
     public <T> T get( final PropertyName name )
     {
-        return (T) m_properties.get( name );
+        final ExecutionProperty<?> property = m_properties.get( name );
+        if( property == null )
+        {
+            return null;
+        }
+        return (T) property.value();
     }
 
     public <T> T get( final PropertyName name, final T defaultValue )
     {
-        final Object property = m_properties.get( name );
+        // VALIDATE
+        final ExecutionProperty<?> property = m_properties.get( name );
         if( property == null )
         {
             return defaultValue;
         }
-        return (T) property;
+        return (T) property.value();
     }
 
-    public Iterable<PropertyName> getNames()
+    public Iterable<PropertyName> names()
     {
         return Collections.unmodifiableSet( m_properties.keySet() );
     }
 
-    public ExecutionContext set( final PropertyName name, final Object value )
+    public ExecutionContext add( final ExecutionProperty property )
     {
-        m_properties.put( name, value );
+        // VALIDATE
+        m_properties.put( property.name(), property );
 
         return this;
     }
 
-    public static DefaultExecutionContext defaultExecutionContext( final Property... properties )
+    public static DefaultExecutionContext defaultExecutionContext( final ExecutionProperty... properties )
     {
         return new DefaultExecutionContext( properties );
     }

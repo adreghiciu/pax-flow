@@ -22,8 +22,8 @@ import com.google.inject.Singleton;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
+import static org.ops4j.pax.flow.api.ConfigurationProperty.*;
 import org.ops4j.pax.flow.api.JobDescription;
-import static org.ops4j.pax.flow.api.Property.*;
 import org.ops4j.pax.flow.api.Transformer;
 import static org.ops4j.pax.flow.api.TriggerType.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
@@ -71,7 +71,9 @@ public class Setup
                     withoutConfiguration(),
                     triggerType( "serviceAvailable" ),
                     immutableConfiguration(
-                        property( ServiceAvailable.Factory.WATCHED_SERVICE_TYPE, JobDescription.class.getName() )
+                        configurationProperty(
+                            ServiceAvailable.Factory.WATCHED_SERVICE_TYPE, JobDescription.class.getName()
+                        )
                     )
                 )
             );
@@ -90,14 +92,15 @@ public class Setup
                 immutableJobDescription(
                     ScanDirectoryForJobDescriptionsFlow.Factory.TYPE,
                     immutableConfiguration(
-                        property( ScanDirectoryForJobDescriptionsFlow.Factory.DIRECTORY,
-                                  "${default.directory.jobs:./conf/jobs}"
+                        configurationProperty(
+                            ScanDirectoryForJobDescriptionsFlow.Factory.DIRECTORY,
+                            "${default.directory.jobs:./conf/jobs}"
                         )
                     ),
                     triggerType( "fixedRateTimer" ),
                     immutableConfiguration(
-                        property( FixedRateTimer.Factory.INITIAL_DELAY, "${default.initialDelay:5s}" ),
-                        property( FixedRateTimer.Factory.REPEAT_PERIOD, "${default.repeatPeriod:10s}" )
+                        configurationProperty( FixedRateTimer.Factory.INITIAL_DELAY, "${default.initialDelay:5s}" ),
+                        configurationProperty( FixedRateTimer.Factory.REPEAT_PERIOD, "${default.repeatPeriod:10s}" )
                     )
                 )
             );

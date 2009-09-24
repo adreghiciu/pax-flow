@@ -23,13 +23,14 @@ package org.ops4j.pax.flow.api;
  *
  * @author Alin Dreghiciu
  */
-public class Property<T>
+public class ConfigurationProperty<T>
 {
 
     private final PropertyName m_name;
     private final T m_value;
 
-    public Property( final PropertyName name, final T value )
+    public ConfigurationProperty( final PropertyName name,
+                                  final T value )
     {
         m_name = name;
         m_value = value;
@@ -52,12 +53,12 @@ public class Property<T>
         {
             return true;
         }
-        if( !( o instanceof Property ) )
+        if( !( o instanceof ConfigurationProperty ) )
         {
             return false;
         }
 
-        final Property property = (Property) o;
+        final ConfigurationProperty property = (ConfigurationProperty) o;
 
         if( !m_name.equals( property.m_name ) )
         {
@@ -85,10 +86,10 @@ public class Property<T>
         return String.format( "%s=%s", m_name, m_value );
     }
 
-    public static <T> Property<T> property( final PropertyName name,
-                                            final T value )
+    public static <T> ConfigurationProperty<T> configurationProperty( final PropertyName name,
+                                                                      final T value )
     {
-        return new Property<T>( name, value );
+        return new ConfigurationProperty<T>( name, value );
     }
 
 }

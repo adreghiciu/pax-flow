@@ -65,9 +65,12 @@ public class DefaultTransformer
 
         private final JobDescription m_description;
 
+        private final PersistentExecutionContext m_executionContext;
+
         public FlowScheduler( final JobDescription description )
         {
             m_description = description;
+            m_executionContext = new PersistentExecutionContext();
         }
 
         public void execute( final ExecutionContext executionContext )
@@ -90,7 +93,8 @@ public class DefaultTransformer
                             else
                             {
                                 final Flow flow = flowFactory.create( m_description.flowConfiguration() );
-                                flow.execute( executionContext );
+                                m_executionContext.useTransientContext( executionContext );
+                                flow.execute( m_executionContext );
                                 LOG.debug( format( "Finished execution of [%s]", flow ) );
                             }
                         }

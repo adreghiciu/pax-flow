@@ -23,6 +23,7 @@ import java.util.Map;
 import com.google.inject.Inject;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.flow.api.Configuration;
+import static org.ops4j.pax.flow.api.ExecutionProperty.*;
 import org.ops4j.pax.flow.api.ExecutionTarget;
 import org.ops4j.pax.flow.api.PropertyName;
 import static org.ops4j.pax.flow.api.PropertyName.*;
@@ -76,7 +77,7 @@ public class ServiceAvailable
                     final Object service = super.adding( anImport );
 
                     final DefaultExecutionContext executionContext = defaultExecutionContext();
-                    executionContext.set( SERVICE, service );
+                    executionContext.add( executionProperty( SERVICE, service ) );
 
                     fire( executionContext );
 

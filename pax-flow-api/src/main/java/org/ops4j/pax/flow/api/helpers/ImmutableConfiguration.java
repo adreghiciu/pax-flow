@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.ops4j.pax.flow.api.Configuration;
-import org.ops4j.pax.flow.api.Property;
+import org.ops4j.pax.flow.api.ConfigurationProperty;
 import org.ops4j.pax.flow.api.PropertyName;
 import static org.ops4j.pax.flow.api.PropertyName.*;
 
@@ -43,25 +43,30 @@ public class ImmutableConfiguration
      */
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile( "(.*?\\$\\{)([.[^\\$]]+?)(\\}.*)" );
 
-    private final Map<PropertyName, Object> m_properties;
+    private final Map<PropertyName, ConfigurationProperty<?>> m_properties;
 
-    private ImmutableConfiguration( final Property<?>... properties )
+    private ImmutableConfiguration( final ConfigurationProperty<?>... properties )
     {
-        m_properties = new HashMap<PropertyName, Object>();
+        m_properties = new HashMap<PropertyName, ConfigurationProperty<?>>();
         if( properties != null && properties.length > 0 )
         {
-            for( Property<?> property : properties )
+            for( ConfigurationProperty<?> property : properties )
             {
-                m_properties.put( property.name(), property.value() );
+                m_properties.put( property.name(), property );
             }
         }
     }
 
     public <T> T get( final PropertyName name )
     {
-        final Object value = m_properties.get( name );
-        if( value != null
-            && value instanceof String
+        final ConfigurationProperty<?> property = m_properties.get( name );
+        if( property == null )
+        {
+            return null;
+        }
+        final Object value = property.value();
+
+        if( value instanceof String
             && !name.value().equals( value ) )
         {
             return (T) replacePlaceholders( (String) value );
@@ -71,12 +76,29 @@ public class ImmutableConfiguration
 
     public <T> T get( final PropertyName name, final T defaultValue )
     {
-        final Object property = m_properties.get( name );
+        final ConfigurationProperty<?> property = m_properties.get( name );
+
+        Object value;
         if( property == null )
         {
-            return defaultValue;
+            value = defaultValue;
         }
-        return (T) property;
+        else
+        {
+            value = property.value();
+        }
+
+        if( value == null )
+        {
+            return null;
+        }
+
+        if( value instanceof String
+            && !name.value().equals( value ) )
+        {
+            return (T) replacePlaceholders( (String) value );
+        }
+        return (T) value;
     }
 
     public Iterable<PropertyName> getNames()
@@ -84,18 +106,18 @@ public class ImmutableConfiguration
         return Collections.unmodifiableSet( m_properties.keySet() );
     }
 
-    public static ImmutableConfiguration immutableConfiguration( final Property<?>... properties )
+    public static ImmutableConfiguration immutableConfiguration( final ConfigurationProperty<?>... properties )
     {
         return new ImmutableConfiguration( properties );
     }
 
-    public static ImmutableConfiguration immutableConfiguration( final Collection<Property<?>> properties )
+    public static ImmutableConfiguration immutableConfiguration( final Collection<ConfigurationProperty<?>> properties )
     {
         if( properties == null )
         {
-            return new ImmutableConfiguration( null );
+            return new ImmutableConfiguration( (ConfigurationProperty<?>[]) null );
         }
-        return new ImmutableConfiguration( properties.toArray( new Property<?>[properties.size()] ) );
+        return new ImmutableConfiguration( properties.toArray( new ConfigurationProperty<?>[properties.size()] ) );
     }
 
     public static ImmutableConfiguration withoutConfiguration()

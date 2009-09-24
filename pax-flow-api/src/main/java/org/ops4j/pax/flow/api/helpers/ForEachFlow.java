@@ -3,6 +3,7 @@ package org.ops4j.pax.flow.api.helpers;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.flow.api.ExecutionContext;
+import static org.ops4j.pax.flow.api.ExecutionProperty.*;
 import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.FlowName;
 import org.ops4j.pax.flow.api.PropertyName;
@@ -26,9 +27,9 @@ public class ForEachFlow
 
     private Thread m_thread;
 
-    public ForEachFlow( final Flow iterableFlow,
-                        final PropertyName iterablePropertyName,
-                        final PropertyName iteratorPropertyName )
+    public ForEachFlow( final PropertyName iterablePropertyName, final PropertyName iteratorPropertyName,
+                        final Flow iterableFlow
+    )
     {
         super();
         // VALIDATE
@@ -59,7 +60,7 @@ public class ForEachFlow
         {
             for( Object object : iterable )
             {
-                context.set( m_iteratorPropertyName, object );
+                context.add( executionProperty( m_iteratorPropertyName, object ) );
                 m_iterableFlow.execute( context );
             }
         }

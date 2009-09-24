@@ -6,16 +6,20 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.io.DirectoryLister;
 import org.ops4j.io.ListerUtils;
 import org.ops4j.pax.flow.api.ExecutionContext;
+import static org.ops4j.pax.flow.api.ExecutionProperty.*;
 import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.PropertyName;
 import org.ops4j.pax.flow.api.helpers.CancelableFlow;
+import static org.ops4j.pax.flow.api.helpers.TypedExecutionContext.*;
 
 /**
  * Lists a file system directory.
@@ -30,6 +34,11 @@ public class ListDirectory
     private static final Log LOG = LogFactory.getLog( ListDirectory.class );
 
     public static final PropertyName FILES = PropertyName.propertyName( "files" );
+    public static final PropertyName TIMESTAMPS = PropertyName.propertyName( "timestamps" );
+
+    public static final PropertyName ADDED_FILES = PropertyName.propertyName( "addedFiles" );
+    public static final PropertyName MODIFIED_FILES = PropertyName.propertyName( "modifiedFiles" );
+    public static final PropertyName DELETED_FILES = PropertyName.propertyName( "deletedFiles" );
 
     private final File m_directory;
     private final Pattern[] m_includes;
@@ -52,17 +61,16 @@ public class ListDirectory
     public void run( final ExecutionContext context )
         throws Exception
     {
-        final Collection<File> files = new ArrayList<File>();
+        final Map<File, Long> files = new HashMap<File, Long>();
 
         if( m_directory.exists() )
         {
             final List<URL> foundUrls = m_lister.list();
 
-            LOG.debug( format( "Found %d files in [%s]", foundUrls.size(), m_directory ) );
-
             for( URL url : foundUrls )
             {
-                files.add( new File( url.toURI() ) );
+                final File file = new File( url.toURI() );
+                files.put( file, file.lastModified() );
             }
         }
         else
@@ -70,7 +78,51 @@ public class ListDirectory
             LOG.debug( format( "Directory [%s] does not exist, so it cannot be scanned", m_directory ) );
         }
 
-        context.set( FILES, files );
+        // TODO figure out how to use generics
+        final Map<File, Long> previousFiles = new HashMap<File, Long>(
+            typedExecutionContext( context ).optional( TIMESTAMPS, Map.class, new HashMap<File, Long>() )
+        );
+
+        final Collection<File> added = new ArrayList<File>();
+        final Collection<File> modified = new ArrayList<File>();
+        final Collection<File> deleted = new ArrayList<File>();
+
+        for( Map.Entry<File, Long> entry : files.entrySet() )
+        {
+            final Long timestamp = previousFiles.get( entry.getKey() );
+
+            boolean exists = entry.getKey().exists();
+
+            if( exists )
+            {
+                if( timestamp == null )
+                {
+                    added.add( entry.getKey() );
+                }
+                else if( entry.getKey().lastModified() > timestamp )
+                {
+                    modified.add( entry.getKey() );
+                }
+            }
+            else if( timestamp != null )
+            {
+                deleted.add( entry.getKey() );
+            }
+        }
+
+        context.add( persistentExecutionProperty( TIMESTAMPS, files ) );
+        context.add( executionProperty( FILES, files ) );
+        context.add( executionProperty( ADDED_FILES, added ) );
+        context.add( executionProperty( MODIFIED_FILES, modified ) );
+        context.add( executionProperty( DELETED_FILES, deleted ) );
+
+        LOG.info(
+            format( "Found %d files (%d added,%d modified,%d deleted) in [%s]",
+                    files.size(),
+                    added.size(), modified.size(), deleted.size(),
+                    m_directory
+            )
+        );
     }
 
     @Override

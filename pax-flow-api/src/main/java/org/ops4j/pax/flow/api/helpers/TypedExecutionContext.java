@@ -54,14 +54,20 @@ public class TypedExecutionContext
     public <T> T optional( final PropertyName propertyName,
                            final Class<T> propertyType )
     {
+        return optional( propertyName, propertyType, null );
+    }
+
+    public <T> T optional( final PropertyName propertyName,
+                           final Class<T> propertyType,
+                           final T defaultValue )
+    {
         // VALIDATE property name / type
-        Object value = m_context.get( propertyName );
+        Object value = m_context.get( propertyName, defaultValue );
         if( value != null && !propertyType.isAssignableFrom( value.getClass() ) )
         {
             value = convert( value, propertyType );
             if( value != null && !propertyType.isAssignableFrom( value.getClass() ) )
             {
-
                 throw new IllegalStateException(
                     String.format( "Property [%s] must be of type [%s].", propertyName, propertyType.getName() )
                 );

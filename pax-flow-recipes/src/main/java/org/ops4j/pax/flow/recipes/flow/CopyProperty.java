@@ -1,6 +1,7 @@
 package org.ops4j.pax.flow.recipes.flow;
 
 import org.ops4j.pax.flow.api.ExecutionContext;
+import static org.ops4j.pax.flow.api.ExecutionProperty.*;
 import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.PropertyName;
 import org.ops4j.pax.flow.api.helpers.CancelableFlow;
@@ -33,7 +34,7 @@ public class CopyProperty<T>
     public void run( final ExecutionContext context )
     {
         final T source = typedExecutionContext( context ).mandatory( m_source, m_propertyType );
-        context.set( m_target, source );
+        context.add( executionProperty( m_target, source ) );
     }
 
     @Override

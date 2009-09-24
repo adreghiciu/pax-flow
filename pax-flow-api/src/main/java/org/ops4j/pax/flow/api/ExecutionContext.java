@@ -30,8 +30,8 @@ public interface ExecutionContext
 
     <T> T get( PropertyName name, T defaultValue );
 
-    Iterable<PropertyName> getNames();
+    Iterable<PropertyName> names();
 
-    ExecutionContext set( PropertyName name, Object value );
+    ExecutionContext add( ExecutionProperty executionProperty );
 
 }

@@ -1,6 +1,7 @@
 package org.ops4j.pax.flow.recipes.flow;
 
 import java.io.File;
+import static java.lang.String.*;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.inject.Inject;
@@ -38,8 +39,26 @@ public class ScanDirectoryForJobDescriptionsFlow
         super(
             flowName,
             new ListDirectory( directory, includes, excludes ),
-            new ForEachFlow( new ParseJsonJobDescription(), ListDirectory.FILES, ParseJsonJobDescription.FILE ),
-            new ScheduleJob( transformer )
+            new ForEachFlow(
+                ListDirectory.ADDED_FILES, ParseJsonJobDescription.FILE,
+                new SequentialFlow(
+                    flowName( format("%s::%s", flowName, "Process Added") ), // TODO do we need a name?
+                    new ParseJsonJobDescription(),
+                    new ScheduleJob( transformer )
+                )
+            ),
+            new ForEachFlow(
+                ListDirectory.MODIFIED_FILES, ParseJsonJobDescription.FILE,
+                new SequentialFlow(
+                    flowName( format("%s::%s", flowName, "Process Modified") ), // TODO do we need a name?
+                    new ParseJsonJobDescription(),
+                    new ScheduleJob( transformer ) // TODO this should be reschedule
+                )
+            ),
+            new ForEachFlow(
+                ListDirectory.DELETED_FILES, ParseJsonJobDescription.FILE,
+                new UnscheduleJob( transformer )
+            )
         );
     }
 
@@ -74,7 +93,7 @@ public class ScanDirectoryForJobDescriptionsFlow
             final TypedConfiguration cfg = typedConfiguration( configuration );
 
             return new ScanDirectoryForJobDescriptionsFlow(
-                flowName( String.format( "%s::%d", type(), m_counter++ ) ),
+                flowName( format( "%s::%d", type(), m_counter++ ) ),
                 m_transformer,
                 new File( cfg.mandatory( DIRECTORY, String.class ) ),
                 cfg.optional( INCLUDES, String[].class ),
@@ -85,7 +104,7 @@ public class ScanDirectoryForJobDescriptionsFlow
         @Override
         public String toString()
         {
-            return String.format( "Flow factory for type [%s] (%d instances)", type(), m_counter );
+            return format( "Flow factory for type [%s] (%d instances)", type(), m_counter );
         }
 
         public static Map<String, String> attributes()
