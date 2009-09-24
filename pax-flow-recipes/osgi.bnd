@@ -1,6 +1,3 @@
-xBundle-Activator:\
-  ${bundle.namespace}.internal.Activator
-
 Bundle-Module:\
   ${bundle.namespace}.internal.GuiceConfig
 

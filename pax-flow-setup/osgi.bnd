@@ -1,5 +1,5 @@
-Bundle-Activator:\
-  ${bundle.namespace}.internal.Activator
+Bundle-Module:\
+  ${bundle.namespace}.internal.GuiceConfig
 
 Bundle-Version>:\
   ${pom.version}

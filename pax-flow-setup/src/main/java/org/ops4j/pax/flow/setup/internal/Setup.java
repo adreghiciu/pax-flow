@@ -17,16 +17,11 @@
  */
 package org.ops4j.pax.flow.setup.internal;
 
-import com.google.inject.AbstractModule;
-import static com.google.inject.Guice.*;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import static com.google.inject.name.Names.*;
+import com.google.inject.Singleton;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.JobDescription;
 import static org.ops4j.pax.flow.api.Property.*;
 import org.ops4j.pax.flow.api.Transformer;
@@ -37,86 +32,34 @@ import org.ops4j.pax.flow.recipes.flow.ScanDirectoryForJobDescriptionsFlow;
 import org.ops4j.pax.flow.recipes.flow.ScheduleJobFlow;
 import org.ops4j.pax.flow.recipes.trigger.FixedRateTimer;
 import org.ops4j.pax.flow.recipes.trigger.ServiceAvailable;
-import org.ops4j.peaberry.Export;
-import static org.ops4j.peaberry.Peaberry.*;
-import static org.ops4j.peaberry.util.TypeLiterals.*;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public class Activator
-    implements BundleActivator
+@Singleton
+public class Setup
 {
 
-    private static final Log LOG = LogFactory.getLog( Activator.class );
+    private static final Log LOG = LogFactory.getLog( Setup.class );
 
-    @Inject
     private Transformer m_transformer;
+    private final BundleContext m_bundleContext;
 
     @Inject
-    @Named( Module.SCHEDULE_JOB_FLOW )
-    private Export<FlowFactory> m_sjffExport;
-
-    @Inject
-    @Named( Module.SCAN_DIRECTORY_FOR_JOB_DESCRIPTIONS )
-    private Export<FlowFactory> m_sdfjdExport;
-
-    public void start( final BundleContext bundleContext )
+    public Setup( final Transformer transformer,
+                  final BundleContext bundleContext )
     {
-        createInjector( osgiModule( bundleContext ), new Module() ).injectMembers( this );
+
+        m_transformer = transformer;
+        m_bundleContext = bundleContext;
 
         setupScheduleJobFlow();
         setupJobDescriptionScanningFlow();
     }
 
-    public void stop( final BundleContext bundleContext )
-        throws Exception
-    {
-        if( m_sjffExport != null )
-        {
-            m_sjffExport.unput();
-            m_sjffExport = null;
-        }
-        if( m_sdfjdExport != null )
-        {
-            m_sdfjdExport.unput();
-            m_sdfjdExport = null;
-        }
-    }
-
-    private static class Module extends AbstractModule
-    {
-
-        private static final String SCHEDULE_JOB_FLOW = "ScheduleJobFlow";
-        private static final String SCAN_DIRECTORY_FOR_JOB_DESCRIPTIONS = "ScanDirectoryForJobDescriptionsFlow";
-
-        @Override
-        protected void configure()
-        {
-
-            bind( Transformer.class ).toProvider( service( Transformer.class ).single() );
-
-            bind( export( FlowFactory.class ) )
-                .annotatedWith( named( SCHEDULE_JOB_FLOW ) )
-                .toProvider(
-                    service( ScheduleJobFlow.Factory.class )
-                        .attributes( ScheduleJobFlow.Factory.attributes() )
-                        .export()
-                );
-
-            bind( export( FlowFactory.class ) )
-                .annotatedWith( named( SCAN_DIRECTORY_FOR_JOB_DESCRIPTIONS ) )
-                .toProvider(
-                    service( ScanDirectoryForJobDescriptionsFlow.Factory.class )
-                        .attributes( ScanDirectoryForJobDescriptionsFlow.Factory.attributes() )
-                        .export()
-                );
-
-        }
-
-    }
+    // TODO on stop unregister jobs?
 
     private void setupScheduleJobFlow()
     {
