@@ -6,6 +6,7 @@ mvn:org.ops4j.pax.flow/pax-flow-setup@update
 compendium
 peaberry/1.1.1
 log
+felix.fileinstall
 
 mvn:org.ops4j/peaberry.activation/1.2-SNAPSHOT
 
