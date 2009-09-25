@@ -116,13 +116,20 @@ public class ListDirectory
         context.add( executionProperty( MODIFIED_FILES, modified ) );
         context.add( executionProperty( DELETED_FILES, deleted ) );
 
-        LOG.info(
-            format( "Found %d files (%d added,%d modified,%d deleted) in [%s]",
-                    files.size(),
-                    added.size(), modified.size(), deleted.size(),
-                    m_directory
-            )
+        final String message = format(
+            "Found %d files (%d added,%d modified,%d deleted) in [%s]",
+            files.size(),
+            added.size(), modified.size(), deleted.size(),
+            m_directory
         );
+        if( added.size() > 0 || modified.size() > 0 || deleted.size() > 0 )
+        {
+            LOG.info( message );
+        }
+        else
+        {
+            LOG.debug( message );
+        }
     }
 
     @Override

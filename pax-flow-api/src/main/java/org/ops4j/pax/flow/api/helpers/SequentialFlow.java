@@ -53,7 +53,7 @@ public class SequentialFlow
                 public void run()
                 {
                     final long startTime = System.currentTimeMillis();
-                    LOG.info( format( "Executing flow [%s]", name() ) );
+                    LOG.debug( format( "Starting flow [%s]", name() ) );
 
                     try
                     {
@@ -74,7 +74,7 @@ public class SequentialFlow
                         LOG.warn( format( "Execution of flow [%s] failed after %d millis ", name(), duration ), e );
                     }
                     final long duration = System.currentTimeMillis() - startTime;
-                    LOG.info( format( "Flow [%s] executed successfully in %d millis", name(), duration ) );
+                    LOG.debug( format( "Flow [%s] executed successfully in %d millis", name(), duration ) );
                 }
             },
             this.toString()
