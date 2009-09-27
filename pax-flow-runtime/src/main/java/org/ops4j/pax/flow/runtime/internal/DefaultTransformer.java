@@ -99,15 +99,46 @@ public class DefaultTransformer
             throw new Exception( format( "Could not find a trigger factory of type [%s]", description.triggerType() ) );
         }
 
+        final FlowScheduler flowScheduler = new FlowScheduler( description );
         final Trigger trigger = triggerFactory.create(
             description.triggerConfiguration(),
-            new FlowScheduler( description )
+            flowScheduler
         );
 
-        final Job job = new Job( description, trigger );
+        final Job job = new Job( description, trigger, flowScheduler );
         m_jobs.put( description.name(), job );
 
-        LOG.info( format( "Scheduled job [%s] (named [%s]", job, description.name() ) );
+        LOG.info( format( "Scheduled job [%s] (%s)", description.name(), job ) );
+
+        trigger.start();
+    }
+
+    public void reschedule( final JobDescription description )
+        throws Exception
+    {
+        // VALIDATE
+        final Job exitingJob = m_jobs.get( description.name() );
+        if( exitingJob == null )
+        {
+            throw new Exception( format( "Rescheduled job [%s] could not be found", description.name() ) );
+        }
+        unschedule( description.name() );
+
+        final TriggerFactory triggerFactory = m_triggerFactoryRegistry.get( description.triggerType() );
+        if( triggerFactory == null )
+        {
+            throw new Exception( format( "Could not find a trigger factory of type [%s]", description.triggerType() ) );
+        }
+
+        final Trigger trigger = triggerFactory.create(
+            description.triggerConfiguration(),
+            exitingJob.flowScheduler
+        );
+
+        final Job job = new Job( description, trigger, exitingJob.flowScheduler );
+        m_jobs.put( description.name(), job );
+
+        LOG.info( format( "Rescheduled job [%s] (%s)", description.name(), job ) );
 
         trigger.start();
     }
@@ -181,12 +212,14 @@ public class DefaultTransformer
 
         final JobDescription jobDescription;
         final Trigger trigger;
+        final FlowScheduler flowScheduler;
 
         public Job( final JobDescription jobDescription,
-                    final Trigger trigger )
+                    final Trigger trigger, final FlowScheduler flowScheduler )
         {
             this.jobDescription = jobDescription;
             this.trigger = trigger;
+            this.flowScheduler = flowScheduler;
         }
 
         @Override

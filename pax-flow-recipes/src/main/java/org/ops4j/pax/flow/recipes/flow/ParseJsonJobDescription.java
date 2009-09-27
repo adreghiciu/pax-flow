@@ -12,6 +12,7 @@ import org.ops4j.pax.flow.api.ConfigurationProperty;
 import static org.ops4j.pax.flow.api.ConfigurationProperty.*;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.ExecutionProperty;
+import static org.ops4j.pax.flow.api.ExecutionProperty.*;
 import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.FlowType;
 import static org.ops4j.pax.flow.api.FlowType.*;
@@ -85,7 +86,7 @@ public class ParseJsonJobDescription
                         }
                         else if( "config".equals( currentName ) || "configuration".equals( currentName ) )
                         {
-                            flowConfig = parseConfig( jp );
+                            triggerConfig = parseConfig( jp );
                         }
                     }
                 }
@@ -119,7 +120,7 @@ public class ParseJsonJobDescription
             final ImmutableJobDescription description = immutableJobDescription(
                 jobName( sourceName ), flowType, flowConfig, triggerType, triggerConfig
             );
-            context.add( ExecutionProperty.executionProperty( ScheduleJob.JOB_DESCRIPTION, description ) );
+            context.add( executionProperty( ScheduleJob.JOB_DESCRIPTION, description ) );
         }
         else
         {

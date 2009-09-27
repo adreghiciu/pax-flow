@@ -29,6 +29,9 @@ public interface Transformer
     void schedule( JobDescription jobDescription )
         throws Exception;
 
+    void reschedule( JobDescription jobDescription )
+        throws Exception;
+
     void unschedule( JobName jobName )
         throws Exception;
 

@@ -54,7 +54,7 @@ public class ScanDirectoryForJobDescriptionsFlow
                     flowName( format( "%s::%s", flowName, "Process Modified" ) ), // TODO do we need a name?
                     new ExtractFileNameFromFile( ParseJsonJobDescription.FILE, ParseJsonJobDescription.JOB_NAME ),
                     new ParseJsonJobDescription(),
-                    new ScheduleJob( transformer ) // TODO this should be reschedule
+                    new RescheduleJob( transformer )
                 )
             ),
             new ForEachFlow(

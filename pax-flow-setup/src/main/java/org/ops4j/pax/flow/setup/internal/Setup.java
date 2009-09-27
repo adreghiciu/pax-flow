@@ -72,7 +72,7 @@ public class Setup
                     jobName( "scanServiceRegistryForJobDescriptions (default setup)" ),
                     ScheduleJobFlow.Factory.TYPE,
                     withoutConfiguration(),
-                    triggerType( "serviceAvailable" ),
+                    ServiceAvailable.Factory.TYPE,
                     immutableConfiguration(
                         configurationProperty(
                             ServiceAvailable.Factory.WATCHED_SERVICE_TYPE, JobDescription.class.getName()
@@ -102,7 +102,7 @@ public class Setup
                             "${default.directory.jobs:./conf/jobs/active}"
                         )
                     ),
-                    triggerType( "fixedRateTimer" ),
+                    FixedRateTimer.Factory.TYPE,
                     immutableConfiguration(
                         frameworkPropertiesConfiguration( m_bundleContext ),
                         configurationProperty( FixedRateTimer.Factory.INITIAL_DELAY, "${default.initialDelay:5s}" ),
