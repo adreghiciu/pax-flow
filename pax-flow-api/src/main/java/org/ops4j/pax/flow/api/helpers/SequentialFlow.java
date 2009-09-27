@@ -13,12 +13,11 @@ import org.ops4j.pax.flow.api.FlowName;
  * @author Alin Dreghiciu
  */
 public class SequentialFlow
+    extends CancelableFlow
     implements Flow
 {
 
     private static final Log LOG = LogFactory.getLog( SequentialFlow.class );
-
-    private final FlowName m_flowName;
 
     private final Flow[] m_flows;
 
@@ -27,8 +26,8 @@ public class SequentialFlow
     public SequentialFlow( final FlowName flowName,
                            final Flow... flows )
     {
-        // VALIDATE
-        m_flowName = flowName;
+        super( flowName );
+
         if( flows == null )
         {
             m_flows = new Flow[0];
@@ -39,69 +38,31 @@ public class SequentialFlow
         }
     }
 
-    public FlowName name()
+    public void run( final ExecutionContext context )
     {
-        return m_flowName;
-    }
+        final long startTime = System.currentTimeMillis();
+        LOG.debug( format( "Starting flow [%s]", name() ) );
 
-    public void execute( final ExecutionContext context )
-    {
-        // TODO handle concurrency
-        m_thread = new Thread(
-            new Runnable()
-            {
-                public void run()
-                {
-                    final long startTime = System.currentTimeMillis();
-                    LOG.debug( format( "Starting flow [%s]", name() ) );
-
-                    try
-                    {
-                        for( Flow flow : m_flows )
-                        {
-                            final long duration = System.currentTimeMillis() - startTime;
-                            LOG.debug(
-                                format(
-                                    "Executing flow [%s:%s] after %d millis from start", name(), flow, duration
-                                )
-                            );
-                            flow.execute( context );
-                        }
-                    }
-                    catch( Exception e )
-                    {
-                        final long duration = System.currentTimeMillis() - startTime;
-                        LOG.warn( format( "Execution of flow [%s] failed after %d millis ", name(), duration ), e );
-                    }
-                    final long duration = System.currentTimeMillis() - startTime;
-                    LOG.debug( format( "Flow [%s] executed successfully in %d millis", name(), duration ) );
-                }
-            },
-            this.toString()
-        );
         try
         {
-            m_thread.join();
-            m_thread.start();
+            for( Flow flow : m_flows )
+            {
+                final long duration = System.currentTimeMillis() - startTime;
+                LOG.debug(
+                    format(
+                        "Executing flow [%s:%s] after %d millis from start", name(), flow, duration
+                    )
+                );
+                flow.execute( context );
+            }
         }
-        catch( InterruptedException ignore )
+        catch( Exception e )
         {
-            // ignore
+            final long duration = System.currentTimeMillis() - startTime;
+            LOG.warn( format( "Execution of flow [%s] failed after %d millis ", name(), duration ), e );
         }
-    }
-
-    public void cancel()
-    {
-        if( m_thread != null && m_thread.isAlive() )
-        {
-            m_thread.interrupt();
-        }
-    }
-
-    @Override
-    public String toString()
-    {
-        return name().value();
+        final long duration = System.currentTimeMillis() - startTime;
+        LOG.debug( format( "Flow [%s] executed successfully in %d millis", name(), duration ) );
     }
 
 }

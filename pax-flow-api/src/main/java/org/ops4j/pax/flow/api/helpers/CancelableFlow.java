@@ -1,5 +1,7 @@
 package org.ops4j.pax.flow.api.helpers;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.FlowName;
@@ -13,6 +15,8 @@ import static org.ops4j.pax.flow.api.FlowName.*;
 public abstract class CancelableFlow
     implements Flow
 {
+
+    private static final Log LOG = LogFactory.getLog( CancelableFlow.class );
 
     private Thread m_thread;
 
@@ -88,6 +92,7 @@ public abstract class CancelableFlow
         if( m_thread != null )
         {
             m_thread.interrupt();
+            m_thread = null;
         }
     }
 

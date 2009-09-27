@@ -10,7 +10,7 @@
   "do" : {
        "flow" : "scanDirectoryForConfigurations",
        "config" : {
-         "directory" : "./conf/configs"
+         "directory" : "../runtime/conf/configs"
        }
   }
 
