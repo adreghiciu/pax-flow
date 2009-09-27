@@ -42,7 +42,8 @@ public class ScanDirectoryForJobDescriptionsFlow
             new ForEachFlow(
                 ListDirectory.ADDED_FILES, ParseJsonJobDescription.FILE,
                 new SequentialFlow(
-                    flowName( format("%s::%s", flowName, "Process Added") ), // TODO do we need a name?
+                    flowName( format( "%s::%s", flowName, "Process Added" ) ), // TODO do we need a name?
+                    new ExtractFileNameFromFile( ParseJsonJobDescription.FILE, ParseJsonJobDescription.JOB_NAME ),
                     new ParseJsonJobDescription(),
                     new ScheduleJob( transformer )
                 )
@@ -50,14 +51,19 @@ public class ScanDirectoryForJobDescriptionsFlow
             new ForEachFlow(
                 ListDirectory.MODIFIED_FILES, ParseJsonJobDescription.FILE,
                 new SequentialFlow(
-                    flowName( format("%s::%s", flowName, "Process Modified") ), // TODO do we need a name?
+                    flowName( format( "%s::%s", flowName, "Process Modified" ) ), // TODO do we need a name?
+                    new ExtractFileNameFromFile( ParseJsonJobDescription.FILE, ParseJsonJobDescription.JOB_NAME ),
                     new ParseJsonJobDescription(),
                     new ScheduleJob( transformer ) // TODO this should be reschedule
                 )
             ),
             new ForEachFlow(
                 ListDirectory.DELETED_FILES, ParseJsonJobDescription.FILE,
-                new UnscheduleJob( transformer )
+                new SequentialFlow(
+                    flowName( format( "%s::%s", flowName, "Process Deleted" ) ), // TODO do we need a name?
+                    new ExtractFileNameFromFile( ParseJsonJobDescription.FILE, UnscheduleJob.JOB_NAME ),
+                    new UnscheduleJob( transformer )
+                )
             )
         );
     }

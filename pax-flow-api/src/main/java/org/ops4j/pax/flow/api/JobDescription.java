@@ -26,6 +26,8 @@ package org.ops4j.pax.flow.api;
 public interface JobDescription
 {
 
+    JobName name();
+
     FlowType flowType();
 
     Configuration flowConfiguration();

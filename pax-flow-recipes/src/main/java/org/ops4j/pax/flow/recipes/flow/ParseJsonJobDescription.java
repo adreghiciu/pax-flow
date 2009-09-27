@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
@@ -18,6 +16,7 @@ import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.FlowType;
 import static org.ops4j.pax.flow.api.FlowType.*;
 import org.ops4j.pax.flow.api.JobDescription;
+import static org.ops4j.pax.flow.api.JobName.*;
 import org.ops4j.pax.flow.api.PropertyName;
 import static org.ops4j.pax.flow.api.PropertyName.*;
 import org.ops4j.pax.flow.api.TriggerType;
@@ -27,6 +26,7 @@ import org.ops4j.pax.flow.api.helpers.ImmutableConfiguration;
 import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
 import org.ops4j.pax.flow.api.helpers.ImmutableJobDescription;
 import static org.ops4j.pax.flow.api.helpers.ImmutableJobDescription.*;
+import org.ops4j.pax.flow.api.helpers.TypedExecutionContext;
 import static org.ops4j.pax.flow.api.helpers.TypedExecutionContext.*;
 
 /**
@@ -39,15 +39,17 @@ public class ParseJsonJobDescription
     implements Flow
 {
 
-    private static final Log LOG = LogFactory.getLog( ParseJsonJobDescription.class );
-
     public static final PropertyName FILE = propertyName( "file" );
+    public static final PropertyName JOB_NAME = propertyName( "jobName" );
 
     @Override
     protected void run( final ExecutionContext context )
         throws Exception
     {
-        final InputStream source = typedExecutionContext( context ).mandatory( FILE, InputStream.class );
+        final TypedExecutionContext executionContext = typedExecutionContext( context );
+
+        final String sourceName = executionContext.mandatory( JOB_NAME, String.class );
+        final InputStream source = executionContext.mandatory( FILE, InputStream.class );
 
         FlowType flowType = null;
         Configuration flowConfig = ImmutableConfiguration.withoutConfiguration();
@@ -115,7 +117,7 @@ public class ParseJsonJobDescription
         if( flowType != null && triggerType != null )
         {
             final ImmutableJobDescription description = immutableJobDescription(
-                flowType, flowConfig, triggerType, triggerConfig
+                jobName( sourceName ), flowType, flowConfig, triggerType, triggerConfig
             );
             context.add( ExecutionProperty.executionProperty( ScheduleJob.JOB_DESCRIPTION, description ) );
         }

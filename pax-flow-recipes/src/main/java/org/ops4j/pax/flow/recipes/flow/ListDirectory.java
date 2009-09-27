@@ -85,7 +85,7 @@ public class ListDirectory
 
         final Collection<File> added = new ArrayList<File>();
         final Collection<File> modified = new ArrayList<File>();
-        final Collection<File> deleted = new ArrayList<File>();
+        final Collection<File> deleted = new ArrayList<File>( previousFiles.keySet() );
 
         for( Map.Entry<File, Long> entry : files.entrySet() )
         {
@@ -103,10 +103,7 @@ public class ListDirectory
                 {
                     modified.add( entry.getKey() );
                 }
-            }
-            else if( timestamp != null )
-            {
-                deleted.add( entry.getKey() );
+                deleted.remove( entry.getKey() );
             }
         }
 

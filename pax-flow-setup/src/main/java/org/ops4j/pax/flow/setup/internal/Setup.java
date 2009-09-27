@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import static org.ops4j.pax.flow.api.ConfigurationProperty.*;
 import org.ops4j.pax.flow.api.JobDescription;
+import static org.ops4j.pax.flow.api.JobName.*;
 import org.ops4j.pax.flow.api.Transformer;
 import static org.ops4j.pax.flow.api.TriggerType.*;
 import static org.ops4j.pax.flow.api.helpers.FrameworkPropertiesConfiguration.*;
@@ -68,6 +69,7 @@ public class Setup
         {
             m_transformer.schedule(
                 immutableJobDescription(
+                    jobName( "scanServiceRegistryForJobDescriptions (default setup)" ),
                     ScheduleJobFlow.Factory.TYPE,
                     withoutConfiguration(),
                     triggerType( "serviceAvailable" ),
@@ -91,12 +93,13 @@ public class Setup
         {
             m_transformer.schedule(
                 immutableJobDescription(
+                    jobName( "scanFileSystemForJobDescriptions (default setup)" ),
                     ScanDirectoryForJobDescriptionsFlow.Factory.TYPE,
                     immutableConfiguration(
                         frameworkPropertiesConfiguration( m_bundleContext ),
                         configurationProperty(
                             ScanDirectoryForJobDescriptionsFlow.Factory.DIRECTORY,
-                            "${default.directory.jobs:./conf/jobs}"
+                            "${default.directory.jobs:./conf/jobs/active}"
                         )
                     ),
                     triggerType( "fixedRateTimer" ),

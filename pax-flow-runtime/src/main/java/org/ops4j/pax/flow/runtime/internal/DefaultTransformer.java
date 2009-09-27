@@ -1,8 +1,8 @@
 package org.ops4j.pax.flow.runtime.internal;
 
 import static java.lang.String.*;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import com.google.inject.Inject;
@@ -15,6 +15,7 @@ import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.FlowFactoryRegistry;
 import org.ops4j.pax.flow.api.JobDescription;
+import org.ops4j.pax.flow.api.JobName;
 import org.ops4j.pax.flow.api.Transformer;
 import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.TriggerFactory;
@@ -34,7 +35,7 @@ public class DefaultTransformer
 
     private static final Log LOG = LogFactory.getLog( DefaultTransformer.class );
 
-    private final Collection<Job> m_jobs;
+    private final Map<JobName, Job> m_jobs;
 
     private final ExecutorService m_executorService;
 
@@ -50,14 +51,14 @@ public class DefaultTransformer
         m_flowFactoryRegistry = flowFactoryRegistry;
         m_triggerFactoryRegistry = triggerFactoryRegistry;
 
-        m_jobs = new ArrayList<Job>();
+        m_jobs = new HashMap<JobName, Job>();
     }
 
     @Start
     public void start()
     {
         LOG.info( format( "Starting transformer (%s jobs active)", m_jobs.size() ) );
-        for( Job job : m_jobs )
+        for( Job job : m_jobs.values() )
         {
             try
             {
@@ -73,7 +74,7 @@ public class DefaultTransformer
     @Stop
     public void stop()
     {
-        for( Job job : m_jobs )
+        for( Job job : m_jobs.values() )
         {
             try
             {
@@ -104,11 +105,22 @@ public class DefaultTransformer
         );
 
         final Job job = new Job( description, trigger );
-        m_jobs.add( job );
+        m_jobs.put( description.name(), job );
 
-        LOG.info( format( "Scheduled job [%s]", job ) );
+        LOG.info( format( "Scheduled job [%s] (named [%s]", job, description.name() ) );
 
         trigger.start();
+    }
+
+    public void unschedule( final JobName jobName )
+        throws Exception
+    {
+        final Job job = m_jobs.remove( jobName );
+        if( job != null )
+        {
+            job.trigger.stop();
+        }
+        LOG.info( format( "Unscheduled job named [%s]", jobName ) );
     }
 
     private class FlowScheduler
