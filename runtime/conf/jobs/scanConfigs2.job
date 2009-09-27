@@ -1,0 +1,17 @@
+{
+
+  "when" : {
+    "trigger" : "fixedRateTimer",
+    "config" : {
+      "repeatPeriod" : "1m"
+    }
+  },
+
+  "do" : {
+       "flow" : "scanDirectoryForConfigurations",
+       "config" : {
+         "directory" : "./conf/configs"
+       }
+  }
+
+}

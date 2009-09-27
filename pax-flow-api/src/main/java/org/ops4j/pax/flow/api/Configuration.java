@@ -30,6 +30,4 @@ public interface Configuration
 
     <T> T get( PropertyName name, T defaultValue );
 
-    Iterable<PropertyName> getNames();
-
 }

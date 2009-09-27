@@ -1,9 +1,12 @@
 package org.ops4j.pax.flow.runtime.internal;
 
 import static java.lang.String.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.flow.api.ExecutionContext;
@@ -13,19 +16,25 @@ import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.FlowFactoryRegistry;
 import org.ops4j.pax.flow.api.JobDescription;
 import org.ops4j.pax.flow.api.Transformer;
+import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.api.TriggerFactoryRegistry;
+import org.ops4j.peaberry.activation.Start;
+import org.ops4j.peaberry.activation.Stop;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
+@Singleton
 public class DefaultTransformer
     implements Transformer
 {
 
     private static final Log LOG = LogFactory.getLog( DefaultTransformer.class );
+
+    private final Collection<Job> m_jobs;
 
     private final ExecutorService m_executorService;
 
@@ -40,6 +49,42 @@ public class DefaultTransformer
         m_executorService = executorService;
         m_flowFactoryRegistry = flowFactoryRegistry;
         m_triggerFactoryRegistry = triggerFactoryRegistry;
+
+        m_jobs = new ArrayList<Job>();
+    }
+
+    @Start
+    public void start()
+    {
+        LOG.info( format( "Starting transformer (%s jobs active)", m_jobs.size() ) );
+        for( Job job : m_jobs )
+        {
+            try
+            {
+                job.trigger.start();
+            }
+            catch( Exception ignore )
+            {
+                LOG.error( format( "Could not start trigger [%s]", job.trigger ), ignore );
+            }
+        }
+    }
+
+    @Stop
+    public void stop()
+    {
+        for( Job job : m_jobs )
+        {
+            try
+            {
+                job.trigger.stop();
+            }
+            catch( Exception ignore )
+            {
+                LOG.error( format( "Could not stop trigger [%s]", job.trigger ), ignore );
+            }
+        }
+        LOG.info( "Stopped transformer" );
     }
 
     public void schedule( final JobDescription description )
@@ -53,10 +98,17 @@ public class DefaultTransformer
             throw new Exception( format( "Could not find a trigger factory of type [%s]", description.triggerType() ) );
         }
 
-        triggerFactory.create(
+        final Trigger trigger = triggerFactory.create(
             description.triggerConfiguration(),
             new FlowScheduler( description )
-        ).start();
+        );
+
+        final Job job = new Job( description, trigger );
+        m_jobs.add( job );
+
+        LOG.info( format( "Scheduled job [%s]", job ) );
+
+        trigger.start();
     }
 
     private class FlowScheduler
@@ -87,7 +139,7 @@ public class DefaultTransformer
                             if( flowFactory == null )
                             {
                                 LOG.warn(
-                                    format( "Could noy find a flow factory of type [%s]", m_description.flowType() )
+                                    format( "Could not find a flow factory of type [%s]", m_description.flowType() )
                                 );
                             }
                             else
@@ -110,6 +162,27 @@ public class DefaultTransformer
                 }
             );
         }
+    }
+
+    private static class Job
+    {
+
+        final JobDescription jobDescription;
+        final Trigger trigger;
+
+        public Job( final JobDescription jobDescription,
+                    final Trigger trigger )
+        {
+            this.jobDescription = jobDescription;
+            this.trigger = trigger;
+        }
+
+        @Override
+        public String toString()
+        {
+            return format( "Execute [%s] when [%s]", jobDescription.flowType(), trigger );
+        }
+
     }
 
 }

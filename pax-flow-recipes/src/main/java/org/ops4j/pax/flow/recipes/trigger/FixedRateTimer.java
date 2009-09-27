@@ -119,7 +119,7 @@ public class FixedRateTimer
     public String toString()
     {
         return String.format(
-            "Fixed rate timer trigger, firing at every [%s], starting after [%s]",
+            "[%s ms] elapsed (initial delay of [%s ms])",
             m_repeatPeriod,
             m_initialDelay
         );

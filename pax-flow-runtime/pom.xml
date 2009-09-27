@@ -77,6 +77,11 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.ops4j</groupId>
+      <artifactId>peaberry.activation</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
       <scope>provided</scope>

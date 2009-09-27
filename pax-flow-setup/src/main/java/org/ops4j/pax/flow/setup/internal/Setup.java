@@ -26,6 +26,7 @@ import static org.ops4j.pax.flow.api.ConfigurationProperty.*;
 import org.ops4j.pax.flow.api.JobDescription;
 import org.ops4j.pax.flow.api.Transformer;
 import static org.ops4j.pax.flow.api.TriggerType.*;
+import static org.ops4j.pax.flow.api.helpers.FrameworkPropertiesConfiguration.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableJobDescription.*;
 import org.ops4j.pax.flow.recipes.flow.ScanDirectoryForJobDescriptionsFlow;
@@ -92,6 +93,7 @@ public class Setup
                 immutableJobDescription(
                     ScanDirectoryForJobDescriptionsFlow.Factory.TYPE,
                     immutableConfiguration(
+                        frameworkPropertiesConfiguration( m_bundleContext ),
                         configurationProperty(
                             ScanDirectoryForJobDescriptionsFlow.Factory.DIRECTORY,
                             "${default.directory.jobs:./conf/jobs}"
@@ -99,6 +101,7 @@ public class Setup
                     ),
                     triggerType( "fixedRateTimer" ),
                     immutableConfiguration(
+                        frameworkPropertiesConfiguration( m_bundleContext ),
                         configurationProperty( FixedRateTimer.Factory.INITIAL_DELAY, "${default.initialDelay:5s}" ),
                         configurationProperty( FixedRateTimer.Factory.REPEAT_PERIOD, "${default.repeatPeriod:10s}" )
                     )

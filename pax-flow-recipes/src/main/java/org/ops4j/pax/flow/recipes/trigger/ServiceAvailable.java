@@ -18,6 +18,7 @@
 
 package org.ops4j.pax.flow.recipes.trigger;
 
+import static java.lang.String.*;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.inject.Inject;
@@ -56,6 +57,7 @@ public class ServiceAvailable
     public static final PropertyName SERVICE = propertyName( "service" );
 
     private final ServiceRegistry m_serviceRegistry;
+    private final String m_description;
 
     public ServiceAvailable( final TriggerName name,
                              final ExecutionTarget target,
@@ -85,6 +87,16 @@ public class ServiceAvailable
                 }
             }
         );
+        m_description = format( "Service of type [%s] is available%s",
+                                serviceClass,
+                                serviceFilter == null ? "" : format( "(filter: %s", serviceFilter )
+        );
+    }
+
+    @Override
+    public String toString()
+    {
+        return m_description;
     }
 
     @Override
@@ -139,7 +151,7 @@ public class ServiceAvailable
             final Class serviceClass = m_bundleContext.getBundle().loadClass( serviceClassName );
 
             return new ServiceAvailable(
-                triggerName( String.format( "%s::%d", type(), m_counter++ ) ),
+                triggerName( format( "%s::%d", type(), m_counter++ ) ),
                 target,
                 m_serviceRegistry,
                 serviceClass,
@@ -150,7 +162,7 @@ public class ServiceAvailable
         @Override
         public String toString()
         {
-            return String.format( "Trigger factory for type [%s] (%d instances)", type(), m_counter );
+            return format( "Trigger factory for type [%s] (%d instances)", type(), m_counter );
         }
 
         public static Map<String, String> attributes()

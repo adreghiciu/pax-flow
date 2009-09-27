@@ -1,5 +1,6 @@
 package org.ops4j.pax.flow.api.helpers;
 
+import static java.lang.String.*;
 import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.FlowType;
 import org.ops4j.pax.flow.api.JobDescription;
@@ -53,7 +54,7 @@ public class ImmutableJobDescription
     @Override
     public String toString()
     {
-        return String.format( "Flow fo type [%s] fired by [%s]", m_flowType, m_triggerType );
+        return format( "When [%s] fires execute [%s]", m_triggerType, m_flowType );
     }
 
     public static ImmutableJobDescription immutableJobDescription( final FlowType flowType,
