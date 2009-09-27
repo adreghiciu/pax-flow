@@ -122,7 +122,7 @@ public class DefaultTransformer
         {
             throw new Exception( format( "Rescheduled job [%s] could not be found", description.name() ) );
         }
-        unschedule( description.name() );
+        exitingJob.trigger.stop();
 
         final TriggerFactory triggerFactory = m_triggerFactoryRegistry.get( description.triggerType() );
         if( triggerFactory == null )
