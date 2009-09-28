@@ -25,12 +25,12 @@ import static org.ops4j.pax.flow.api.helpers.TypedConfiguration.*;
  *
  * @author Alin Dreghiciu
  */
-public class ScanDirectoryForJobDescriptionsFlow
+public class ScanDirectoryForJobDescriptions
     extends SequentialFlow
     implements Flow
 {
 
-    public ScanDirectoryForJobDescriptionsFlow( final FlowName flowName,
+    public ScanDirectoryForJobDescriptions( final FlowName flowName,
                                                 final Transformer transformer,
                                                 final File directory,
                                                 final String[] includes,
@@ -72,7 +72,7 @@ public class ScanDirectoryForJobDescriptionsFlow
         implements FlowFactory
     {
 
-        public static final FlowType TYPE = flowType( ScanDirectoryForJobDescriptionsFlow.class );
+        public static final FlowType TYPE = flowType( ScanDirectoryForJobDescriptions.class );
 
         public static final PropertyName DIRECTORY = propertyName( "directory" );
         public static final PropertyName INCLUDES = propertyName( "includes" );
@@ -94,11 +94,11 @@ public class ScanDirectoryForJobDescriptionsFlow
             return TYPE;
         }
 
-        public ScanDirectoryForJobDescriptionsFlow create( final Configuration configuration )
+        public ScanDirectoryForJobDescriptions create( final Configuration configuration )
         {
             final TypedConfiguration cfg = typedConfiguration( configuration );
 
-            return new ScanDirectoryForJobDescriptionsFlow(
+            return new ScanDirectoryForJobDescriptions(
                 flowName( format( "%s::%d", type(), m_counter++ ) ),
                 m_transformer,
                 new File( cfg.mandatory( DIRECTORY, String.class ) ),

@@ -26,11 +26,10 @@ import static org.ops4j.pax.flow.api.ConfigurationProperty.*;
 import org.ops4j.pax.flow.api.JobDescription;
 import static org.ops4j.pax.flow.api.JobName.*;
 import org.ops4j.pax.flow.api.Transformer;
-import static org.ops4j.pax.flow.api.TriggerType.*;
 import static org.ops4j.pax.flow.api.helpers.FrameworkPropertiesConfiguration.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableJobDescription.*;
-import org.ops4j.pax.flow.recipes.flow.ScanDirectoryForJobDescriptionsFlow;
+import org.ops4j.pax.flow.recipes.flow.ScanDirectoryForJobDescriptions;
 import org.ops4j.pax.flow.recipes.flow.ScheduleJobFlow;
 import org.ops4j.pax.flow.recipes.trigger.FixedRateTimer;
 import org.ops4j.pax.flow.recipes.trigger.ServiceAvailable;
@@ -94,12 +93,12 @@ public class Setup
             m_transformer.schedule(
                 immutableJobDescription(
                     jobName( "scanFileSystemForJobDescriptions (default setup)" ),
-                    ScanDirectoryForJobDescriptionsFlow.Factory.TYPE,
+                    ScanDirectoryForJobDescriptions.Factory.TYPE,
                     immutableConfiguration(
                         frameworkPropertiesConfiguration( m_bundleContext ),
                         configurationProperty(
-                            ScanDirectoryForJobDescriptionsFlow.Factory.DIRECTORY,
-                            "${default.directory.jobs:./conf/jobs/active}"
+                            ScanDirectoryForJobDescriptions.Factory.DIRECTORY,
+                            "${default.directory.jobs:${default.directory:./conf}/jobs/active}"
                         )
                     ),
                     FixedRateTimer.Factory.TYPE,

@@ -3,10 +3,10 @@ mvn:org.ops4j.pax.flow/pax-flow-runtime@update
 mvn:org.ops4j.pax.flow/pax-flow-recipes@update
 mvn:org.ops4j.pax.flow/pax-flow-setup@update
 
-compendium
+config
 peaberry/1.1.1
 log
-felix.fileinstall
+#felix.fileinstall
 
 mvn:org.ops4j/peaberry.activation/1.2-SNAPSHOT@update
 

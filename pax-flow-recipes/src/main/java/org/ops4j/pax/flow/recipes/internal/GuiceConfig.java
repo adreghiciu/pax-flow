@@ -23,11 +23,13 @@ import com.google.inject.AbstractModule;
 import static com.google.inject.name.Names.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.Transformer;
 import org.ops4j.pax.flow.api.TriggerFactory;
-import org.ops4j.pax.flow.recipes.flow.ScanDirectoryForJobDescriptionsFlow;
+import org.ops4j.pax.flow.recipes.flow.ScanDirectoryForJobDescriptions;
 import org.ops4j.pax.flow.recipes.flow.ScheduleJobFlow;
+import org.ops4j.pax.flow.recipes.flow.cm.ScanDirectoryForConfigurations;
 import org.ops4j.pax.flow.recipes.trigger.FixedRateTimer;
 import org.ops4j.pax.flow.recipes.trigger.Manual;
 import org.ops4j.pax.flow.recipes.trigger.ServiceAvailable;
@@ -51,6 +53,7 @@ public class GuiceConfig
 
     private static final String SCHEDULE_JOB_FLOW = "ScheduleJobFlow";
     private static final String SCAN_DIRECTORY_FOR_JOB_DESCRIPTIONS = "ScanDirectoryForJobDescriptionsFlow";
+    private static final String SCAN_DIRECTORY_FOR_CONFIGURATIONS = "ScanDirectoryForConfigurationsFlow";
 
     @Override
     protected void configure()
@@ -96,8 +99,18 @@ public class GuiceConfig
         bind( export( FlowFactory.class ) )
             .annotatedWith( named( SCAN_DIRECTORY_FOR_JOB_DESCRIPTIONS ) )
             .toProvider(
-                service( ScanDirectoryForJobDescriptionsFlow.Factory.class )
-                    .attributes( ScanDirectoryForJobDescriptionsFlow.Factory.attributes() )
+                service( ScanDirectoryForJobDescriptions.Factory.class )
+                    .attributes( ScanDirectoryForJobDescriptions.Factory.attributes() )
+                    .export()
+            );
+
+        bind( ConfigurationAdmin.class ).toProvider( service( ConfigurationAdmin.class ).single() );
+
+        bind( export( FlowFactory.class ) )
+            .annotatedWith( named( SCAN_DIRECTORY_FOR_CONFIGURATIONS ) )
+            .toProvider(
+                service( ScanDirectoryForConfigurations.Factory.class )
+                    .attributes( ScanDirectoryForConfigurations.Factory.attributes() )
                     .export()
             );
 
