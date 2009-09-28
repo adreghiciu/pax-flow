@@ -13,7 +13,7 @@ import static org.ops4j.pax.flow.api.helpers.TypedExecutionContext.*;
  *
  * @author Alin Dreghiciu
  */
-public class ExtractPidFromFile
+public class DeterminePidFromFileName
     extends CancelableFlow
     implements Flow
 {
@@ -22,7 +22,7 @@ public class ExtractPidFromFile
     private final PropertyName m_pidPropertyName;
     private final PropertyName m_factoryPidPropertyName;
 
-    public ExtractPidFromFile( final PropertyName filePropertyName,
+    public DeterminePidFromFileName( final PropertyName filePropertyName,
                                final PropertyName pidPropertyName,
                                final PropertyName factoryPidPropertyName )
     {

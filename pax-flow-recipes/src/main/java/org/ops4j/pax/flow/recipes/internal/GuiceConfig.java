@@ -28,7 +28,7 @@ import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.Transformer;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.recipes.flow.ScanDirectoryForJobDescriptions;
-import org.ops4j.pax.flow.recipes.flow.ScheduleJobFlow;
+import org.ops4j.pax.flow.recipes.flow.WatchRegistryForJobDescriptions;
 import org.ops4j.pax.flow.recipes.flow.cm.ScanDirectoryForConfigurations;
 import org.ops4j.pax.flow.recipes.trigger.FixedRateTimer;
 import org.ops4j.pax.flow.recipes.trigger.Manual;
@@ -91,8 +91,8 @@ public class GuiceConfig
         bind( export( FlowFactory.class ) )
             .annotatedWith( named( SCHEDULE_JOB_FLOW ) )
             .toProvider(
-                service( ScheduleJobFlow.Factory.class )
-                    .attributes( ScheduleJobFlow.Factory.attributes() )
+                service( WatchRegistryForJobDescriptions.Factory.class )
+                    .attributes( WatchRegistryForJobDescriptions.Factory.attributes() )
                     .export()
             );
 

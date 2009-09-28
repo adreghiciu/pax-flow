@@ -21,8 +21,6 @@ public class SequentialFlow
 
     private final Flow[] m_flows;
 
-    private Thread m_thread;
-
     public SequentialFlow( final FlowName flowName,
                            final Flow... flows )
     {

@@ -66,18 +66,4 @@ public class ForEachFlow
         }
     }
 
-    public void cancel()
-    {
-        if( m_thread != null && m_thread.isAlive() )
-        {
-            m_thread.interrupt();
-        }
-    }
-
-    @Override
-    public String toString()
-    {
-        return name().value();
-    }
-
 }

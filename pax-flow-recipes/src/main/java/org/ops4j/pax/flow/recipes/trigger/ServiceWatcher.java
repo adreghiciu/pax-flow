@@ -49,19 +49,25 @@ import static org.ops4j.peaberry.util.Filters.*;
  *
  * @author Alin Dreghiciu
  */
-public class ServiceAvailable
-    extends AbstractTrigger<ServiceAvailable>
+public class ServiceWatcher
+    extends AbstractTrigger<ServiceWatcher>
     implements Trigger
 {
+
+    public static final PropertyName SERVICE = propertyName( "service" );
+    public static final PropertyName EVENT = propertyName( "event" );
+
+    public static final String ADDED = "ADDED";
+    public static final String REMOVED = "REMOVED";
 
     private final ServiceRegistry m_serviceRegistry;
     private final String m_description;
 
-    public ServiceAvailable( final TriggerName name,
-                             final ExecutionTarget target,
-                             final ServiceRegistry serviceRegistry,
-                             final Class<?> serviceClass,
-                             final String serviceFilter )
+    public ServiceWatcher( final TriggerName name,
+                           final ExecutionTarget target,
+                           final ServiceRegistry serviceRegistry,
+                           final Class<?> serviceClass,
+                           final String serviceFilter )
     {
         super( name, target );
         // VALIDATE
@@ -77,16 +83,26 @@ public class ServiceAvailable
                     final Object service = super.adding( anImport );
 
                     final DefaultExecutionContext executionContext = defaultExecutionContext();
-                    executionContext.add( executionProperty( ServiceWatcher.SERVICE, service ) );
-                    executionContext.add( executionProperty( ServiceWatcher.EVENT, ServiceWatcher.ADDED ) );
+                    executionContext.add( executionProperty( SERVICE, service ) );
+                    executionContext.add( executionProperty( EVENT, ADDED ) );
 
                     fire( executionContext );
 
                     return service;
                 }
+
+                @Override
+                protected void removed( final Object service )
+                {
+                    final DefaultExecutionContext executionContext = defaultExecutionContext();
+                    executionContext.add( executionProperty( SERVICE, service ) );
+                    executionContext.add( executionProperty( EVENT, REMOVED ) );
+
+                    fire( executionContext );
+                }
             }
         );
-        m_description = format( "Service of type [%s] is available%s",
+        m_description = format( "Watch service of type [%s]%s",
                                 serviceClass,
                                 serviceFilter == null ? "" : format( " (filter: %s", serviceFilter )
         );
@@ -99,7 +115,7 @@ public class ServiceAvailable
     }
 
     @Override
-    protected ServiceAvailable itself()
+    protected ServiceWatcher itself()
     {
         return this;
     }
@@ -110,10 +126,10 @@ public class ServiceAvailable
      * @author Alin Dreghiciu
      */
     public static class Factory
-        implements TriggerFactory<ServiceAvailable>
+        implements TriggerFactory<ServiceWatcher>
     {
 
-        public static final TriggerType TYPE = triggerType( ServiceAvailable.class );
+        public static final TriggerType TYPE = triggerType( ServiceWatcher.class );
 
         public static final PropertyName WATCHED_SERVICE_TYPE = propertyName( "watchedServiceType" );
         public static final PropertyName WATCHED_SERVICE_FILTER = propertyName( "watchedServiceFilter" );
@@ -137,8 +153,8 @@ public class ServiceAvailable
             return TYPE;
         }
 
-        public ServiceAvailable create( final Configuration configuration,
-                                        final ExecutionTarget target )
+        public ServiceWatcher create( final Configuration configuration,
+                                      final ExecutionTarget target )
             throws ClassNotFoundException
         {
 
@@ -149,7 +165,7 @@ public class ServiceAvailable
 
             final Class serviceClass = m_bundleContext.getBundle().loadClass( serviceClassName );
 
-            return new ServiceAvailable(
+            return new ServiceWatcher(
                 triggerName( format( "%s::%d", type(), m_counter++ ) ),
                 target,
                 m_serviceRegistry,

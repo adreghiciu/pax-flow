@@ -30,7 +30,7 @@ import static org.ops4j.pax.flow.api.helpers.FrameworkPropertiesConfiguration.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableJobDescription.*;
 import org.ops4j.pax.flow.recipes.flow.ScanDirectoryForJobDescriptions;
-import org.ops4j.pax.flow.recipes.flow.ScheduleJobFlow;
+import org.ops4j.pax.flow.recipes.flow.WatchRegistryForJobDescriptions;
 import org.ops4j.pax.flow.recipes.trigger.FixedRateTimer;
 import org.ops4j.pax.flow.recipes.trigger.ServiceAvailable;
 
@@ -56,20 +56,20 @@ public class Setup
         m_transformer = transformer;
         m_bundleContext = bundleContext;
 
-        setupScheduleJobFlow();
+        setupWatchRegistryForJobDescriptionsFlow();
         setupJobDescriptionScanningFlow();
     }
 
     // TODO on stop unregister jobs?
 
-    private void setupScheduleJobFlow()
+    private void setupWatchRegistryForJobDescriptionsFlow()
     {
         try
         {
             m_transformer.schedule(
                 immutableJobDescription(
-                    jobName( "scanServiceRegistryForJobDescriptions (default setup)" ),
-                    ScheduleJobFlow.Factory.TYPE,
+                    jobName( "watchRegistryForJobDescriptions (default setup)" ),
+                    WatchRegistryForJobDescriptions.Factory.TYPE,
                     withoutConfiguration(),
                     ServiceAvailable.Factory.TYPE,
                     immutableConfiguration(

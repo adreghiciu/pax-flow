@@ -19,9 +19,7 @@ import org.ops4j.pax.flow.api.helpers.ForEachFlow;
 import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
 import static org.ops4j.pax.flow.api.helpers.TypedConfiguration.*;
-import org.ops4j.pax.flow.recipes.flow.ExtractFileNameFromFile;
 import org.ops4j.pax.flow.recipes.flow.ListDirectory;
-import org.ops4j.pax.flow.recipes.flow.UnscheduleJob;
 
 /**
  * JAVADOC
@@ -34,10 +32,10 @@ public class ScanDirectoryForConfigurations
 {
 
     public ScanDirectoryForConfigurations( final FlowName flowName,
-                                               final ConfigurationAdmin configurationAdmin,
-                                               final File directory,
-                                               final String[] includes,
-                                               final String[] excludes )
+                                           final ConfigurationAdmin configurationAdmin,
+                                           final File directory,
+                                           final String[] includes,
+                                           final String[] excludes )
     {
         super(
             flowName,
@@ -45,8 +43,8 @@ public class ScanDirectoryForConfigurations
             new ForEachFlow(
                 ListDirectory.ADDED_FILES, ParsePropertiesFileAsConfiguration.FILE,
                 new SequentialFlow(
-                    flowName( format( "%s::%s", flowName, "Process Added" ) ), // TODO do we need a name?
-                    new ExtractPidFromFile(
+                    flowName( format( "%s::%s", flowName, "Added" ) ), // TODO do we need a name?
+                    new DeterminePidFromFileName(
                         ParsePropertiesFileAsConfiguration.FILE,
                         AddConfiguration.PID,
                         AddConfiguration.FACTORY_PID
@@ -58,8 +56,8 @@ public class ScanDirectoryForConfigurations
             new ForEachFlow(
                 ListDirectory.MODIFIED_FILES, ParsePropertiesFileAsConfiguration.FILE,
                 new SequentialFlow(
-                    flowName( format( "%s::%s", flowName, "Process Modified" ) ), // TODO do we need a name?
-                    new ExtractPidFromFile(
+                    flowName( format( "%s::%s", flowName, "Modified" ) ), // TODO do we need a name?
+                    new DeterminePidFromFileName(
                         ParsePropertiesFileAsConfiguration.FILE,
                         UpdateConfiguration.PID,
                         UpdateConfiguration.FACTORY_PID
@@ -71,11 +69,11 @@ public class ScanDirectoryForConfigurations
             new ForEachFlow(
                 ListDirectory.DELETED_FILES, ParsePropertiesFileAsConfiguration.FILE,
                 new SequentialFlow(
-                    flowName( format( "%s::%s", flowName, "Process Deleted" ) ), // TODO do we need a name?
-                    new ExtractPidFromFile(
+                    flowName( format( "%s::%s", flowName, "Deleted" ) ), // TODO do we need a name?
+                    new DeterminePidFromFileName(
                         ParsePropertiesFileAsConfiguration.FILE,
-                        UpdateConfiguration.PID,
-                        UpdateConfiguration.FACTORY_PID
+                        DeleteConfiguration.PID,
+                        DeleteConfiguration.FACTORY_PID
                     ),
                     new DeleteConfiguration( configurationAdmin )
                 )

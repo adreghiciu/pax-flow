@@ -20,21 +20,21 @@ public abstract class CancelableFlow
 
     private Thread m_thread;
 
-    private FlowName m_flowName;
+    private FlowName m_name;
 
     public CancelableFlow()
     {
-        m_flowName = flowName( this.getClass().getSimpleName() );
+        m_name = flowName( this.getClass().getSimpleName() );
     }
 
-    public CancelableFlow( final FlowName flowName )
+    public CancelableFlow( final FlowName name )
     {
-        m_flowName = flowName;
+        m_name = name;
     }
 
     public FlowName name()
     {
-        return m_flowName;
+        return m_name;
     }
 
     public void execute( final ExecutionContext context )
@@ -89,11 +89,17 @@ public abstract class CancelableFlow
     public void cancel()
         throws Exception
     {
-        if( m_thread != null )
+        if( m_thread != null && m_thread.isAlive() )
         {
             m_thread.interrupt();
             m_thread = null;
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return name().value();
     }
 
     protected abstract void run( ExecutionContext context )

@@ -13,27 +13,33 @@ import static org.ops4j.pax.flow.api.FlowType.*;
 import org.ops4j.pax.flow.api.JobDescription;
 import org.ops4j.pax.flow.api.Transformer;
 import org.ops4j.pax.flow.api.helpers.SequentialFlow;
-import org.ops4j.pax.flow.recipes.trigger.ServiceAvailable;
+import org.ops4j.pax.flow.api.helpers.SwitchFlow;
+import static org.ops4j.pax.flow.api.helpers.SwitchFlow.SwitchCase.*;
+import org.ops4j.pax.flow.recipes.trigger.ServiceWatcher;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public class ScheduleJobFlow
+public class WatchRegistryForJobDescriptions
     extends SequentialFlow
     implements Flow
 {
 
-    public ScheduleJobFlow( final FlowName flowName,
-                            final Transformer transformer )
+    public WatchRegistryForJobDescriptions( final FlowName flowName,
+                                            final Transformer transformer )
     {
         super(
             flowName,
             new CopyProperty<JobDescription>(
-                ServiceAvailable.SERVICE, ScheduleJob.JOB_DESCRIPTION, JobDescription.class
+                ServiceWatcher.SERVICE, ScheduleJob.JOB_DESCRIPTION, JobDescription.class
             ),
-            new ScheduleJob( transformer )
+            new SwitchFlow(
+                ServiceWatcher.EVENT,
+                switchCase( ServiceWatcher.ADDED, new ScheduleJob( transformer ) ),
+                switchCase( ServiceWatcher.REMOVED, new UnscheduleJob( transformer ) )
+            )
         );
     }
 
@@ -41,7 +47,7 @@ public class ScheduleJobFlow
         implements FlowFactory
     {
 
-        public static final FlowType TYPE = flowType( ScheduleJobFlow.class );
+        public static final FlowType TYPE = flowType( WatchRegistryForJobDescriptions.class );
 
         private final Transformer m_transformer;
 
@@ -59,9 +65,9 @@ public class ScheduleJobFlow
             return TYPE;
         }
 
-        public ScheduleJobFlow create( final Configuration configuration )
+        public WatchRegistryForJobDescriptions create( final Configuration configuration )
         {
-            return new ScheduleJobFlow(
+            return new WatchRegistryForJobDescriptions(
                 flowName( String.format( "%s::%d", type(), m_counter++ ) ),
                 m_transformer
             );
