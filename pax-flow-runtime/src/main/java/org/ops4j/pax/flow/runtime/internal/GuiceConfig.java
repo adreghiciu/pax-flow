@@ -3,6 +3,7 @@ package org.ops4j.pax.flow.runtime.internal;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
 import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.FlowFactoryRegistry;
 import org.ops4j.pax.flow.api.Transformer;
@@ -12,10 +13,10 @@ import static org.ops4j.peaberry.Peaberry.*;
 import static org.ops4j.peaberry.util.TypeLiterals.*;
 
 /**
-* JAVADOC
-*
-* @author Alin Dreghiciu
-*/
+ * JAVADOC
+ *
+ * @author Alin Dreghiciu
+ */
 public class GuiceConfig extends AbstractModule
 {
 
@@ -43,6 +44,7 @@ public class GuiceConfig extends AbstractModule
         // TODO make number of threads configurable
         bind( ExecutorService.class ).toInstance( Executors.newFixedThreadPool( 10 ) );
         bind( export( Transformer.class ) ).toProvider( service( DefaultTransformer.class ).export() );
+        bind( DefaultTransformer.class ).in( Singleton.class );
     }
 
 }
