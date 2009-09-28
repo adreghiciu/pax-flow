@@ -33,6 +33,8 @@ import org.ops4j.pax.flow.recipes.flow.cm.ScanDirectoryForConfigurations;
 import org.ops4j.pax.flow.recipes.trigger.FixedRateTimer;
 import org.ops4j.pax.flow.recipes.trigger.Manual;
 import org.ops4j.pax.flow.recipes.trigger.ServiceAvailable;
+import org.ops4j.pax.flow.recipes.trigger.ServiceUnavailable;
+import org.ops4j.pax.flow.recipes.trigger.ServiceWatcher;
 import static org.ops4j.peaberry.Peaberry.*;
 import static org.ops4j.peaberry.util.TypeLiterals.*;
 
@@ -47,14 +49,6 @@ public class GuiceConfig
 
     private static final Log LOG = LogFactory.getLog( GuiceConfig.class );
 
-    private static final String SERVICE_AVAILABLE = "serviceAvailableTrigger";
-    private static final String MANUAL = "manualTriger";
-    private static final String TIMER = "fixedRateTimerTrigger";
-
-    private static final String SCHEDULE_JOB_FLOW = "ScheduleJobFlow";
-    private static final String SCAN_DIRECTORY_FOR_JOB_DESCRIPTIONS = "ScanDirectoryForJobDescriptionsFlow";
-    private static final String SCAN_DIRECTORY_FOR_CONFIGURATIONS = "ScanDirectoryForConfigurationsFlow";
-
     @Override
     protected void configure()
     {
@@ -63,7 +57,7 @@ public class GuiceConfig
         bind( ScheduledExecutorService.class ).toInstance( Executors.newScheduledThreadPool( 5 ) );
 
         bind( export( TriggerFactory.class ) )
-            .annotatedWith( named( MANUAL ) )
+            .annotatedWith( named( Manual.Factory.class.getName() ) )
             .toProvider(
                 service( Manual.Factory.class )
                     .attributes( Manual.Factory.attributes() )
@@ -71,7 +65,7 @@ public class GuiceConfig
             );
 
         bind( export( TriggerFactory.class ) )
-            .annotatedWith( named( SERVICE_AVAILABLE ) )
+            .annotatedWith( named( ServiceAvailable.Factory.class.getName() ) )
             .toProvider(
                 service( ServiceAvailable.Factory.class )
                     .attributes( ServiceAvailable.Factory.attributes() )
@@ -79,7 +73,23 @@ public class GuiceConfig
             );
 
         bind( export( TriggerFactory.class ) )
-            .annotatedWith( named( TIMER ) )
+            .annotatedWith( named( ServiceUnavailable.Factory.class.getName() ) )
+            .toProvider(
+                service( ServiceUnavailable.Factory.class )
+                    .attributes( ServiceUnavailable.Factory.attributes() )
+                    .export()
+            );
+
+        bind( export( TriggerFactory.class ) )
+            .annotatedWith( named( ServiceWatcher.Factory.class.getName() ) )
+            .toProvider(
+                service( ServiceWatcher.Factory.class )
+                    .attributes( ServiceWatcher.Factory.attributes() )
+                    .export()
+            );
+
+        bind( export( TriggerFactory.class ) )
+            .annotatedWith( named( FixedRateTimer.Factory.class.getName() ) )
             .toProvider(
                 service( FixedRateTimer.Factory.class )
                     .attributes( FixedRateTimer.Factory.attributes() )
@@ -89,7 +99,7 @@ public class GuiceConfig
         bind( Transformer.class ).toProvider( service( Transformer.class ).single() );
 
         bind( export( FlowFactory.class ) )
-            .annotatedWith( named( SCHEDULE_JOB_FLOW ) )
+            .annotatedWith( named( WatchRegistryForJobDescriptions.Factory.class.getName() ) )
             .toProvider(
                 service( WatchRegistryForJobDescriptions.Factory.class )
                     .attributes( WatchRegistryForJobDescriptions.Factory.attributes() )
@@ -97,7 +107,7 @@ public class GuiceConfig
             );
 
         bind( export( FlowFactory.class ) )
-            .annotatedWith( named( SCAN_DIRECTORY_FOR_JOB_DESCRIPTIONS ) )
+            .annotatedWith( named( ScanDirectoryForJobDescriptions.Factory.class.getName() ) )
             .toProvider(
                 service( ScanDirectoryForJobDescriptions.Factory.class )
                     .attributes( ScanDirectoryForJobDescriptions.Factory.attributes() )
@@ -107,7 +117,7 @@ public class GuiceConfig
         bind( ConfigurationAdmin.class ).toProvider( service( ConfigurationAdmin.class ).single() );
 
         bind( export( FlowFactory.class ) )
-            .annotatedWith( named( SCAN_DIRECTORY_FOR_CONFIGURATIONS ) )
+            .annotatedWith( named( ScanDirectoryForConfigurations.Factory.class.getName() ) )
             .toProvider(
                 service( ScanDirectoryForConfigurations.Factory.class )
                     .attributes( ScanDirectoryForConfigurations.Factory.attributes() )
