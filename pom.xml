@@ -89,6 +89,11 @@
         <artifactId>pax-swissbox-optional-jcl</artifactId>
         <version>${pax.swissbox.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.swissbox</groupId>
+        <artifactId>pax-swissbox-extender</artifactId>
+        <version>${pax.swissbox.version}</version>
+      </dependency>      
       <!-- Peaberry / Guice -->
       <dependency>
         <groupId>org.ops4j</groupId>
