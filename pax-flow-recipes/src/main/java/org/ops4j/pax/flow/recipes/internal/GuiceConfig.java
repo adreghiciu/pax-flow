@@ -30,6 +30,7 @@ import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.recipes.flow.ScanDirectoryForJobDescriptions;
 import org.ops4j.pax.flow.recipes.flow.WatchRegistryForJobDescriptions;
 import org.ops4j.pax.flow.recipes.flow.cm.ScanDirectoryForConfigurations;
+import org.ops4j.pax.flow.recipes.flow.cm.WatchBundlesForConfigurations;
 import org.ops4j.pax.flow.recipes.trigger.BundleContentWatcher;
 import org.ops4j.pax.flow.recipes.trigger.BundleManifestWatcher;
 import org.ops4j.pax.flow.recipes.trigger.FixedRateTimer;
@@ -139,6 +140,14 @@ public class GuiceConfig
             .toProvider(
                 service( ScanDirectoryForConfigurations.Factory.class )
                     .attributes( ScanDirectoryForConfigurations.Factory.attributes() )
+                    .export()
+            );
+
+        bind( export( FlowFactory.class ) )
+            .annotatedWith( named( WatchBundlesForConfigurations.Factory.class.getName() ) )
+            .toProvider(
+                service( WatchBundlesForConfigurations.Factory.class )
+                    .attributes( WatchBundlesForConfigurations.Factory.attributes() )
                     .export()
             );
 

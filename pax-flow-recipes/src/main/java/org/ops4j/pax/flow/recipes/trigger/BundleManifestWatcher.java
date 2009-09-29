@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.google.inject.Inject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.flow.api.Configuration;
@@ -57,6 +59,8 @@ public class BundleManifestWatcher
     implements Trigger
 {
 
+    private static final Log LOG = LogFactory.getLog( BundleManifestWatcher.class );
+
     public static final PropertyName BUNDLE = propertyName( "bundle" );
     public static final PropertyName MANIFEST_ENTRIES = propertyName( "manifestEntries" );
     public static final PropertyName EVENT = propertyName( "event" );
@@ -68,9 +72,9 @@ public class BundleManifestWatcher
     private final String m_description;
 
     public BundleManifestWatcher( final TriggerName name,
-                            final ExecutionTarget target,
-                            final BundleContext bundleContext,
-                            final String regexp )
+                                  final ExecutionTarget target,
+                                  final BundleContext bundleContext,
+                                  final String regexp )
     {
         super( name, target );
 
@@ -82,6 +86,14 @@ public class BundleManifestWatcher
             {
                 public void addingEntries( final Bundle bundle, final List<ManifestEntry> manifestEntries )
                 {
+                    if( LOG.isInfoEnabled() )
+                    {
+                        for( ManifestEntry entry : manifestEntries )
+                        {
+                            LOG.info( format( "Watching manifest entry [%s] in bundle [%s]", entry, bundle ) );
+                        }
+                    }
+
                     final DefaultExecutionContext executionContext = defaultExecutionContext();
                     executionContext.add( executionProperty( BUNDLE, bundle ) );
                     executionContext.add( executionProperty( MANIFEST_ENTRIES, manifestEntries ) );
@@ -92,6 +104,14 @@ public class BundleManifestWatcher
 
                 public void removingEntries( final Bundle bundle, final List<ManifestEntry> manifestEntries )
                 {
+                    if( LOG.isInfoEnabled() )
+                    {
+                        for( ManifestEntry entry : manifestEntries )
+                        {
+                            LOG.info( format( "Un-watching manifest entry [%s] in bundle [%s]", entry, bundle ) );
+                        }
+                    }
+
                     final DefaultExecutionContext executionContext = defaultExecutionContext();
                     executionContext.add( executionProperty( BUNDLE, bundle ) );
                     executionContext.add( executionProperty( MANIFEST_ENTRIES, manifestEntries ) );
@@ -170,8 +190,7 @@ public class BundleManifestWatcher
         }
 
         public BundleManifestWatcher create( final Configuration configuration,
-                                       final ExecutionTarget target )
-            throws ClassNotFoundException
+                                             final ExecutionTarget target )
         {
 
             final TypedConfiguration config = typedConfiguration( configuration );

@@ -22,6 +22,8 @@ import static java.lang.String.*;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.inject.Inject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.flow.api.Configuration;
 import static org.ops4j.pax.flow.api.ExecutionProperty.*;
@@ -53,6 +55,8 @@ public class ServiceUnavailable
     implements Trigger
 {
 
+    private static final Log LOG = LogFactory.getLog( ServiceUnavailable.class );
+
     private final ServiceRegistry m_serviceRegistry;
     private final String m_description;
 
@@ -73,6 +77,8 @@ public class ServiceUnavailable
                 @Override
                 protected void removed( final Object service )
                 {
+                    LOG.info( format( "Service [%s] unavailable", service ) );
+
                     final DefaultExecutionContext executionContext = defaultExecutionContext();
                     executionContext.add( executionProperty( ServiceWatcher.SERVICE, service ) );
                     executionContext.add( executionProperty( ServiceWatcher.EVENT, ServiceWatcher.REMOVED ) );

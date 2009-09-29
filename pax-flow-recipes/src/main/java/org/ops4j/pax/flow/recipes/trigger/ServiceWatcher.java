@@ -22,6 +22,8 @@ import static java.lang.String.*;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.inject.Inject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.flow.api.Configuration;
 import static org.ops4j.pax.flow.api.ExecutionProperty.*;
@@ -54,6 +56,8 @@ public class ServiceWatcher
     implements Trigger
 {
 
+    private static final Log LOG = LogFactory.getLog( ServiceWatcher.class );
+
     public static final PropertyName SERVICE = propertyName( "service" );
     public static final PropertyName EVENT = propertyName( "event" );
 
@@ -82,6 +86,8 @@ public class ServiceWatcher
                 {
                     final Object service = super.adding( anImport );
 
+                    LOG.info( format( "Service [%s] available", service ) );
+
                     final DefaultExecutionContext executionContext = defaultExecutionContext();
                     executionContext.add( executionProperty( SERVICE, service ) );
                     executionContext.add( executionProperty( EVENT, ADDED ) );
@@ -94,6 +100,8 @@ public class ServiceWatcher
                 @Override
                 protected void removed( final Object service )
                 {
+                    LOG.info( format( "Service [%s] unavailable", service ) );
+
                     final DefaultExecutionContext executionContext = defaultExecutionContext();
                     executionContext.add( executionProperty( SERVICE, service ) );
                     executionContext.add( executionProperty( EVENT, REMOVED ) );

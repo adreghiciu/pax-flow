@@ -1,15 +1,16 @@
+--vmOptions=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+
 mvn:org.ops4j.pax.flow/pax-flow-api@update
 mvn:org.ops4j.pax.flow/pax-flow-runtime@update
 mvn:org.ops4j.pax.flow/pax-flow-recipes@update
 mvn:org.ops4j.pax.flow/pax-flow-setup@update
 
+mvn:org.ops4j/peaberry.activation/1.2-SNAPSHOT@update
+
+scan-file:file:runner.properties
+
 config
 peaberry/1.1.1
 log
-#felix.fileinstall
 
-mvn:org.ops4j/peaberry.activation/1.2-SNAPSHOT@update
-
---vmOptions=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
-
-scan-file:file:runner.properties
+wrap:assembly:runtime/conf/bundle@nostart@update

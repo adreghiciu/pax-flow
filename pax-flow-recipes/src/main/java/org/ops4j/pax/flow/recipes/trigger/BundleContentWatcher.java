@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.google.inject.Inject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.flow.api.Configuration;
@@ -56,6 +58,8 @@ public class BundleContentWatcher
     implements Trigger
 {
 
+    private static final Log LOG = LogFactory.getLog( BundleContentWatcher.class );
+
     public static final PropertyName BUNDLE = propertyName( "bundle" );
     public static final PropertyName URLS = propertyName( "manifestEntries" );
     public static final PropertyName EVENT = propertyName( "event" );
@@ -83,6 +87,13 @@ public class BundleContentWatcher
             {
                 public void addingEntries( final Bundle bundle, final List<URL> urls )
                 {
+                    if( LOG.isInfoEnabled() )
+                    {
+                        for( URL url : urls )
+                        {
+                            LOG.info( format( "Watching [%s] in bundle [%s]", url, bundle ) );
+                        }
+                    }
                     final DefaultExecutionContext executionContext = defaultExecutionContext();
                     executionContext.add( executionProperty( BUNDLE, bundle ) );
                     executionContext.add( executionProperty( URLS, urls ) );
@@ -93,6 +104,14 @@ public class BundleContentWatcher
 
                 public void removingEntries( final Bundle bundle, final List<URL> urls )
                 {
+                    if( LOG.isInfoEnabled() )
+                    {
+                        for( URL url : urls )
+                        {
+                            LOG.info( format( "Un-watching [%s] in bundle [%s]", url, bundle ) );
+                        }
+                    }
+
                     final DefaultExecutionContext executionContext = defaultExecutionContext();
                     executionContext.add( executionProperty( BUNDLE, bundle ) );
                     executionContext.add( executionProperty( URLS, urls ) );
@@ -176,7 +195,6 @@ public class BundleContentWatcher
 
         public BundleContentWatcher create( final Configuration configuration,
                                             final ExecutionTarget target )
-            throws ClassNotFoundException
         {
 
             final TypedConfiguration config = typedConfiguration( configuration );

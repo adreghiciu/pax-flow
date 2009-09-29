@@ -22,6 +22,8 @@ import static java.lang.String.*;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.inject.Inject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.flow.api.Configuration;
 import static org.ops4j.pax.flow.api.ExecutionProperty.*;
@@ -54,6 +56,8 @@ public class ServiceAvailable
     implements Trigger
 {
 
+    private static final Log LOG = LogFactory.getLog( ServiceAvailable.class );
+
     private final ServiceRegistry m_serviceRegistry;
     private final String m_description;
 
@@ -75,6 +79,8 @@ public class ServiceAvailable
                 protected Object adding( final Import<Object> anImport )
                 {
                     final Object service = super.adding( anImport );
+
+                    LOG.info( format( "Service [%s] available", service ) );
 
                     final DefaultExecutionContext executionContext = defaultExecutionContext();
                     executionContext.add( executionProperty( ServiceWatcher.SERVICE, service ) );

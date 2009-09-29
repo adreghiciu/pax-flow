@@ -1,0 +1,15 @@
+{
+
+  "when" : {
+    "trigger" : "bundleContentWatcher",
+    "config" : {
+      "path" : "META-INF/configs",
+      "pattern" : "*.cfg"
+    }
+  },
+
+  "do" : {
+       "flow" : "watchBundlesForConfigurations"
+  }
+
+}

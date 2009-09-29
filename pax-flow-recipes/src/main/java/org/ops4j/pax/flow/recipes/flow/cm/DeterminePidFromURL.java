@@ -1,6 +1,6 @@
 package org.ops4j.pax.flow.recipes.flow.cm;
 
-import java.io.File;
+import java.net.URL;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import static org.ops4j.pax.flow.api.ExecutionProperty.*;
 import org.ops4j.pax.flow.api.Flow;
@@ -13,29 +13,32 @@ import static org.ops4j.pax.flow.api.helpers.TypedExecutionContext.*;
  *
  * @author Alin Dreghiciu
  */
-public class DeterminePidFromFileName
+public class DeterminePidFromURL
     extends CancelableFlow
     implements Flow
 {
 
-    private final PropertyName m_filePropertyName;
+    private final PropertyName m_urlPropertyName;
     private final PropertyName m_pidPropertyName;
     private final PropertyName m_factoryPidPropertyName;
 
-    public DeterminePidFromFileName( final PropertyName filePropertyName,
-                                     final PropertyName pidPropertyName,
-                                     final PropertyName factoryPidPropertyName )
+    public DeterminePidFromURL( final PropertyName urlPropertyName,
+                                final PropertyName pidPropertyName,
+                                final PropertyName factoryPidPropertyName )
     {
-        m_filePropertyName = filePropertyName;
+        m_urlPropertyName = urlPropertyName;
         m_pidPropertyName = pidPropertyName;
         m_factoryPidPropertyName = factoryPidPropertyName;
     }
 
     public void run( final ExecutionContext context )
     {
-        final File file = typedExecutionContext( context ).mandatory( m_filePropertyName, File.class );
+        final URL url = typedExecutionContext( context ).mandatory( m_urlPropertyName, URL.class );
 
-        String pid = file.getName();
+        final String stringForm = url.toExternalForm();
+        final int startOfPid = stringForm.lastIndexOf( "/" );
+
+        String pid = stringForm.substring( startOfPid + 1 );
         String factoryPid = null;
 
         // remove extension, if any
@@ -62,7 +65,7 @@ public class DeterminePidFromFileName
     {
         return String.format(
             "Extract PID / Factory PID from [%s] to [%s] and [%s]",
-            m_filePropertyName, m_pidPropertyName, m_factoryPidPropertyName
+            m_urlPropertyName, m_pidPropertyName, m_factoryPidPropertyName
         );
     }
 
