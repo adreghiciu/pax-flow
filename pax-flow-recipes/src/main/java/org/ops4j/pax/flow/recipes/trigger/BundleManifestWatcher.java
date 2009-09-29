@@ -52,8 +52,8 @@ import org.ops4j.pax.swissbox.extender.RegexKeyManifestFilter;
  *
  * @author Alin Dreghiciu
  */
-public class ManifestWatcher
-    extends AbstractTrigger<ManifestWatcher>
+public class BundleManifestWatcher
+    extends AbstractTrigger<BundleManifestWatcher>
     implements Trigger
 {
 
@@ -67,7 +67,7 @@ public class ManifestWatcher
     private final BundleWatcher<ManifestEntry> m_bundleWatcher;
     private final String m_description;
 
-    public ManifestWatcher( final TriggerName name,
+    public BundleManifestWatcher( final TriggerName name,
                             final ExecutionTarget target,
                             final BundleContext bundleContext,
                             final String regexp )
@@ -106,7 +106,7 @@ public class ManifestWatcher
     }
 
     @Override
-    public ManifestWatcher start()
+    public BundleManifestWatcher start()
         throws Exception
     {
         if( !isStarted() )
@@ -118,7 +118,7 @@ public class ManifestWatcher
     }
 
     @Override
-    public ManifestWatcher stop()
+    public BundleManifestWatcher stop()
     {
         if( isStarted() )
         {
@@ -135,7 +135,7 @@ public class ManifestWatcher
     }
 
     @Override
-    protected ManifestWatcher itself()
+    protected BundleManifestWatcher itself()
     {
         return this;
     }
@@ -146,10 +146,10 @@ public class ManifestWatcher
      * @author Alin Dreghiciu
      */
     public static class Factory
-        implements TriggerFactory<ManifestWatcher>
+        implements TriggerFactory<BundleManifestWatcher>
     {
 
-        public static final TriggerType TYPE = triggerType( ManifestWatcher.class );
+        public static final TriggerType TYPE = triggerType( BundleManifestWatcher.class );
 
         public static final PropertyName REGEXP = propertyName( "regexp" );
 
@@ -169,7 +169,7 @@ public class ManifestWatcher
             return TYPE;
         }
 
-        public ManifestWatcher create( final Configuration configuration,
+        public BundleManifestWatcher create( final Configuration configuration,
                                        final ExecutionTarget target )
             throws ClassNotFoundException
         {
@@ -178,7 +178,7 @@ public class ManifestWatcher
 
             final String regexp = config.mandatory( REGEXP, String.class );
 
-            return new ManifestWatcher(
+            return new BundleManifestWatcher(
                 triggerName( format( "%s::%d", type(), m_counter++ ) ),
                 target,
                 m_bundleContext,
