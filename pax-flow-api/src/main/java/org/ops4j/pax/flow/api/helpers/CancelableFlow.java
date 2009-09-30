@@ -16,8 +16,6 @@ public abstract class CancelableFlow
     implements Flow
 {
 
-    private static final Log LOG = LogFactory.getLog( CancelableFlow.class );
-
     private Thread m_thread;
 
     private FlowName m_name;

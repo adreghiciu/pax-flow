@@ -1,0 +1,17 @@
+{
+
+  "when" : {
+    "trigger" : "fixedRateTimer",
+    "config" : {
+      "repeatPeriod" : "10s"
+    }
+  },
+
+  "do" : {
+       "flow" : "scanBundles",
+       "config" : {
+         "url" : "scan-dir:../runtime/bundles"
+       }
+  }
+
+}

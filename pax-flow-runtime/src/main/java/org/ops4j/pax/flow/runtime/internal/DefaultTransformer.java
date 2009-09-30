@@ -130,12 +130,16 @@ public class DefaultTransformer
             throw new Exception( format( "Could not find a trigger factory of type [%s]", description.triggerType() ) );
         }
 
-        final Trigger trigger = triggerFactory.create(
-            description.triggerConfiguration(),
-            exitingJob.flowScheduler
+        final FlowScheduler flowScheduler = new FlowScheduler(
+            description, exitingJob.flowScheduler.getExecutionContext()
         );
 
-        final Job job = new Job( description, trigger, exitingJob.flowScheduler );
+        final Trigger trigger = triggerFactory.create(
+            description.triggerConfiguration(),
+            flowScheduler
+        );
+
+        final Job job = new Job( description, trigger, flowScheduler );
         m_jobs.put( description.name(), job );
 
         LOG.info( format( "Rescheduled job [%s] (%s)", description.name(), job ) );
@@ -160,12 +164,19 @@ public class DefaultTransformer
 
         private final JobDescription m_description;
 
-        private final PersistentExecutionContext m_executionContext;
+        final PersistentExecutionContext m_executionContext;
 
         public FlowScheduler( final JobDescription description )
         {
             m_description = description;
             m_executionContext = new PersistentExecutionContext();
+        }
+
+        public FlowScheduler( final JobDescription description,
+                              final PersistentExecutionContext executionContext )
+        {
+            m_description = description;
+            m_executionContext = executionContext;
         }
 
         public void execute( final ExecutionContext executionContext )
@@ -188,8 +199,8 @@ public class DefaultTransformer
                             else
                             {
                                 final Flow flow = flowFactory.create( m_description.flowConfiguration() );
-                                m_executionContext.useTransientContext( executionContext );
-                                flow.execute( m_executionContext );
+                                FlowScheduler.this.m_executionContext.useTransientContext( executionContext );
+                                flow.execute( FlowScheduler.this.m_executionContext );
                                 LOG.debug( format( "Finished execution of [%s]", flow ) );
                             }
                         }
@@ -205,6 +216,12 @@ public class DefaultTransformer
                 }
             );
         }
+
+        public PersistentExecutionContext getExecutionContext()
+        {
+            return m_executionContext;
+        }
+
     }
 
     private static class Job
