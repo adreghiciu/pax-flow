@@ -106,8 +106,7 @@ public class ScanBundles
         context.add( executionProperty( DELETED, deleted ) );
 
         final String message = format(
-            "Found %d bundles (%d added,%d modified,%d deleted) scanning url [%s]",
-            newUrls.size(),
+            "Found %d added, %d modified, %d deleted bundles while scanning url [%s]",
             added.size(), modified.size(), deleted.size(),
             m_url
         );

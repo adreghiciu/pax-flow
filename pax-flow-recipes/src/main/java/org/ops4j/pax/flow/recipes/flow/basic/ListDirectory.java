@@ -114,8 +114,7 @@ public class ListDirectory
         context.add( executionProperty( DELETED, deleted ) );
 
         final String message = format(
-            "Found %d files (%d added,%d modified,%d deleted) in [%s]",
-            files.size(),
+            "Found %d added, %d modified, %d deleted files in [%s]",
             added.size(), modified.size(), deleted.size(),
             m_directory
         );
