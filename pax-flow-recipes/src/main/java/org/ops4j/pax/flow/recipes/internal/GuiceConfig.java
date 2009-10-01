@@ -27,6 +27,7 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.Transformer;
 import org.ops4j.pax.flow.api.TriggerFactory;
+import org.ops4j.pax.flow.recipes.flow.bundle.SyncBundlesWithScanner;
 import org.ops4j.pax.flow.recipes.flow.job.ScanDirectoryForJobDescriptions;
 import org.ops4j.pax.flow.recipes.flow.job.WatchRegistryForJobDescriptions;
 import org.ops4j.pax.flow.recipes.flow.cm.ScanDirectoryForConfigurations;
@@ -162,6 +163,14 @@ public class GuiceConfig
                     .attributes( ScanBundles.Factory.attributes() )
                     .export()
             );
+
+        bind( export( FlowFactory.class ) )
+            .annotatedWith( named( SyncBundlesWithScanner.Factory.class.getName() ) )
+            .toProvider(
+                service( SyncBundlesWithScanner.Factory.class )
+                    .attributes( SyncBundlesWithScanner.Factory.attributes() )
+                    .export()
+            );        
 
         LOG.info( "Registered built-in flows and triggers" );
     }

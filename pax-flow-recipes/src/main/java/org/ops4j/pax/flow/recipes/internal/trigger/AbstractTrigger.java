@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.recipes.internal;
+package org.ops4j.pax.flow.recipes.internal.trigger;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

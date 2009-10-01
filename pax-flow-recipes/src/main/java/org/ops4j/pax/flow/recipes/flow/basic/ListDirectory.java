@@ -36,9 +36,9 @@ public class ListDirectory
     public static final PropertyName FILES = PropertyName.propertyName( "files" );
     public static final PropertyName TIMESTAMPS = PropertyName.propertyName( "timestamps" );
 
-    public static final PropertyName ADDED_FILES = PropertyName.propertyName( "addedFiles" );
-    public static final PropertyName MODIFIED_FILES = PropertyName.propertyName( "modifiedFiles" );
-    public static final PropertyName DELETED_FILES = PropertyName.propertyName( "deletedFiles" );
+    public static final PropertyName ADDED = PropertyName.propertyName( "added" );
+    public static final PropertyName MODIFIED = PropertyName.propertyName( "modified" );
+    public static final PropertyName DELETED = PropertyName.propertyName( "deleted" );
 
     private final File m_directory;
     private final Pattern[] m_includes;
@@ -109,9 +109,9 @@ public class ListDirectory
 
         context.add( persistentExecutionProperty( TIMESTAMPS, files ) );
         context.add( executionProperty( FILES, files ) );
-        context.add( executionProperty( ADDED_FILES, added ) );
-        context.add( executionProperty( MODIFIED_FILES, modified ) );
-        context.add( executionProperty( DELETED_FILES, deleted ) );
+        context.add( executionProperty( ADDED, added ) );
+        context.add( executionProperty( MODIFIED, modified ) );
+        context.add( executionProperty( DELETED, deleted ) );
 
         final String message = format(
             "Found %d files (%d added,%d modified,%d deleted) in [%s]",

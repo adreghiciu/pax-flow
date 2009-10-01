@@ -44,9 +44,9 @@ public class ScanBundles
     public static final PropertyName URLS = PropertyName.propertyName( "urls" );
     public static final PropertyName TIMESTAMPS = PropertyName.propertyName( "timestamps" );
 
-    public static final PropertyName ADDED_FILES = PropertyName.propertyName( "addedFiles" );
-    public static final PropertyName MODIFIED_FILES = PropertyName.propertyName( "modifiedFiles" );
-    public static final PropertyName DELETED_FILES = PropertyName.propertyName( "deletedFiles" );
+    public static final PropertyName ADDED = PropertyName.propertyName( "added" );
+    public static final PropertyName MODIFIED = PropertyName.propertyName( "modified" );
+    public static final PropertyName DELETED = PropertyName.propertyName( "deleted" );
 
     private final ProvisionService m_provisionService;
     private final String m_url;
@@ -101,9 +101,9 @@ public class ScanBundles
 
         context.add( persistentExecutionProperty( TIMESTAMPS, newUrls ) );
         context.add( executionProperty( URLS, newUrls ) );
-        context.add( executionProperty( ADDED_FILES, added ) );
-        context.add( executionProperty( MODIFIED_FILES, modified ) );
-        context.add( executionProperty( DELETED_FILES, deleted ) );
+        context.add( executionProperty( ADDED, added ) );
+        context.add( executionProperty( MODIFIED, modified ) );
+        context.add( executionProperty( DELETED, deleted ) );
 
         final String message = format(
             "Found %d bundles (%d added,%d modified,%d deleted) scanning url [%s]",
@@ -172,5 +172,5 @@ public class ScanBundles
         }
 
     }
-    
+
 }

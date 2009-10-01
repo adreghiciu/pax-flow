@@ -41,7 +41,7 @@ public class ScanDirectoryForConfigurations
             flowName,
             new ListDirectory( directory, includes, excludes ),
             new ForEachFlow(
-                ListDirectory.ADDED_FILES, ParsePropertiesFileAsConfiguration.FILE,
+                ListDirectory.ADDED, ParsePropertiesFileAsConfiguration.FILE,
                 new SequentialFlow(
                     flowName( format( "%s::%s", flowName, "Added" ) ), // TODO do we need a name?
                     new DeterminePidFromFileName(
@@ -54,7 +54,7 @@ public class ScanDirectoryForConfigurations
                 )
             ),
             new ForEachFlow(
-                ListDirectory.MODIFIED_FILES, ParsePropertiesFileAsConfiguration.FILE,
+                ListDirectory.MODIFIED, ParsePropertiesFileAsConfiguration.FILE,
                 new SequentialFlow(
                     flowName( format( "%s::%s", flowName, "Modified" ) ), // TODO do we need a name?
                     new DeterminePidFromFileName(
@@ -67,7 +67,7 @@ public class ScanDirectoryForConfigurations
                 )
             ),
             new ForEachFlow(
-                ListDirectory.DELETED_FILES, ParsePropertiesFileAsConfiguration.FILE,
+                ListDirectory.DELETED, ParsePropertiesFileAsConfiguration.FILE,
                 new SequentialFlow(
                     flowName( format( "%s::%s", flowName, "Deleted" ) ), // TODO do we need a name?
                     new DeterminePidFromFileName(

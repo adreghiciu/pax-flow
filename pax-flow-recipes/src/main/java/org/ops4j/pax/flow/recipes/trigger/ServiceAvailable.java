@@ -40,7 +40,7 @@ import org.ops4j.pax.flow.api.helpers.DefaultExecutionContext;
 import static org.ops4j.pax.flow.api.helpers.DefaultExecutionContext.*;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
 import static org.ops4j.pax.flow.api.helpers.TypedConfiguration.*;
-import org.ops4j.pax.flow.recipes.internal.AbstractTrigger;
+import org.ops4j.pax.flow.recipes.internal.trigger.AbstractTrigger;
 import org.ops4j.peaberry.Import;
 import org.ops4j.peaberry.ServiceRegistry;
 import org.ops4j.peaberry.util.AbstractWatcher;

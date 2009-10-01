@@ -8,9 +8,9 @@
   },
 
   "do" : {
-       "flow" : "scanBundles",
+       "flow" : "syncBundlesWithScanner",
        "config" : {
-         "url" : "scan-dir:../runtime/bundles"
+         "url" : "scan-dir:../runtime/bundles/installed"
        }
   }
 

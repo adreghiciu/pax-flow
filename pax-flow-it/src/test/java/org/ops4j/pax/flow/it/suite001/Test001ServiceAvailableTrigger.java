@@ -34,6 +34,7 @@ import org.ops4j.pax.flow.api.ExecutionTarget;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.it.Cfg;
 import org.ops4j.pax.flow.recipes.trigger.ServiceAvailable;
+import org.ops4j.pax.flow.recipes.trigger.ServiceWatcher;
 import static org.ops4j.peaberry.Peaberry.*;
 
 /**
@@ -77,7 +78,7 @@ public class Test001ServiceAvailableTrigger
 
         assertNotNull(
             "There a 'service' property",
-            usedExecutionContext.getValue().get( ServiceAvailable.SERVICE )
+            usedExecutionContext.getValue().get( ServiceWatcher.SERVICE )
         );
     }
 

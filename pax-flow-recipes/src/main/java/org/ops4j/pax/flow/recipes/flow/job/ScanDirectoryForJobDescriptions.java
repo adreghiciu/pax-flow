@@ -33,16 +33,16 @@ public class ScanDirectoryForJobDescriptions
 {
 
     public ScanDirectoryForJobDescriptions( final FlowName flowName,
-                                                final Transformer transformer,
-                                                final File directory,
-                                                final String[] includes,
-                                                final String[] excludes )
+                                            final Transformer transformer,
+                                            final File directory,
+                                            final String[] includes,
+                                            final String[] excludes )
     {
         super(
             flowName,
             new ListDirectory( directory, includes, excludes ),
             new ForEachFlow(
-                ListDirectory.ADDED_FILES, ParseJsonJobDescription.FILE,
+                ListDirectory.ADDED, ParseJsonJobDescription.FILE,
                 new SequentialFlow(
                     flowName( format( "%s::%s", flowName, "Process Added" ) ), // TODO do we need a name?
                     new ExtractFileNameFromFile( ParseJsonJobDescription.FILE, ParseJsonJobDescription.JOB_NAME ),
@@ -51,7 +51,7 @@ public class ScanDirectoryForJobDescriptions
                 )
             ),
             new ForEachFlow(
-                ListDirectory.MODIFIED_FILES, ParseJsonJobDescription.FILE,
+                ListDirectory.MODIFIED, ParseJsonJobDescription.FILE,
                 new SequentialFlow(
                     flowName( format( "%s::%s", flowName, "Process Modified" ) ), // TODO do we need a name?
                     new ExtractFileNameFromFile( ParseJsonJobDescription.FILE, ParseJsonJobDescription.JOB_NAME ),
@@ -60,7 +60,7 @@ public class ScanDirectoryForJobDescriptions
                 )
             ),
             new ForEachFlow(
-                ListDirectory.DELETED_FILES, ParseJsonJobDescription.FILE,
+                ListDirectory.DELETED, ParseJsonJobDescription.FILE,
                 new SequentialFlow(
                     flowName( format( "%s::%s", flowName, "Process Deleted" ) ), // TODO do we need a name?
                     new ExtractFileNameFromFile( ParseJsonJobDescription.FILE, UnscheduleJob.JOB_NAME ),

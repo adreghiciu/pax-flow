@@ -38,8 +38,8 @@ import org.ops4j.pax.flow.api.TriggerType;
 import static org.ops4j.pax.flow.api.TriggerType.*;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
 import static org.ops4j.pax.flow.api.helpers.TypedConfiguration.*;
-import org.ops4j.pax.flow.recipes.internal.AbstractTrigger;
-import org.ops4j.pax.flow.recipes.internal.TimerUtils;
+import org.ops4j.pax.flow.recipes.internal.trigger.AbstractTrigger;
+import org.ops4j.pax.flow.recipes.internal.trigger.TimerUtils;
 
 /**
  * JAVADOC
