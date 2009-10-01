@@ -1,4 +1,4 @@
-package org.ops4j.pax.flow.recipes.flow;
+package org.ops4j.pax.flow.recipes.flow.basic;
 
 import java.io.File;
 import static java.lang.String.*;

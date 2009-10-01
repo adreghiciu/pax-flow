@@ -1,4 +1,4 @@
-package org.ops4j.pax.flow.recipes.flow;
+package org.ops4j.pax.flow.recipes.flow.basic;
 
 import org.ops4j.pax.flow.api.ExecutionContext;
 import static org.ops4j.pax.flow.api.ExecutionProperty.*;

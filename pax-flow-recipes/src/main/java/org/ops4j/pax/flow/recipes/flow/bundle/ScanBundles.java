@@ -1,4 +1,4 @@
-package org.ops4j.pax.flow.recipes.flow.scanner;
+package org.ops4j.pax.flow.recipes.flow.bundle;
 
 import static java.lang.String.*;
 import java.net.URL;

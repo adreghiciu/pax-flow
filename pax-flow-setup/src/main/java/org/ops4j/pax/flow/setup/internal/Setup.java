@@ -29,8 +29,8 @@ import org.ops4j.pax.flow.api.Transformer;
 import static org.ops4j.pax.flow.api.helpers.FrameworkPropertiesConfiguration.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableJobDescription.*;
-import org.ops4j.pax.flow.recipes.flow.ScanDirectoryForJobDescriptions;
-import org.ops4j.pax.flow.recipes.flow.WatchRegistryForJobDescriptions;
+import org.ops4j.pax.flow.recipes.flow.job.ScanDirectoryForJobDescriptions;
+import org.ops4j.pax.flow.recipes.flow.job.WatchRegistryForJobDescriptions;
 import org.ops4j.pax.flow.recipes.trigger.FixedRateTimer;
 import org.ops4j.pax.flow.recipes.trigger.ServiceAvailable;
 

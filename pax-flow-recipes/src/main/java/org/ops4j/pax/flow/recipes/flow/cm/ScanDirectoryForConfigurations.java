@@ -19,7 +19,7 @@ import org.ops4j.pax.flow.api.helpers.ForEachFlow;
 import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
 import static org.ops4j.pax.flow.api.helpers.TypedConfiguration.*;
-import org.ops4j.pax.flow.recipes.flow.ListDirectory;
+import org.ops4j.pax.flow.recipes.flow.basic.ListDirectory;
 
 /**
  * JAVADOC

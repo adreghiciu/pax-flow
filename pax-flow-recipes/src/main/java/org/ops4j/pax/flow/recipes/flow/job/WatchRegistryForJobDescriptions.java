@@ -1,4 +1,4 @@
-package org.ops4j.pax.flow.recipes.flow;
+package org.ops4j.pax.flow.recipes.flow.job;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +15,7 @@ import org.ops4j.pax.flow.api.Transformer;
 import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.api.helpers.SwitchFlow;
 import static org.ops4j.pax.flow.api.helpers.SwitchFlow.SwitchCase.*;
+import org.ops4j.pax.flow.recipes.flow.basic.CopyProperty;
 import org.ops4j.pax.flow.recipes.trigger.ServiceWatcher;
 
 /**

@@ -1,4 +1,4 @@
-package org.ops4j.pax.flow.recipes.flow;
+package org.ops4j.pax.flow.recipes.flow.job;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +11,6 @@ import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.ConfigurationProperty;
 import static org.ops4j.pax.flow.api.ConfigurationProperty.*;
 import org.ops4j.pax.flow.api.ExecutionContext;
-import org.ops4j.pax.flow.api.ExecutionProperty;
 import static org.ops4j.pax.flow.api.ExecutionProperty.*;
 import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.FlowType;

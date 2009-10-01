@@ -1,30 +1,30 @@
-package org.ops4j.pax.flow.recipes.flow;
+package org.ops4j.pax.flow.recipes.flow.job;
 
 import com.google.inject.Inject;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.Flow;
-import static org.ops4j.pax.flow.api.JobName.*;
+import org.ops4j.pax.flow.api.JobDescription;
 import org.ops4j.pax.flow.api.PropertyName;
 import org.ops4j.pax.flow.api.Transformer;
 import org.ops4j.pax.flow.api.helpers.CancelableFlow;
 import static org.ops4j.pax.flow.api.helpers.TypedExecutionContext.*;
 
 /**
- * JAVADOC
+ * Takes a job description from {@link ExecutionContext} and schedules it.
  *
  * @author Alin Dreghiciu
  */
-public class UnscheduleJob
+public class ScheduleJob
     extends CancelableFlow
     implements Flow
 {
 
-    public static final PropertyName JOB_NAME = PropertyName.propertyName( "jobDescriptionName" );
+    public static final PropertyName JOB_DESCRIPTION = PropertyName.propertyName( "jobDescription" );
 
     private final Transformer m_transformer;
 
     @Inject
-    public UnscheduleJob( final Transformer transformer )
+    public ScheduleJob( final Transformer transformer )
     {
         // VALIDATE
         m_transformer = transformer;
@@ -33,14 +33,15 @@ public class UnscheduleJob
     public void run( final ExecutionContext context )
         throws Exception
     {
-        final String jobName = typedExecutionContext( context ).mandatory( JOB_NAME, String.class );
-
-        m_transformer.unschedule( jobName( jobName ) );
+        final JobDescription description = typedExecutionContext( context ).mandatory(
+            JOB_DESCRIPTION, JobDescription.class
+        );
+        m_transformer.schedule( description );
     }
 
     @Override
     public String toString()
     {
-        return "Unschedule job available in execution context";
+        return "Schedule job available in execution context";
     }
 }

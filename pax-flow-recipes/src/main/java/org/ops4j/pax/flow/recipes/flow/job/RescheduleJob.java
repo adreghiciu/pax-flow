@@ -1,4 +1,4 @@
-package org.ops4j.pax.flow.recipes.flow;
+package org.ops4j.pax.flow.recipes.flow.job;
 
 import com.google.inject.Inject;
 import org.ops4j.pax.flow.api.ExecutionContext;
