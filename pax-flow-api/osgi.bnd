@@ -5,8 +5,8 @@ Bundle-SymbolicName:\
   ${bundle.symbolicName}; singleton:=true
 
 Import-Package:\
-  ${bundle.namespace}; version="${pom.version}",\
-  ${bundle.namespace}.helpers; version="${pom.version}",\
+  ${bundle.namespace},\
+  ${bundle.namespace}.helpers,\
   org.apache.commons.logging; version="[1.0.4,2.0)"; resolution:=optional,\
   org.osgi.framework; version="[1.3,2.0)",\
   org.ops4j.pax.swissbox.converter; version="1.0",\
@@ -20,7 +20,10 @@ Embed-Dependency:\
   *; scope=compile; type=!pom; inline=true
 
 Embed-Transitive:\
-  true    
+  true
+
+-versionpolicy:\
+  [${version;==;${@}},${version;+;${@}})
 
 -removeheaders:\
   Include-Resource,\
