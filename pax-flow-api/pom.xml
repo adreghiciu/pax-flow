@@ -58,6 +58,11 @@
       <artifactId>pax-swissbox-optional-jcl</artifactId>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.swissbox</groupId>
+      <artifactId>pax-swissbox-converter</artifactId>
+      <scope>provided</scope>
+    </dependency>    
 
     <dependency>
       <groupId>org.osgi</groupId>

@@ -296,5 +296,15 @@ public class GenericType
         throw new RuntimeException( "Unknown type " + type );
     }
 
+    public static GenericType genericType( final Type type )
+    {
+        return new GenericType( type );
+    }
+
+    public static GenericType genericType( final Class clazz,
+                                           final GenericType... parameters )
+    {
+        return new GenericType( clazz, parameters );
+    }
 
 }

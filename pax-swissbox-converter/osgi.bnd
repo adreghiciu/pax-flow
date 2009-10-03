@@ -19,8 +19,8 @@ Export-Package:\
   ${bundle.namespace}.java.lang; version="${pom.version}",\
   ${bundle.namespace}.java.util; version="${pom.version}",\
   ${bundle.namespace}.java.io; version="${pom.version}",\
-
   ${bundle.namespace}.loader; version="${pom.version}"
 
 Private-Package:\
-  ${bundle.namespace}.internal; version="${pom.version}"
+  ${bundle.namespace}.internal; version="${pom.version}",\
+  org.osgi.service.blueprint.container

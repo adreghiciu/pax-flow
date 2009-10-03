@@ -38,6 +38,8 @@ public class JavaIOConverter
     implements Converter
 {
 
+    public static final JavaIOConverter INSTANCE = new JavaIOConverter();
+
     public JavaIOConverter()
     {
         delegate(
@@ -64,6 +66,16 @@ public class JavaIOConverter
                 toWriterConverter( escape )
             )
         );
+    }
+
+    public static JavaIOConverter javaIOConverter()
+    {
+        return INSTANCE;
+    }
+
+    public static JavaIOConverter javaIOConverter( final Converter escape )
+    {
+        return new JavaIOConverter( escape );
     }
 
 }

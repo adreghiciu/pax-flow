@@ -1,7 +1,11 @@
 package org.ops4j.pax.flow.api.helpers;
 
+import static java.lang.String.*;
+import org.osgi.service.blueprint.container.Converter;
 import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.PropertyName;
+import static org.ops4j.pax.swissbox.converter.GenericType.*;
+import static org.ops4j.pax.swissbox.converter.JavaConverter.*;
 
 /**
  * JAVADOC
@@ -12,29 +16,53 @@ public class TypedConfiguration
 {
 
     private final Configuration m_configuration;
+    private final Converter converter;
 
     private TypedConfiguration( final Configuration configuration )
     {
         // VALIDATE
         m_configuration = configuration;
+        // TODO shall we get the converter as input?
+        converter = javaConverter();
     }
 
     public <T> T mandatory( final PropertyName propertyName,
                             final Class<T> propertyType )
     {
         // VALIDATE property name / type
-        final Object value = m_configuration.get( propertyName );
+        Object value = m_configuration.get( propertyName );
+
         if( value == null )
         {
             throw new IllegalStateException(
                 String.format( "Property [%s] must be specified (cannot be null)", propertyName )
             );
         }
+
         if( !propertyType.isAssignableFrom( value.getClass() ) )
         {
-            throw new IllegalStateException(
-                String.format( "Property [%s] must be of type [%s].", propertyName, propertyType.getName() )
-            );
+            try
+            {
+                value = converter.convert( value, genericType( propertyType ) );
+            }
+            catch( Exception e )
+            {
+                throw new IllegalStateException(
+                    format(
+                        "Property [%s] with value [%s] cannot be converted to type [%s].",
+                        propertyName, value, propertyType.getName()
+                    )
+                );
+            }
+            if( value != null && !propertyType.isAssignableFrom( value.getClass() ) )
+            {
+                throw new IllegalStateException(
+                    format(
+                        "Property [%s] with value [%s] must be of type [%s].",
+                        propertyName, value, propertyType.getName()
+                    )
+                );
+            }
         }
 
         return (T) value;
@@ -43,16 +71,7 @@ public class TypedConfiguration
     public <T> T optional( final PropertyName propertyName,
                            final Class<T> propertyType )
     {
-        // VALIDATE property name / type
-        final Object value = m_configuration.get( propertyName );
-        if( value != null && !propertyType.isAssignableFrom( value.getClass() ) )
-        {
-            throw new IllegalStateException(
-                String.format( "Property [%s] must be of type [%s].", propertyName, propertyType.getName() )
-            );
-        }
-
-        return (T) value;
+        return optional( propertyName, propertyType, null );
     }
 
     public <T> T optional( final PropertyName propertyName,
@@ -60,10 +79,29 @@ public class TypedConfiguration
                            final T defaultValue )
     {
         // VALIDATE property name / type
-        Object value = optional( propertyName, propertyType );
-        if( value == null )
+        Object value = m_configuration.get( propertyName, defaultValue );
+
+        if( value != null && !propertyType.isAssignableFrom( value.getClass() ) )
         {
-            value = defaultValue;
+            try
+            {
+                value = converter.convert( value, genericType( propertyType ) );
+            }
+            catch( Exception e )
+            {
+                throw new IllegalStateException(
+                    format(
+                        "Property [%s] with value [%s] cannot be converted to type [%s].",
+                        propertyName, value, propertyType.getName()
+                    )
+                );
+            }
+            if( value != null && !propertyType.isAssignableFrom( value.getClass() ) )
+            {
+                throw new IllegalStateException(
+                    format( "Property [%s] must be of type [%s].", propertyName, propertyType.getName() )
+                );
+            }
         }
 
         return (T) value;

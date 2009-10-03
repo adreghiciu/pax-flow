@@ -38,6 +38,8 @@ public class JavaLangConverter
     implements Converter
 {
 
+    public static final JavaLangConverter INSTANCE = new JavaLangConverter();
+
     public JavaLangConverter()
     {
         delegate(
@@ -61,6 +63,16 @@ public class JavaLangConverter
                 fromStringToClassConverter( loader )
             )
         );
+    }
+
+    public static JavaLangConverter javaLangConverter()
+    {
+        return INSTANCE;
+    }
+
+    public static JavaLangConverter javaLangConverter( final Loader loader )
+    {
+        return new JavaLangConverter( loader );
     }
 
 }

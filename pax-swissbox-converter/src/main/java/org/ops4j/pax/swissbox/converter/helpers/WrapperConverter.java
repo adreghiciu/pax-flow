@@ -64,7 +64,7 @@ public class WrapperConverter
                            final ReifiedType targetType )
         throws Exception
     {
-        return convert( sourceObject, targetType );
+        return converter.convert( sourceObject, targetType );
     }
 
     public static WrapperConverter wrapperConverter( final Converter converter )

@@ -19,18 +19,13 @@
 package org.ops4j.pax.swissbox.converter;
 
 import org.osgi.service.blueprint.container.Converter;
+import org.ops4j.pax.swissbox.converter.helpers.ImmutableCompositeConverter;
 import static org.ops4j.pax.swissbox.converter.helpers.ImmutableCompositeConverter.*;
 import org.ops4j.pax.swissbox.converter.helpers.WrapperConverter;
-import static org.ops4j.pax.swissbox.converter.java.lang.AssignableConverter.*;
-import static org.ops4j.pax.swissbox.converter.java.lang.FromNullConverter.*;
-import static org.ops4j.pax.swissbox.converter.java.lang.FromStringConverter.*;
-import static org.ops4j.pax.swissbox.converter.java.lang.FromStringToClassConverter.*;
-import static org.ops4j.pax.swissbox.converter.java.lang.ToNumberConverter.*;
 import static org.ops4j.pax.swissbox.converter.java.util.ToArrayConverter.*;
 import static org.ops4j.pax.swissbox.converter.java.util.ToCollectionConverter.*;
 import static org.ops4j.pax.swissbox.converter.java.util.ToDictionaryConverter.*;
 import static org.ops4j.pax.swissbox.converter.java.util.ToMapConverter.*;
-import org.ops4j.pax.swissbox.converter.loader.Loader;
 
 /**
  * JAVADOC
@@ -41,6 +36,8 @@ public class JavaUtilConverter
     extends WrapperConverter
     implements Converter
 {
+
+    public static final JavaUtilConverter INSTANCE = new JavaUtilConverter();
 
     public JavaUtilConverter()
     {
@@ -56,14 +53,26 @@ public class JavaUtilConverter
 
     public JavaUtilConverter( final Converter escape )
     {
+        final ImmutableCompositeConverter includingThisEscape = immutableCompositeConverter( escape, this );
+
         delegate(
             immutableCompositeConverter(
-                toArrayConverter( escape ),
-                toCollectionConverter( escape ),
-                toDictionaryConverter( escape ),
-                toMapConverter( escape )
+                toArrayConverter( includingThisEscape ),
+                toCollectionConverter( includingThisEscape ),
+                toDictionaryConverter( includingThisEscape ),
+                toMapConverter( includingThisEscape )
             )
         );
+    }
+
+    public static JavaUtilConverter javaUtilConverter()
+    {
+        return INSTANCE;
+    }
+
+    public static JavaUtilConverter javaUtilConverter( final Converter escape )
+    {
+        return new JavaUtilConverter( escape );
     }
 
 }
