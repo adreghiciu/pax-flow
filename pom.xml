@@ -157,6 +157,8 @@
     <module>pax-flow-runtime</module>
     <module>pax-flow-recipes</module>
     <module>pax-flow-setup</module>
+
+    <module>pax-swissbox-converter</module>
   </modules>
 
   <profiles>

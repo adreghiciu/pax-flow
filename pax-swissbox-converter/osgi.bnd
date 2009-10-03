@@ -1,0 +1,16 @@
+Bundle-SymbolicName:\
+  ${bundle.symbolicName}
+
+Bundle-Version>:\
+  ${pom.version}
+
+Bundle-Activator:\
+  ${bundle.namespace}.internal.Activator  
+
+Import-Package:\
+  ${bundle.namespace}.*; version="${pom.version}",\
+  org.osgi.framework; version="[1.0,2.0)",\
+  org.osgi.service.blueprint.container; version="[1.0,2.0)"; resolution:=optional
+
+Export-Package:\
+  ${bundle.namespace}.*; version="${pom.version}"
