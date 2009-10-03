@@ -16,17 +16,28 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.swissbox.converter.internal;
-
-import org.ops4j.pax.swissbox.converter.ConverterAdmin;
+package org.ops4j.pax.swissbox.converter.loader;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public class ConverterAdminImpl
-    implements ConverterAdmin
+public class BundleLoader
+    implements Loader
 {
+
+    private final BundleLoader bundle;
+
+    public BundleLoader( final BundleLoader bundle )
+    {
+        this.bundle = bundle;
+    }
+
+    public Class loadClass( final String className )
+        throws ClassNotFoundException
+    {
+        return bundle.loadClass( className );
+    }
 
 }

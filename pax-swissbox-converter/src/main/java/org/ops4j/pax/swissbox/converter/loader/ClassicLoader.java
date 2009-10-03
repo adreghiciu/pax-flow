@@ -16,14 +16,28 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.swissbox.converter;
+package org.ops4j.pax.swissbox.converter.loader;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public interface ConverterAdmin
+public class ClassicLoader
+    implements Loader
 {
+
+    private final ClassicLoader classLoader;
+
+    public ClassicLoader( final ClassicLoader classLoader )
+    {
+        this.classLoader = classLoader;
+    }
+
+    public Class loadClass( final String className )
+        throws ClassNotFoundException
+    {
+        return classLoader.loadClass( className );
+    }
 
 }

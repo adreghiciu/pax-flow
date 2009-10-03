@@ -16,33 +16,26 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.swissbox.converter.basic;
+package org.ops4j.pax.swissbox.converter.java.lang;
 
 import org.osgi.service.blueprint.container.Converter;
 import org.osgi.service.blueprint.container.ReifiedType;
-import static org.ops4j.pax.swissbox.converter.basic.FromNullConverter.*;
-import static org.ops4j.pax.swissbox.converter.internal.Primitives.*;
 
 /**
  * JAVADOC
  *
- * NOTICE: This class contains code originally developed by "Apache Geronimo Project", OSGi Blueprint Implementation.
- *
- * @author <a href="mailto:dev@geronimo.apache.org">Apache Geronimo Project</a>
  * @author Alin Dreghiciu (adreghiciu@gmail.com)
  */
-public class AssignableConverter
+public class FromNullConverter
     implements Converter
 {
 
-    public static final AssignableConverter INSTANCE = new AssignableConverter();
+    public static final FromNullConverter INSTANCE = new FromNullConverter();
 
     public boolean canConvert( final Object sourceObject,
                                final ReifiedType targetType )
     {
-        return FromNullConverter.fromNullConverter().canConvert( sourceObject, targetType )
-               || ( targetType.size() == 0
-                    && unwrap( targetType.getRawClass() ).isAssignableFrom( unwrap( sourceObject.getClass() ) ) );
+        return sourceObject == null;
     }
 
     public Object convert( final Object sourceObject,
@@ -53,20 +46,15 @@ public class AssignableConverter
         {
             throw new Exception(
                 String.format(
-                    "%s cannot convert an %s", AssignableConverter.class.getSimpleName(), sourceObject.getClass()
+                    "%s cannot convert an %s", FromNullConverter.class.getSimpleName(), sourceObject.getClass()
                 )
             );
         }
 
-        if( fromNullConverter().canConvert( sourceObject, targetType ) )
-        {
-            return fromNullConverter().convert( sourceObject, targetType );
-        }
-
-        return sourceObject;
+        return null;
     }
 
-    public static AssignableConverter assignableConverter()
+    public static FromNullConverter fromNullConverter()
     {
         return INSTANCE;
     }

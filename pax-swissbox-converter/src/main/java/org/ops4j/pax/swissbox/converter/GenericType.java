@@ -23,9 +23,9 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
-import org.osgi.framework.Bundle;
 import org.osgi.service.blueprint.container.ReifiedType;
 import org.ops4j.pax.swissbox.converter.internal.Primitives;
+import org.ops4j.pax.swissbox.converter.loader.Loader;
 
 /**
  * JAVADOC
@@ -296,37 +296,5 @@ public class GenericType
         throw new RuntimeException( "Unknown type " + type );
     }
 
-    public static interface Loader
-    {
-
-        Class loadClass( java.lang.String className )
-            throws java.lang.ClassNotFoundException;
-    }
-
-    public static Loader bundleLoader( final Bundle bundle )
-    {
-        return new Loader()
-        {
-
-            public Class loadClass( final String className )
-                throws ClassNotFoundException
-            {
-                return bundle.loadClass( className );
-            }
-        };
-    }
-
-    public static Loader classLoader( final ClassLoader classLoader )
-    {
-        return new Loader()
-        {
-
-            public Class loadClass( final String className )
-                throws ClassNotFoundException
-            {
-                return classLoader.loadClass( className );
-            }
-        };
-    }
 
 }

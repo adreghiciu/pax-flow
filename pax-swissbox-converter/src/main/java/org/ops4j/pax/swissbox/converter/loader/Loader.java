@@ -16,36 +16,18 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.swissbox.converter.internal;
-
-import java.util.Hashtable;
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.ops4j.pax.swissbox.converter.ConverterAdmin;
+package org.ops4j.pax.swissbox.converter.loader;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public class Activator
-    implements BundleActivator
+public interface Loader
 {
 
-    public void start( final BundleContext bundleContext )
-        throws Exception
-    {
-        bundleContext.registerService(
-            ConverterAdmin.class.getName(),
-            new ConverterAdminImpl(),
-            new Hashtable()
-        );
-    }
+    Class loadClass( java.lang.String className )
+        throws ClassNotFoundException;
 
-    public void stop( final BundleContext bundleContext )
-        throws Exception
-    {
-        // nothing to do
-    }
-    
+
 }

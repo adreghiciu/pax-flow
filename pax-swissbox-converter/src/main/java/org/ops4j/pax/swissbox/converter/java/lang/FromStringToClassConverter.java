@@ -15,14 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.swissbox.converter.basic;
+package org.ops4j.pax.swissbox.converter.java.lang;
 
 import static java.lang.String.*;
 import org.osgi.service.blueprint.container.Converter;
 import org.osgi.service.blueprint.container.ReifiedType;
 import org.ops4j.pax.swissbox.converter.GenericType;
-import static org.ops4j.pax.swissbox.converter.basic.AssignableConverter.*;
-import static org.ops4j.pax.swissbox.converter.basic.FromNullConverter.*;
+import static org.ops4j.pax.swissbox.converter.java.lang.AssignableConverter.*;
+import static org.ops4j.pax.swissbox.converter.java.lang.FromNullConverter.*;
+import org.ops4j.pax.swissbox.converter.loader.Loader;
 
 /**
  * JAVADOC
@@ -36,9 +37,9 @@ public class FromStringToClassConverter
     implements Converter
 {
 
-    private final GenericType.Loader m_loader;
+    private final Loader m_loader;
 
-    public FromStringToClassConverter( final GenericType.Loader loader )
+    public FromStringToClassConverter( final Loader loader )
     {
         m_loader = loader;
     }
@@ -112,7 +113,7 @@ public class FromStringToClassConverter
         throw new Exception( format( "Unable to convert string [%s] to %s", sourceObject, targetType ) );
     }
 
-    public static FromStringToClassConverter fromStringToClassConverter( final GenericType.Loader loader )
+    public static FromStringToClassConverter fromStringToClassConverter( final Loader loader )
     {
         return new FromStringToClassConverter( loader );
     }

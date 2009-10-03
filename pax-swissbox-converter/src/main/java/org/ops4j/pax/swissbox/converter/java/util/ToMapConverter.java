@@ -15,23 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.swissbox.converter.basic;
+package org.ops4j.pax.swissbox.converter.java.util;
 
 import static java.lang.String.*;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import org.osgi.service.blueprint.container.Converter;
 import org.osgi.service.blueprint.container.ReifiedType;
-import static org.ops4j.pax.swissbox.converter.basic.AssignableConverter.*;
-import static org.ops4j.pax.swissbox.converter.basic.FromNullConverter.*;
+import static org.ops4j.pax.swissbox.converter.java.lang.AssignableConverter.*;
+import static org.ops4j.pax.swissbox.converter.java.lang.FromNullConverter.*;
 import org.ops4j.pax.swissbox.converter.internal.Reflection;
 
 /**
@@ -42,13 +40,13 @@ import org.ops4j.pax.swissbox.converter.internal.Reflection;
  * @author <a href="mailto:dev@geronimo.apache.org">Apache Geronimo Project</a>
  * @author Alin Dreghiciu (adreghiciu@gmail.com)
  */
-public class ToCollectionConverter
+public class ToMapConverter
     implements Converter
 {
 
     private final Converter escape;
 
-    public ToCollectionConverter( final Converter escape )
+    public ToMapConverter( final Converter escape )
     {
 
         this.escape = escape;
@@ -59,9 +57,9 @@ public class ToCollectionConverter
     {
         return fromNullConverter().canConvert( sourceObject, targetType )
                || assignableConverter().canConvert( sourceObject, targetType )
-               || Collection.class.isAssignableFrom( targetType.getRawClass() )
-                  && ( sourceObject instanceof Collection
-                       || sourceObject.getClass().isArray() );
+               || Map.class.isAssignableFrom( targetType.getRawClass() )
+                  && ( sourceObject instanceof Map
+                       || sourceObject instanceof Dictionary );
     }
 
     public Object convert( final Object sourceObject,
@@ -72,7 +70,7 @@ public class ToCollectionConverter
         {
             throw new Exception(
                 format(
-                    "%s cannot convert an %s", ToCollectionConverter.class.getSimpleName(), sourceObject.getClass()
+                    "%s cannot convert an %s", ToMapConverter.class.getSimpleName(), sourceObject.getClass()
                 )
             );
         }
@@ -87,24 +85,32 @@ public class ToCollectionConverter
             return assignableConverter().convert( sourceObject, targetType );
         }
 
-        return convertToCollection( sourceObject, targetType );
+        return convertToMap( sourceObject, targetType );
     }
 
-    private Object convertToCollection( final Object sourceObject,
-                                        final ReifiedType targetType )
+    private Object convertToMap( final Object sourceObject,
+                                 final ReifiedType targetType )
         throws Exception
     {
-        final ReifiedType valueType = targetType.getActualTypeArgument( 0 );
+        final ReifiedType keyType = targetType.getActualTypeArgument( 0 );
+        final ReifiedType valueType = targetType.getActualTypeArgument( 1 );
 
-        if( sourceObject.getClass().isArray() )
+        if( sourceObject instanceof Dictionary )
         {
-            final Collection<Object> converted = createCollection( getCollectionType( targetType.getRawClass() ) );
+            final Map<Object, Object> converted = createMap( getMapType( targetType.getRawClass() ) );
 
-            for( int i = 0; i < Array.getLength( sourceObject ); i++ )
+            final Dictionary toConvert = (Dictionary) sourceObject;
+
+            for( Enumeration keys = toConvert.keys(); keys.hasMoreElements(); )
             {
+                final Object key = keys.nextElement();
+
                 try
                 {
-                    converted.add( escape.convert( Array.get( sourceObject, i ), valueType ) );
+                    converted.put(
+                        escape.convert( key, keyType ),
+                        escape.convert( toConvert.get( key ), valueType )
+                    );
                 }
                 catch( Exception e )
                 {
@@ -120,15 +126,18 @@ public class ToCollectionConverter
             return converted;
         }
 
-        if( sourceObject instanceof Collection )
+        if( sourceObject instanceof Map )
         {
-            final Collection<Object> converted = createCollection( getCollectionType( targetType.getRawClass() ) );
+            final Map<Object, Object> converted = createMap( getMapType( targetType.getRawClass() ) );
 
-            for( Object item : (Collection) sourceObject )
+            for( Map.Entry<?, ?> entry : ( (Map<?, ?>) sourceObject ).entrySet() )
             {
                 try
                 {
-                    converted.add( convert( item, valueType ) );
+                    converted.put(
+                        escape.convert( entry.getKey(), keyType ),
+                        escape.convert( entry.getValue(), valueType )
+                    );
                 }
                 catch( Exception e )
                 {
@@ -147,43 +156,35 @@ public class ToCollectionConverter
         throw new Exception( format( "Unable to convert from %s to %s", sourceObject, targetType ) );
     }
 
-    private static Collection<Object> createCollection( final Class<? extends Collection> type )
+    private static Map<Object, Object> createMap( final Class<? extends Map> type )
         throws Exception
     {
         return Reflection.newInstance( type );
     }
 
-    private static Class<? extends Collection> getCollectionType( final Class type )
+    private static Class<? extends Map> getMapType( final Class type )
     {
         if( Reflection.hasDefaultConstructor( type ) )
         {
             return type;
         }
-        else if( SortedSet.class.isAssignableFrom( type ) )
+        else if( SortedMap.class.isAssignableFrom( type ) )
         {
-            return TreeSet.class;
+            return TreeMap.class;
         }
-        else if( Set.class.isAssignableFrom( type ) )
+        else if( ConcurrentMap.class.isAssignableFrom( type ) )
         {
-            return LinkedHashSet.class;
-        }
-        else if( List.class.isAssignableFrom( type ) )
-        {
-            return ArrayList.class;
-        }
-        else if( Queue.class.isAssignableFrom( type ) )
-        {
-            return LinkedList.class;
+            return ConcurrentHashMap.class;
         }
         else
         {
-            return ArrayList.class;
+            return LinkedHashMap.class;
         }
     }
 
-    public static ToCollectionConverter toCollectionConverter( final Converter escape )
+    public static ToMapConverter toMapConverter( final Converter escape )
     {
-        return new ToCollectionConverter( escape );
+        return new ToMapConverter( escape );
     }
 
 }

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.swissbox.converter.basic;
+package org.ops4j.pax.swissbox.converter.java.lang;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Constructor;
@@ -25,8 +25,8 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 import org.osgi.service.blueprint.container.Converter;
 import org.osgi.service.blueprint.container.ReifiedType;
-import static org.ops4j.pax.swissbox.converter.basic.AssignableConverter.*;
-import static org.ops4j.pax.swissbox.converter.basic.FromNullConverter.*;
+import static org.ops4j.pax.swissbox.converter.java.lang.AssignableConverter.*;
+import static org.ops4j.pax.swissbox.converter.java.lang.FromNullConverter.*;
 import static org.ops4j.pax.swissbox.converter.internal.Primitives.*;
 
 /**
