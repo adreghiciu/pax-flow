@@ -43,7 +43,9 @@ public class GuiceConfig extends AbstractModule
 
         // TODO make number of threads configurable
         bind( ExecutorService.class ).toInstance( Executors.newFixedThreadPool( 10 ) );
-        bind( export( Transformer.class ) ).toProvider( service( DefaultTransformer.class ).export() );
+        bind( export( Transformer.class ) ).toProvider(
+            service( DefaultTransformer.class ).attributes( DefaultTransformer.attributes() ).export()
+        );
         bind( DefaultTransformer.class ).in( Singleton.class );
     }
 

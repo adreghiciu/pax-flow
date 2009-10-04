@@ -104,7 +104,7 @@ public class Setup
                     FixedRateTimer.Factory.TYPE,
                     immutableConfiguration(
                         frameworkPropertiesConfiguration( m_bundleContext ),
-                        configurationProperty( FixedRateTimer.Factory.INITIAL_DELAY, "${default.initialDelay:5s}" ),
+                        configurationProperty( FixedRateTimer.Factory.INITIAL_DELAY, "${default.initialDelay:0s}" ),
                         configurationProperty( FixedRateTimer.Factory.REPEAT_PERIOD, "${default.repeatPeriod:10s}" )
                     )
                 )

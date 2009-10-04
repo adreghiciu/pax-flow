@@ -3,6 +3,7 @@ package org.ops4j.pax.flow.runtime.internal;
 import static java.lang.String.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import com.google.inject.Inject;
@@ -35,30 +36,30 @@ public class DefaultTransformer
 
     private static final Log LOG = LogFactory.getLog( DefaultTransformer.class );
 
-    private final Map<JobName, Job> m_jobs;
+    private final Map<JobName, Job> jobs;
 
-    private final ExecutorService m_executorService;
+    private final ExecutorService executorService;
 
-    private final FlowFactoryRegistry m_flowFactoryRegistry;
-    private final TriggerFactoryRegistry m_triggerFactoryRegistry;
+    private final FlowFactoryRegistry flowFactoryRegistry;
+    private final TriggerFactoryRegistry triggerFactoryRegistry;
 
     @Inject
     public DefaultTransformer( final ExecutorService executorService,
                                final FlowFactoryRegistry flowFactoryRegistry,
                                final TriggerFactoryRegistry triggerFactoryRegistry )
     {
-        m_executorService = executorService;
-        m_flowFactoryRegistry = flowFactoryRegistry;
-        m_triggerFactoryRegistry = triggerFactoryRegistry;
+        this.executorService = executorService;
+        this.flowFactoryRegistry = flowFactoryRegistry;
+        this.triggerFactoryRegistry = triggerFactoryRegistry;
 
-        m_jobs = new HashMap<JobName, Job>();
+        jobs = new HashMap<JobName, Job>();
     }
 
     @Start
     public void start()
     {
-        LOG.info( format( "Starting transformer (%s jobs active)", m_jobs.size() ) );
-        for( Job job : m_jobs.values() )
+        LOG.info( format( "Starting transformer (%s jobs active)", jobs.size() ) );
+        for( Job job : jobs.values() )
         {
             try
             {
@@ -74,7 +75,7 @@ public class DefaultTransformer
     @Stop
     public void stop()
     {
-        for( Job job : m_jobs.values() )
+        for( Job job : jobs.values() )
         {
             try
             {
@@ -93,7 +94,7 @@ public class DefaultTransformer
     {
         // VALIDATE
 
-        final TriggerFactory triggerFactory = m_triggerFactoryRegistry.get( description.triggerType() );
+        final TriggerFactory triggerFactory = triggerFactoryRegistry.get( description.triggerType() );
         if( triggerFactory == null )
         {
             throw new Exception( format( "Could not find a trigger factory of type [%s]", description.triggerType() ) );
@@ -106,7 +107,7 @@ public class DefaultTransformer
         );
 
         final Job job = new Job( description, trigger, flowScheduler );
-        m_jobs.put( description.name(), job );
+        jobs.put( description.name(), job );
 
         LOG.info( format( "Scheduled job [%s] (%s)", description.name(), job ) );
 
@@ -117,14 +118,14 @@ public class DefaultTransformer
         throws Exception
     {
         // VALIDATE
-        final Job exitingJob = m_jobs.get( description.name() );
+        final Job exitingJob = jobs.get( description.name() );
         if( exitingJob == null )
         {
             throw new Exception( format( "Rescheduled job [%s] could not be found", description.name() ) );
         }
         exitingJob.trigger.stop();
 
-        final TriggerFactory triggerFactory = m_triggerFactoryRegistry.get( description.triggerType() );
+        final TriggerFactory triggerFactory = triggerFactoryRegistry.get( description.triggerType() );
         if( triggerFactory == null )
         {
             throw new Exception( format( "Could not find a trigger factory of type [%s]", description.triggerType() ) );
@@ -140,7 +141,7 @@ public class DefaultTransformer
         );
 
         final Job job = new Job( description, trigger, flowScheduler );
-        m_jobs.put( description.name(), job );
+        jobs.put( description.name(), job );
 
         LOG.info( format( "Rescheduled job [%s] (%s)", description.name(), job ) );
 
@@ -150,12 +151,93 @@ public class DefaultTransformer
     public void unschedule( final JobName jobName )
         throws Exception
     {
-        final Job job = m_jobs.remove( jobName );
+        final Job job = jobs.remove( jobName );
         if( job != null )
         {
             job.trigger.stop();
         }
         LOG.info( format( "Unscheduled job named [%s]", jobName ) );
+    }
+
+    public void list()
+    {
+        if( jobs.isEmpty() )
+        {
+            System.out.println( "There are no scheduled jobs" );
+            return;
+        }
+
+        System.out.println( format( " %4.4s   %-40.40s   %-80.80s", "Id", "Flow type", "Trigger" ) );
+
+        for( Job job : new TreeSet<Job>( jobs.values() ) )
+        {
+            System.out.println(
+                format(
+                    "[%4.4s] [%-40.40s] [%-80.80s]",
+                    job.id,
+                    job.jobDescription.flowType(),
+                    job.trigger
+                )
+            );
+        }
+    }
+
+    public void detail()
+    {
+        if( jobs.isEmpty() )
+        {
+            System.out.println( "There are no scheduled jobs" );
+            return;
+        }
+
+        boolean first = true;
+
+        for( Job entry : new TreeSet<Job>( jobs.values() ) )
+        {
+            if( !first )
+            {
+                System.out.println();
+            }
+            first = false;
+            detail( entry.id );
+        }
+    }
+
+    public void detail( final int id )
+    {
+        Job job = null;
+
+        for( Job entry : jobs.values() )
+        {
+            if( entry.id == id )
+            {
+                job = entry;
+                break;
+            }
+        }
+
+        if( job == null )
+        {
+            System.out.println( format( "There is no job with id [%s]", id ) );
+        }
+        else
+        {
+            System.out.println( format( "%15s : %s", "Id", job.id ) );
+            System.out.println( format( "%15s : %s", "Flow type", job.jobDescription.flowType() ) );
+            System.out.println( format( "%15s : %s", "Trigger type", job.jobDescription.triggerType() ) );
+            System.out.println( format( "%15s : %s", "Trigger", job.trigger ) );
+            System.out.println( format( "%15s : %s", "Job name", job.jobDescription.name() ) );
+        }
+    }
+
+    public static Map<String, ?> attributes()
+    {
+        final Map<String, Object> attributes = new HashMap<String, Object>();
+
+        attributes.put( "osgi.command.scope", "flow" );
+        attributes.put( "osgi.command.function", new String[]{ "start", "stop", "list", "detail" } );
+
+        return attributes;
     }
 
     private class FlowScheduler
@@ -181,7 +263,7 @@ public class DefaultTransformer
 
         public void execute( final ExecutionContext executionContext )
         {
-            m_executorService.submit(
+            executorService.submit(
                 new Callable<Object>()
                 {
                     public Object call()
@@ -189,7 +271,7 @@ public class DefaultTransformer
                         try
                         {
                             LOG.debug( format( "Starting flow of type [%s]", m_description.flowType() ) );
-                            final FlowFactory flowFactory = m_flowFactoryRegistry.get( m_description.flowType() );
+                            final FlowFactory flowFactory = flowFactoryRegistry.get( m_description.flowType() );
                             if( flowFactory == null )
                             {
                                 LOG.warn(
@@ -225,15 +307,21 @@ public class DefaultTransformer
     }
 
     private static class Job
+        implements Comparable<Job>
     {
 
+        final int id;
         final JobDescription jobDescription;
         final Trigger trigger;
         final FlowScheduler flowScheduler;
 
+        private static int counter;
+
         public Job( final JobDescription jobDescription,
-                    final Trigger trigger, final FlowScheduler flowScheduler )
+                    final Trigger trigger,
+                    final FlowScheduler flowScheduler )
         {
+            this.id = ++counter;
             this.jobDescription = jobDescription;
             this.trigger = trigger;
             this.flowScheduler = flowScheduler;
@@ -243,6 +331,11 @@ public class DefaultTransformer
         public String toString()
         {
             return format( "Execute [%s] when [%s]", jobDescription.flowType(), trigger );
+        }
+
+        public int compareTo( final Job other )
+        {
+            return Integer.valueOf( id ).compareTo( other.id );
         }
 
     }
