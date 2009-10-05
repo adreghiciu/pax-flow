@@ -1,7 +1,5 @@
 package org.ops4j.pax.flow.api.helpers;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.FlowName;
@@ -16,29 +14,29 @@ public abstract class CancelableFlow
     implements Flow
 {
 
-    private Thread m_thread;
+    private Thread thread;
 
-    private FlowName m_name;
+    private FlowName name;
 
     public CancelableFlow()
     {
-        m_name = flowName( this.getClass().getSimpleName() );
+        name = flowName( this.getClass().getSimpleName() );
     }
 
     public CancelableFlow( final FlowName name )
     {
-        m_name = name;
+        this.name = name;
     }
 
     public FlowName name()
     {
-        return m_name;
+        return name;
     }
 
     public void execute( final ExecutionContext context )
         throws Exception
     {
-        m_thread = new Thread(
+        thread = new Thread(
             new Runnable()
             {
 
@@ -58,10 +56,10 @@ public abstract class CancelableFlow
         final ExceptionCaptor captor = new ExceptionCaptor();
         try
         {
-            m_thread.setName( name().value() );
-            m_thread.setUncaughtExceptionHandler( captor );
-            m_thread.start();
-            m_thread.join();
+            thread.setName( name().value() );
+            thread.setUncaughtExceptionHandler( captor );
+            thread.start();
+            thread.join();
         }
         catch( InterruptedException ignore )
         {
@@ -87,10 +85,10 @@ public abstract class CancelableFlow
     public void cancel()
         throws Exception
     {
-        if( m_thread != null && m_thread.isAlive() )
+        if( thread != null && thread.isAlive() )
         {
-            m_thread.interrupt();
-            m_thread = null;
+            thread.interrupt();
+            thread = null;
         }
     }
 

@@ -48,8 +48,8 @@ public class DefaultScheduler
 
     @Inject
     public DefaultScheduler( final ExecutorService executorService,
-                               final FlowFactoryRegistry flowFactoryRegistry,
-                               final TriggerFactoryRegistry triggerFactoryRegistry )
+                             final FlowFactoryRegistry flowFactoryRegistry,
+                             final TriggerFactoryRegistry triggerFactoryRegistry )
     {
         this.executorService = executorService;
         this.flowFactoryRegistry = flowFactoryRegistry;
@@ -61,7 +61,7 @@ public class DefaultScheduler
     @Start
     public void start()
     {
-        LOG.info( format( "Starting transformer (%s jobs active)", jobs.size() ) );
+        LOG.info( format( "Starting scheduler (%s jobs active)", jobs.size() ) );
         for( Job job : jobs.values() )
         {
             try
@@ -89,7 +89,7 @@ public class DefaultScheduler
                 LOG.error( format( "Could not stop trigger [%s]", job.trigger ), ignore );
             }
         }
-        LOG.info( "Stopped transformer" );
+        LOG.info( "Stopped scheduler" );
     }
 
     public void schedule( final JobDescription description )

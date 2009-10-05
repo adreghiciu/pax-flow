@@ -18,26 +18,26 @@ public class ExtractFileNameFromFile
     implements Flow
 {
 
-    private final PropertyName m_filePropertyName;
-    private final PropertyName m_fileNamePropertyName;
+    private final PropertyName filePropertyName;
+    private final PropertyName fileNamePropertyName;
 
     public ExtractFileNameFromFile( final PropertyName filePropertyName,
                                     final PropertyName fileNamePropertyName )
     {
-        m_filePropertyName = filePropertyName;
-        m_fileNamePropertyName = fileNamePropertyName;
+        this.filePropertyName = filePropertyName;
+        this.fileNamePropertyName = fileNamePropertyName;
     }
 
     public void run( final ExecutionContext context )
     {
-        final File file = typedExecutionContext( context ).mandatory( m_filePropertyName, File.class );
-        context.add( executionProperty( m_fileNamePropertyName, file.getAbsolutePath() ) );
+        final File file = typedExecutionContext( context ).mandatory( filePropertyName, File.class );
+        context.add( executionProperty( fileNamePropertyName, file.getAbsolutePath() ) );
     }
 
     @Override
     public String toString()
     {
-        return String.format( "Extract file name from [%s] to [%s]", m_filePropertyName, m_fileNamePropertyName );
+        return String.format( "Extract file name from [%s] to [%s]", filePropertyName, fileNamePropertyName );
     }
 
 }

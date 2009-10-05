@@ -31,13 +31,13 @@ public class UpdateConfiguration
     public static final PropertyName PID = propertyName( "pid" );
     public static final PropertyName FACTORY_PID = propertyName( "factoryPid" );
 
-    private final ConfigurationAdmin m_configurationAdmin;
+    private final ConfigurationAdmin configurationAdmin;
 
     @Inject
     public UpdateConfiguration( final ConfigurationAdmin configurationAdmin )
     {
         // VALIDATE
-        m_configurationAdmin = configurationAdmin;
+        this.configurationAdmin = configurationAdmin;
     }
 
     public void run( final ExecutionContext context )
@@ -56,17 +56,17 @@ public class UpdateConfiguration
         }
 
         final Configuration configuration;
-        final Configuration[] configurations = m_configurationAdmin.listConfigurations( filter );
+        final Configuration[] configurations = configurationAdmin.listConfigurations( filter );
 
         if( configurations == null || configurations.length == 0 )
         {
             if( factoryPid == null )
             {
-                configuration = m_configurationAdmin.getConfiguration( pid, null );
+                configuration = configurationAdmin.getConfiguration( pid, null );
             }
             else
             {
-                configuration = m_configurationAdmin.createFactoryConfiguration( pid, null );
+                configuration = configurationAdmin.createFactoryConfiguration( pid, null );
             }
         }
         else

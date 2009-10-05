@@ -34,23 +34,23 @@ public class DefaultExecutionContext
     implements ExecutionContext
 {
 
-    private final Map<PropertyName, ExecutionProperty<?>> m_properties;
+    private final Map<PropertyName, ExecutionProperty<?>> properties;
 
     protected DefaultExecutionContext( final ExecutionProperty<?>... properties )
     {
-        m_properties = new HashMap<PropertyName, ExecutionProperty<?>>();
+        this.properties = new HashMap<PropertyName, ExecutionProperty<?>>();
         if( properties != null && properties.length > 0 )
         {
             for( ExecutionProperty<?> property : properties )
             {
-                m_properties.put( property.name(), property );
+                this.properties.put( property.name(), property );
             }
         }
     }
 
     public <T> T get( final PropertyName name )
     {
-        final ExecutionProperty<?> property = m_properties.get( name );
+        final ExecutionProperty<?> property = properties.get( name );
         if( property == null )
         {
             return null;
@@ -61,7 +61,7 @@ public class DefaultExecutionContext
     public <T> T get( final PropertyName name, final T defaultValue )
     {
         // VALIDATE
-        final ExecutionProperty<?> property = m_properties.get( name );
+        final ExecutionProperty<?> property = properties.get( name );
         if( property == null )
         {
             return defaultValue;
@@ -71,13 +71,13 @@ public class DefaultExecutionContext
 
     public Iterable<PropertyName> names()
     {
-        return Collections.unmodifiableSet( m_properties.keySet() );
+        return Collections.unmodifiableSet( properties.keySet() );
     }
 
     public ExecutionContext add( final ExecutionProperty property )
     {
         // VALIDATE
-        m_properties.put( property.name(), property );
+        properties.put( property.name(), property );
 
         return this;
     }

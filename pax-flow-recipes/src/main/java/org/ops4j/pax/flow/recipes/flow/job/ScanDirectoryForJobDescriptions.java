@@ -80,15 +80,15 @@ public class ScanDirectoryForJobDescriptions
         public static final PropertyName INCLUDES = propertyName( "includes" );
         public static final PropertyName EXCLUDES = propertyName( "excludes" );
 
-        private final Scheduler m_scheduler;
+        private final Scheduler scheduler;
 
-        private long m_counter;
+        private long counter;
 
         @Inject
         public Factory( final Scheduler scheduler )
         {
             // VALIDATE
-            m_scheduler = scheduler;
+            this.scheduler = scheduler;
         }
 
         public FlowType type()
@@ -101,8 +101,8 @@ public class ScanDirectoryForJobDescriptions
             final TypedConfiguration cfg = typedConfiguration( configuration );
 
             return new ScanDirectoryForJobDescriptions(
-                flowName( format( "%s::%d", type(), m_counter++ ) ),
-                m_scheduler,
+                flowName( format( "%s::%d", type(), counter++ ) ),
+                scheduler,
                 new File( cfg.mandatory( DIRECTORY, String.class ) ),
                 cfg.optional( INCLUDES, String[].class ),
                 cfg.optional( EXCLUDES, String[].class )
@@ -112,7 +112,7 @@ public class ScanDirectoryForJobDescriptions
         @Override
         public String toString()
         {
-            return format( "Flow factory for type [%s] (%d instances)", type(), m_counter );
+            return format( "Flow factory for type [%s] (%d instances)", type(), counter );
         }
 
         public static Map<String, String> attributes()

@@ -18,22 +18,22 @@ public class DeterminePidFromURL
     implements Flow
 {
 
-    private final PropertyName m_urlPropertyName;
-    private final PropertyName m_pidPropertyName;
-    private final PropertyName m_factoryPidPropertyName;
+    private final PropertyName urlPropertyName;
+    private final PropertyName pidPropertyName;
+    private final PropertyName factoryPidPropertyName;
 
     public DeterminePidFromURL( final PropertyName urlPropertyName,
                                 final PropertyName pidPropertyName,
                                 final PropertyName factoryPidPropertyName )
     {
-        m_urlPropertyName = urlPropertyName;
-        m_pidPropertyName = pidPropertyName;
-        m_factoryPidPropertyName = factoryPidPropertyName;
+        this.urlPropertyName = urlPropertyName;
+        this.pidPropertyName = pidPropertyName;
+        this.factoryPidPropertyName = factoryPidPropertyName;
     }
 
     public void run( final ExecutionContext context )
     {
-        final URL url = typedExecutionContext( context ).mandatory( m_urlPropertyName, URL.class );
+        final URL url = typedExecutionContext( context ).mandatory( urlPropertyName, URL.class );
 
         final String stringForm = url.toExternalForm();
         final int startOfPid = stringForm.lastIndexOf( "/" );
@@ -56,8 +56,8 @@ public class DeterminePidFromURL
             pid = pid.substring( 0, startOfExtension );
         }
 
-        context.add( executionProperty( m_pidPropertyName, pid ) );
-        context.add( executionProperty( m_factoryPidPropertyName, factoryPid ) );
+        context.add( executionProperty( pidPropertyName, pid ) );
+        context.add( executionProperty( factoryPidPropertyName, factoryPid ) );
     }
 
     @Override
@@ -65,7 +65,7 @@ public class DeterminePidFromURL
     {
         return String.format(
             "Extract PID / Factory PID from [%s] to [%s] and [%s]",
-            m_urlPropertyName, m_pidPropertyName, m_factoryPidPropertyName
+            urlPropertyName, pidPropertyName, factoryPidPropertyName
         );
     }
 

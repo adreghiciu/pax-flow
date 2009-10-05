@@ -26,24 +26,24 @@ package org.ops4j.pax.flow.api;
 public class ConfigurationProperty<T>
 {
 
-    private final PropertyName m_name;
-    private final T m_value;
+    private final PropertyName name;
+    private final T value;
 
     public ConfigurationProperty( final PropertyName name,
                                   final T value )
     {
-        m_name = name;
-        m_value = value;
+        this.name = name;
+        this.value = value;
     }
 
     public PropertyName name()
     {
-        return m_name;
+        return name;
     }
 
     public T value()
     {
-        return m_value;
+        return value;
     }
 
     @Override
@@ -60,11 +60,11 @@ public class ConfigurationProperty<T>
 
         final ConfigurationProperty property = (ConfigurationProperty) o;
 
-        if( !m_name.equals( property.m_name ) )
+        if( !name.equals( property.name ) )
         {
             return false;
         }
-        if( !m_value.equals( property.m_value ) )
+        if( !value.equals( property.value ) )
         {
             return false;
         }
@@ -75,15 +75,15 @@ public class ConfigurationProperty<T>
     @Override
     public int hashCode()
     {
-        int result = m_name.hashCode();
-        result = 31 * result + m_value.hashCode();
+        int result = name.hashCode();
+        result = 31 * result + value.hashCode();
         return result;
     }
 
     @Override
     public String toString()
     {
-        return String.format( "%s=%s", m_name, m_value );
+        return String.format( "%s=%s", name, value );
     }
 
     public static <T> ConfigurationProperty<T> configurationProperty( final PropertyName name,

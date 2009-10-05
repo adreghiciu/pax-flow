@@ -16,11 +16,11 @@ public class ImmutableJobDescription
     implements JobDescription
 {
 
-    private final JobName m_jobName;
-    private final FlowType m_flowType;
-    private final Configuration m_flowConfiguration;
-    private final TriggerType m_triggerType;
-    private final Configuration m_triggerConfiguration;
+    private final JobName jobName;
+    private final FlowType flowType;
+    private final Configuration flowConfiguration;
+    private final TriggerType triggerType;
+    private final Configuration triggerConfiguration;
 
     private ImmutableJobDescription( final JobName jobName,
                                      final FlowType flowType,
@@ -28,36 +28,36 @@ public class ImmutableJobDescription
                                      final TriggerType triggerType,
                                      final Configuration triggerConfiguration )
     {
-        m_jobName = jobName;
-        m_flowType = flowType;
-        m_flowConfiguration = flowConfiguration;
-        m_triggerType = triggerType;
-        m_triggerConfiguration = triggerConfiguration;
+        this.jobName = jobName;
+        this.flowType = flowType;
+        this.flowConfiguration = flowConfiguration;
+        this.triggerType = triggerType;
+        this.triggerConfiguration = triggerConfiguration;
     }
 
     public JobName name()
     {
-        return m_jobName;
+        return jobName;
     }
 
     public FlowType flowType()
     {
-        return m_flowType;
+        return flowType;
     }
 
     public Configuration flowConfiguration()
     {
-        return m_flowConfiguration;
+        return flowConfiguration;
     }
 
     public TriggerType triggerType()
     {
-        return m_triggerType;
+        return triggerType;
     }
 
     public Configuration triggerConfiguration()
     {
-        return m_triggerConfiguration;
+        return triggerConfiguration;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class ImmutableJobDescription
     @Override
     public String toString()
     {
-        return format( "When [%s] fires execute [%s]", m_triggerType, m_flowType );
+        return format( "When [%s] fires execute [%s]", triggerType, flowType );
     }
 
     public static ImmutableJobDescription immutableJobDescription( final JobName jobName,

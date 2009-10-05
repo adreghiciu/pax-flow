@@ -14,20 +14,20 @@ public class SRFlowFactoryRegistry
     implements FlowFactoryRegistry
 {
 
-    private final Iterable<FlowFactory> m_factories;
+    private final Iterable<FlowFactory> factories;
 
     @Inject
     public SRFlowFactoryRegistry( final Iterable<FlowFactory> factories )
     {
         // VALIDATE
-        m_factories = factories;
+        this.factories = factories;
     }
 
     public FlowFactory get( final FlowType type )
     {
         if( type != null )
         {
-            for( FlowFactory factory : m_factories )
+            for( FlowFactory factory : factories )
             {
                 if( type.equals( factory.type() ) )
                 {

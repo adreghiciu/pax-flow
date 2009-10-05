@@ -18,22 +18,22 @@ public class DeterminePidFromFileName
     implements Flow
 {
 
-    private final PropertyName m_filePropertyName;
-    private final PropertyName m_pidPropertyName;
-    private final PropertyName m_factoryPidPropertyName;
+    private final PropertyName filePropertyName;
+    private final PropertyName pidPropertyName;
+    private final PropertyName factoryPidPropertyName;
 
     public DeterminePidFromFileName( final PropertyName filePropertyName,
                                      final PropertyName pidPropertyName,
                                      final PropertyName factoryPidPropertyName )
     {
-        m_filePropertyName = filePropertyName;
-        m_pidPropertyName = pidPropertyName;
-        m_factoryPidPropertyName = factoryPidPropertyName;
+        this.filePropertyName = filePropertyName;
+        this.pidPropertyName = pidPropertyName;
+        this.factoryPidPropertyName = factoryPidPropertyName;
     }
 
     public void run( final ExecutionContext context )
     {
-        final File file = typedExecutionContext( context ).mandatory( m_filePropertyName, File.class );
+        final File file = typedExecutionContext( context ).mandatory( filePropertyName, File.class );
 
         String pid = file.getName();
         String factoryPid = null;
@@ -53,8 +53,8 @@ public class DeterminePidFromFileName
             pid = pid.substring( 0, startOfExtension );
         }
 
-        context.add( executionProperty( m_pidPropertyName, pid ) );
-        context.add( executionProperty( m_factoryPidPropertyName, factoryPid ) );
+        context.add( executionProperty( pidPropertyName, pid ) );
+        context.add( executionProperty( factoryPidPropertyName, factoryPid ) );
     }
 
     @Override
@@ -62,7 +62,7 @@ public class DeterminePidFromFileName
     {
         return String.format(
             "Extract PID / Factory PID from [%s] to [%s] and [%s]",
-            m_filePropertyName, m_pidPropertyName, m_factoryPidPropertyName
+            filePropertyName, pidPropertyName, factoryPidPropertyName
         );
     }
 

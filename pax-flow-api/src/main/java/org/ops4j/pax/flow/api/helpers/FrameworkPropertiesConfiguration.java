@@ -32,16 +32,16 @@ public class FrameworkPropertiesConfiguration
     implements Configuration
 {
 
-    private final BundleContext m_bundleContext;
+    private final BundleContext bundleContext;
 
     private FrameworkPropertiesConfiguration( final BundleContext bundleContext )
     {
-        m_bundleContext = bundleContext;
+        this.bundleContext = bundleContext;
     }
 
     public <T> T get( final PropertyName name )
     {
-        final String value = m_bundleContext.getProperty( name.value() );
+        final String value = bundleContext.getProperty( name.value() );
         if( !name.value().equals( value ) )
         {
             return (T) replacePlaceholders( this, value );

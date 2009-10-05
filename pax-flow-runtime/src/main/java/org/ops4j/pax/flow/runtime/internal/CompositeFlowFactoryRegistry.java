@@ -14,20 +14,20 @@ public class CompositeFlowFactoryRegistry
     implements FlowFactoryRegistry
 {
 
-    private Iterable<FlowFactoryRegistry> m_registries;
+    private Iterable<FlowFactoryRegistry> registries;
 
     @Inject
     public CompositeFlowFactoryRegistry( final Iterable<FlowFactoryRegistry> registries )
     {
         // VALIDATE
-        m_registries = registries;
+        this.registries = registries;
     }
 
     public FlowFactory get( final FlowType type )
     {
         if( type != null )
         {
-            for( FlowFactoryRegistry registry : m_registries )
+            for( FlowFactoryRegistry registry : registries )
             {
                 final FlowFactory factory = registry.get( type );
                 if( factory != null )

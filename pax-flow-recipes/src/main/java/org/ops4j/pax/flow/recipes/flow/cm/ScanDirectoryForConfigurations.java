@@ -91,15 +91,15 @@ public class ScanDirectoryForConfigurations
         public static final PropertyName INCLUDES = propertyName( "includes" );
         public static final PropertyName EXCLUDES = propertyName( "excludes" );
 
-        private final ConfigurationAdmin m_configurationAdmin;
+        private final ConfigurationAdmin configurationAdmin;
 
-        private long m_counter;
+        private long counter;
 
         @Inject
         public Factory( final ConfigurationAdmin configurationAdmin )
         {
             // VALIDATE
-            m_configurationAdmin = configurationAdmin;
+            this.configurationAdmin = configurationAdmin;
         }
 
         public FlowType type()
@@ -112,8 +112,8 @@ public class ScanDirectoryForConfigurations
             final TypedConfiguration cfg = typedConfiguration( configuration );
 
             return new ScanDirectoryForConfigurations(
-                flowName( format( "%s::%d", type(), m_counter++ ) ),
-                m_configurationAdmin,
+                flowName( format( "%s::%d", type(), counter++ ) ),
+                configurationAdmin,
                 new File( cfg.mandatory( DIRECTORY, String.class ) ),
                 cfg.optional( INCLUDES, String[].class ),
                 cfg.optional( EXCLUDES, String[].class )
@@ -123,7 +123,7 @@ public class ScanDirectoryForConfigurations
         @Override
         public String toString()
         {
-            return format( "Flow factory for type [%s] (%d instances)", type(), m_counter );
+            return format( "Flow factory for type [%s] (%d instances)", type(), counter );
         }
 
         public static Map<String, String> attributes()

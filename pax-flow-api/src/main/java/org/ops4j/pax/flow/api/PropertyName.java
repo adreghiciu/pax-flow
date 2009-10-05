@@ -26,17 +26,17 @@ package org.ops4j.pax.flow.api;
 public class PropertyName
 {
 
-    private final String m_name;
+    private final String name;
 
     public PropertyName( final String name )
     {
         // VALIDATE
-        m_name = name;
+        this.name = name;
     }
 
     public String value()
     {
-        return m_name;
+        return name;
     }
 
     @Override
@@ -53,13 +53,13 @@ public class PropertyName
 
         final PropertyName that = (PropertyName) o;
 
-        return m_name.equals( that.m_name );
+        return name.equals( that.name );
     }
 
     @Override
     public int hashCode()
     {
-        return m_name.hashCode();
+        return name.hashCode();
     }
 
     @Override

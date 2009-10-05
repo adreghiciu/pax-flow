@@ -21,13 +21,13 @@ public class RescheduleJob
 
     public static final PropertyName JOB_DESCRIPTION = PropertyName.propertyName( "jobDescription" );
 
-    private final Scheduler m_scheduler;
+    private final Scheduler scheduler;
 
     @Inject
     public RescheduleJob( final Scheduler scheduler )
     {
         // VALIDATE
-        m_scheduler = scheduler;
+        this.scheduler = scheduler;
     }
 
     public void run( final ExecutionContext context )
@@ -36,7 +36,7 @@ public class RescheduleJob
         final JobDescription description = typedExecutionContext( context ).mandatory(
             JOB_DESCRIPTION, JobDescription.class
         );
-        m_scheduler.reschedule( description );
+        scheduler.reschedule( description );
     }
 
     @Override

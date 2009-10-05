@@ -68,8 +68,8 @@ public class BundleManifestWatcher
     public static final String ADDED = "ADDED";
     public static final String REMOVED = "REMOVED";
 
-    private final BundleWatcher<ManifestEntry> m_bundleWatcher;
-    private final String m_description;
+    private final BundleWatcher<ManifestEntry> bundleWatcher;
+    private final String description;
 
     public BundleManifestWatcher( final TriggerName name,
                                   final ExecutionTarget target,
@@ -79,7 +79,7 @@ public class BundleManifestWatcher
         super( name, target );
 
         // VALIDATE
-        m_bundleWatcher = new BundleWatcher<ManifestEntry>(
+        bundleWatcher = new BundleWatcher<ManifestEntry>(
             bundleContext,
             new BundleManifestScanner( new RegexKeyManifestFilter( regexp ) ),
             new BundleObserver<ManifestEntry>()
@@ -122,7 +122,7 @@ public class BundleManifestWatcher
             }
         );
 
-        m_description = format( "Watch bundles with a manifest attribute matching [%s]", regexp );
+        description = format( "Watch bundles with a manifest attribute matching [%s]", regexp );
     }
 
     @Override
@@ -132,7 +132,7 @@ public class BundleManifestWatcher
         if( !isStarted() )
         {
             super.start();
-            m_bundleWatcher.start();
+            bundleWatcher.start();
         }
         return itself();
     }
@@ -142,7 +142,7 @@ public class BundleManifestWatcher
     {
         if( isStarted() )
         {
-            m_bundleWatcher.stop();
+            bundleWatcher.stop();
             super.stop();
         }
         return itself();
@@ -151,7 +151,7 @@ public class BundleManifestWatcher
     @Override
     public String toString()
     {
-        return m_description;
+        return description;
     }
 
     @Override
@@ -173,15 +173,15 @@ public class BundleManifestWatcher
 
         public static final PropertyName REGEXP = propertyName( "regexp" );
 
-        private final BundleContext m_bundleContext;
+        private final BundleContext bundleContext;
 
-        private long m_counter;
+        private long counter;
 
         @Inject
         public Factory( final BundleContext bundleContext )
         {
             // VALIDATE
-            m_bundleContext = bundleContext;
+            this.bundleContext = bundleContext;
         }
 
         public TriggerType type()
@@ -198,9 +198,9 @@ public class BundleManifestWatcher
             final String regexp = config.mandatory( REGEXP, String.class );
 
             return new BundleManifestWatcher(
-                triggerName( format( "%s::%d", type(), m_counter++ ) ),
+                triggerName( format( "%s::%d", type(), counter++ ) ),
                 target,
-                m_bundleContext,
+                bundleContext,
                 regexp
             );
         }
@@ -208,7 +208,7 @@ public class BundleManifestWatcher
         @Override
         public String toString()
         {
-            return format( "Trigger factory for type [%s] (%d instances)", type(), m_counter );
+            return format( "Trigger factory for type [%s] (%d instances)", type(), counter );
         }
 
         public static Map<String, String> attributes()

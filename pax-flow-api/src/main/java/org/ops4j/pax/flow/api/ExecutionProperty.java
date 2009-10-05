@@ -26,32 +26,32 @@ package org.ops4j.pax.flow.api;
 public class ExecutionProperty<T>
 {
 
-    private final PropertyName m_name;
-    private final T m_value;
-    private final boolean m_persistent;
+    private final PropertyName name;
+    private final T value;
+    private final boolean persistent;
 
     public ExecutionProperty( final PropertyName name,
                               final T value,
                               final boolean persistent )
     {
-        m_name = name;
-        m_value = value;
-        m_persistent = persistent;
+        this.name = name;
+        this.value = value;
+        this.persistent = persistent;
     }
 
     public PropertyName name()
     {
-        return m_name;
+        return name;
     }
 
     public T value()
     {
-        return m_value;
+        return value;
     }
 
     public boolean isPersistent()
     {
-        return m_persistent;
+        return persistent;
     }
 
     @Override
@@ -68,11 +68,11 @@ public class ExecutionProperty<T>
 
         final ExecutionProperty property = (ExecutionProperty) o;
 
-        if( !m_name.equals( property.m_name ) )
+        if( !name.equals( property.name ) )
         {
             return false;
         }
-        if( !m_value.equals( property.m_value ) )
+        if( !value.equals( property.value ) )
         {
             return false;
         }
@@ -83,15 +83,15 @@ public class ExecutionProperty<T>
     @Override
     public int hashCode()
     {
-        int result = m_name.hashCode();
-        result = 31 * result + m_value.hashCode();
+        int result = name.hashCode();
+        result = 31 * result + value.hashCode();
         return result;
     }
 
     @Override
     public String toString()
     {
-        return String.format( "%s=%s%s", m_name, m_value, m_persistent ? "(persistent)" : "" );
+        return String.format( "%s=%s%s", name, value, persistent ? "(persistent)" : "" );
     }
 
     public static <T> ExecutionProperty<T> executionProperty( final PropertyName name,

@@ -21,13 +21,13 @@ public class UnscheduleJob
 
     public static final PropertyName JOB_NAME = PropertyName.propertyName( "jobDescriptionName" );
 
-    private final Scheduler m_scheduler;
+    private final Scheduler scheduler;
 
     @Inject
     public UnscheduleJob( final Scheduler scheduler )
     {
         // VALIDATE
-        m_scheduler = scheduler;
+        this.scheduler = scheduler;
     }
 
     public void run( final ExecutionContext context )
@@ -35,7 +35,7 @@ public class UnscheduleJob
     {
         final String jobName = typedExecutionContext( context ).mandatory( JOB_NAME, String.class );
 
-        m_scheduler.unschedule( jobName( jobName ) );
+        scheduler.unschedule( jobName( jobName ) );
     }
 
     @Override

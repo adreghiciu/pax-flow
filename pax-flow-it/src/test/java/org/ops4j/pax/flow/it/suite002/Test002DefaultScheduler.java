@@ -36,11 +36,11 @@ import static org.ops4j.peaberry.Peaberry.*;
  */
 @RunWith( JUnit4TestRunner.class )
 @org.ops4j.pax.exam.junit.Configuration( extend = { Cfg.Runtime.class, Cfg.Triggers.class } )
-public class Test002DefaultTransformer
+public class Test002DefaultScheduler
 {
 
     @org.ops4j.pax.exam.Inject
-    private BundleContext m_bundleContext;
+    private BundleContext bundleContext;
 
     /**
      * Tests that runtime bundle is activated without problems (exceptions) and a {@link org.ops4j.pax.flow.api.Scheduler} service gets
@@ -49,7 +49,7 @@ public class Test002DefaultTransformer
     @Test
     public void runtimeStarts()
     {
-        final Injector injector = createInjector( osgiModule( m_bundleContext ), new GuiceSetup() );
+        final Injector injector = createInjector( osgiModule( bundleContext ), new GuiceSetup() );
 
         injector.injectMembers( this );
 

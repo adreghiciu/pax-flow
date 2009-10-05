@@ -62,18 +62,18 @@ public class SyncBundlesWithScanner
 
         public static final FlowType TYPE = flowType( SyncBundlesWithScanner.class );
 
-        private final BundleContext m_bundleContext;
-        private final ProvisionService m_provisionService;
+        private final BundleContext bundleContext;
+        private final ProvisionService provisionService;
 
-        private long m_counter;
+        private long counter;
 
         @Inject
-        public Factory( final BundleContext transformer,
+        public Factory( final BundleContext bundleContext,
                         final ProvisionService provisionService )
         {
             // VALIDATE
-            m_bundleContext = transformer;
-            m_provisionService = provisionService;
+            this.bundleContext = bundleContext;
+            this.provisionService = provisionService;
         }
 
         public FlowType type()
@@ -92,9 +92,9 @@ public class SyncBundlesWithScanner
             }
 
             return new SyncBundlesWithScanner(
-                flowName( format( "%s::%d", type(), m_counter++ ) ),
-                m_bundleContext,
-                m_provisionService,
+                flowName( format( "%s::%d", type(), counter++ ) ),
+                bundleContext,
+                provisionService,
                 cfg.mandatory( ScanBundles.Factory.URL, String.class ),
                 autoStart == null ? true : Boolean.valueOf( autoStart )
             );
@@ -103,7 +103,7 @@ public class SyncBundlesWithScanner
         @Override
         public String toString()
         {
-            return format( "Flow factory for type [%s] (%d instances)", type(), m_counter );
+            return format( "Flow factory for type [%s] (%d instances)", type(), counter );
         }
 
         public static Map<String, String> attributes()

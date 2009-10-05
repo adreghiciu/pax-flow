@@ -40,22 +40,22 @@ public class ListDirectory
     public static final PropertyName MODIFIED = PropertyName.propertyName( "modified" );
     public static final PropertyName DELETED = PropertyName.propertyName( "deleted" );
 
-    private final File m_directory;
-    private final Pattern[] m_includes;
-    private final Pattern[] m_excludes;
+    private final File directory;
+    private final Pattern[] includes;
+    private final Pattern[] excludes;
 
-    private final DirectoryLister m_lister;
+    private final DirectoryLister lister;
 
     public ListDirectory( final File directory,
                           final String[] includes,
                           final String[] excludes )
     {
         // VALIDATE
-        m_directory = directory;
-        m_includes = asPatterns( includes );
-        m_excludes = asPatterns( excludes );
+        this.directory = directory;
+        this.includes = asPatterns( includes );
+        this.excludes = asPatterns( excludes );
 
-        m_lister = new DirectoryLister( m_directory, m_includes, m_excludes );
+        lister = new DirectoryLister( this.directory, this.includes, this.excludes );
     }
 
     public void run( final ExecutionContext context )
@@ -63,9 +63,9 @@ public class ListDirectory
     {
         final Map<File, Long> files = new HashMap<File, Long>();
 
-        if( m_directory.exists() )
+        if( directory.exists() )
         {
-            final List<URL> foundUrls = m_lister.list();
+            final List<URL> foundUrls = lister.list();
 
             for( URL url : foundUrls )
             {
@@ -75,7 +75,7 @@ public class ListDirectory
         }
         else
         {
-            LOG.debug( format( "Directory [%s] does not exist, so it cannot be scanned", m_directory ) );
+            LOG.debug( format( "Directory [%s] does not exist, so it cannot be scanned", directory ) );
         }
 
         // TODO figure out how to use generics
@@ -116,7 +116,7 @@ public class ListDirectory
         final String message = format(
             "Found %d added, %d modified, %d deleted files in [%s]",
             added.size(), modified.size(), deleted.size(),
-            m_directory
+            directory
         );
         if( added.size() > 0 || modified.size() > 0 || deleted.size() > 0 )
         {
@@ -133,7 +133,7 @@ public class ListDirectory
     {
         return format(
             "Lists directory [%s] including(%s) excluding (%s) ",
-            m_directory, Arrays.deepToString( m_includes ), Arrays.deepToString( m_excludes )
+            directory, Arrays.deepToString( includes ), Arrays.deepToString( excludes )
         );
     }
 

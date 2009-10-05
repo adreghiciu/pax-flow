@@ -50,15 +50,15 @@ public class WatchRegistryForJobDescriptions
 
         public static final FlowType TYPE = flowType( WatchRegistryForJobDescriptions.class );
 
-        private final Scheduler m_scheduler;
+        private final Scheduler scheduler;
 
-        private long m_counter;
+        private long counter;
 
         @Inject
         public Factory( final Scheduler scheduler )
         {
             // VALIDATE
-            m_scheduler = scheduler;
+            this.scheduler = scheduler;
         }
 
         public FlowType type()
@@ -69,15 +69,15 @@ public class WatchRegistryForJobDescriptions
         public WatchRegistryForJobDescriptions create( final Configuration configuration )
         {
             return new WatchRegistryForJobDescriptions(
-                flowName( String.format( "%s::%d", type(), m_counter++ ) ),
-                m_scheduler
+                flowName( String.format( "%s::%d", type(), counter++ ) ),
+                scheduler
             );
         }
 
         @Override
         public String toString()
         {
-            return String.format( "Flow factory for type [%s] (%d instances)", type(), m_counter );
+            return String.format( "Flow factory for type [%s] (%d instances)", type(), counter );
         }
 
         public static Map<String, String> attributes()

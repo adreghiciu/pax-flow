@@ -16,7 +16,7 @@ class PersistentExecutionContext
     implements ExecutionContext
 {
 
-    private ExecutionContext m_transientContext;
+    private ExecutionContext transientContext;
 
     protected PersistentExecutionContext( final ExecutionProperty<?>... properties )
     {
@@ -25,7 +25,7 @@ class PersistentExecutionContext
 
     public PersistentExecutionContext useTransientContext( final ExecutionContext context )
     {
-        m_transientContext = context;
+        transientContext = context;
 
         return this;
     }
@@ -36,7 +36,7 @@ class PersistentExecutionContext
         T value = super.<T>get( name );
         if( value == null )
         {
-            value = m_transientContext.<T>get( name );
+            value = transientContext.<T>get( name );
         }
         return value;
     }
@@ -47,7 +47,7 @@ class PersistentExecutionContext
         T value = super.<T>get( name );
         if( value == null )
         {
-            value = m_transientContext.<T>get( name );
+            value = transientContext.<T>get( name );
         }
         if( value == null )
         {
@@ -85,7 +85,7 @@ class PersistentExecutionContext
         }
         else
         {
-            m_transientContext.add( property );
+            transientContext.add( property );
         }
 
         return this;

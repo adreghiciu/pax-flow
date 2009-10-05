@@ -17,7 +17,8 @@ import static org.ops4j.peaberry.util.TypeLiterals.*;
  *
  * @author Alin Dreghiciu
  */
-public class GuiceConfig extends AbstractModule
+public class GuiceConfig
+    extends AbstractModule
 {
 
     @Override

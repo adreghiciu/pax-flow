@@ -67,8 +67,8 @@ public class BundleContentWatcher
     public static final String ADDED = "ADDED";
     public static final String REMOVED = "REMOVED";
 
-    private final BundleWatcher<URL> m_bundleWatcher;
-    private final String m_description;
+    private final BundleWatcher<URL> bundleWatcher;
+    private final String description;
 
     public BundleContentWatcher( final TriggerName name,
                                  final ExecutionTarget target,
@@ -80,7 +80,7 @@ public class BundleContentWatcher
         super( name, target );
 
         // VALIDATE
-        m_bundleWatcher = new BundleWatcher<URL>(
+        bundleWatcher = new BundleWatcher<URL>(
             bundleContext,
             new BundleURLScanner( path, pattern, recursive ),
             new BundleObserver<URL>()
@@ -122,7 +122,7 @@ public class BundleContentWatcher
             }
         );
 
-        m_description = format(
+        description = format(
             "Watch bundles for files like [%s] in path [%s]%s", pattern, path, recursive ? ", recursive" : ""
         );
     }
@@ -134,7 +134,7 @@ public class BundleContentWatcher
         if( !isStarted() )
         {
             super.start();
-            m_bundleWatcher.start();
+            bundleWatcher.start();
         }
         return itself();
     }
@@ -144,7 +144,7 @@ public class BundleContentWatcher
     {
         if( isStarted() )
         {
-            m_bundleWatcher.stop();
+            bundleWatcher.stop();
             super.stop();
         }
         return itself();
@@ -153,7 +153,7 @@ public class BundleContentWatcher
     @Override
     public String toString()
     {
-        return m_description;
+        return description;
     }
 
     @Override
@@ -177,15 +177,15 @@ public class BundleContentWatcher
         public static final PropertyName PATTERN = propertyName( "pattern" );
         public static final PropertyName RECURSIVE = propertyName( "recursive" );
 
-        private final BundleContext m_bundleContext;
+        private final BundleContext bundleContext;
 
-        private long m_counter;
+        private long counter;
 
         @Inject
         public Factory( final BundleContext bundleContext )
         {
             // VALIDATE
-            m_bundleContext = bundleContext;
+            this.bundleContext = bundleContext;
         }
 
         public TriggerType type()
@@ -204,9 +204,9 @@ public class BundleContentWatcher
             final String recursive = config.optional( RECURSIVE, String.class );
 
             return new BundleContentWatcher(
-                triggerName( format( "%s::%d", type(), m_counter++ ) ),
+                triggerName( format( "%s::%d", type(), counter++ ) ),
                 target,
-                m_bundleContext,
+                bundleContext,
                 path,
                 pattern,
                 Boolean.valueOf( recursive )
@@ -216,7 +216,7 @@ public class BundleContentWatcher
         @Override
         public String toString()
         {
-            return format( "Trigger factory for type [%s] (%d instances)", type(), m_counter );
+            return format( "Trigger factory for type [%s] (%d instances)", type(), counter );
         }
 
         public static Map<String, String> attributes()

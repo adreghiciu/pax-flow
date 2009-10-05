@@ -14,20 +14,20 @@ public class SRTriggerFactoryRegistry
     implements TriggerFactoryRegistry
 {
 
-    private final Iterable<TriggerFactory> m_factories;
+    private final Iterable<TriggerFactory> factories;
 
     @Inject
     public SRTriggerFactoryRegistry( final Iterable<TriggerFactory> factories )
     {
         // VALIDATE
-        m_factories = factories;
+        this.factories = factories;
     }
 
     public TriggerFactory get( final TriggerType type )
     {
         if( type != null )
         {
-            for( TriggerFactory factory : m_factories )
+            for( TriggerFactory factory : factories )
             {
                 if( type.equals( factory.type() ) )
                 {

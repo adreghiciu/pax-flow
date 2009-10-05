@@ -19,7 +19,7 @@ public class SequentialFlow
 
     private static final Log LOG = LogFactory.getLog( SequentialFlow.class );
 
-    private final Flow[] m_flows;
+    private final Flow[] flows;
 
     public SequentialFlow( final FlowName flowName,
                            final Flow... flows )
@@ -28,11 +28,11 @@ public class SequentialFlow
 
         if( flows == null )
         {
-            m_flows = new Flow[0];
+            this.flows = new Flow[0];
         }
         else
         {
-            m_flows = flows;
+            this.flows = flows;
         }
     }
 
@@ -43,7 +43,7 @@ public class SequentialFlow
 
         try
         {
-            for( Flow flow : m_flows )
+            for( Flow flow : flows )
             {
                 final long duration = System.currentTimeMillis() - startTime;
                 LOG.debug(

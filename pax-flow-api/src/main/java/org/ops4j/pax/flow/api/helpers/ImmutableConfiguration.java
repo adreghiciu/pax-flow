@@ -35,31 +35,31 @@ public class ImmutableConfiguration
     implements Configuration
 {
 
-    private final Map<PropertyName, ConfigurationProperty<?>> m_properties;
-    private final Configuration m_fallback;
+    private final Map<PropertyName, ConfigurationProperty<?>> properties;
+    private final Configuration fallback;
 
     private ImmutableConfiguration( final Configuration configuration,
                                     final ConfigurationProperty<?>... properties )
     {
-        m_fallback = configuration;
-        m_properties = new HashMap<PropertyName, ConfigurationProperty<?>>();
+        fallback = configuration;
+        this.properties = new HashMap<PropertyName, ConfigurationProperty<?>>();
         if( properties != null && properties.length > 0 )
         {
             for( ConfigurationProperty<?> property : properties )
             {
-                m_properties.put( property.name(), property );
+                this.properties.put( property.name(), property );
             }
         }
     }
 
     public <T> T get( final PropertyName name )
     {
-        ConfigurationProperty<?> property = m_properties.get( name );
+        ConfigurationProperty<?> property = properties.get( name );
         if( property == null )
         {
-            if( m_fallback != null )
+            if( fallback != null )
             {
-                return m_fallback.<T>get( name );
+                return fallback.<T>get( name );
             }
             return null;
         }

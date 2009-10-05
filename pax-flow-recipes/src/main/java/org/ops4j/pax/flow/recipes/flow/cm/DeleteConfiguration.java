@@ -30,13 +30,13 @@ public class DeleteConfiguration
     public static final PropertyName PID = propertyName( "pid" );
     public static final PropertyName FACTORY_PID = propertyName( "factoryPid" );
 
-    private final ConfigurationAdmin m_configurationAdmin;
+    private final ConfigurationAdmin configurationAdmin;
 
     @Inject
     public DeleteConfiguration( final ConfigurationAdmin configurationAdmin )
     {
         // VALIDATE
-        m_configurationAdmin = configurationAdmin;
+        this.configurationAdmin = configurationAdmin;
     }
 
     public void run( final ExecutionContext context )
@@ -52,7 +52,7 @@ public class DeleteConfiguration
             filter = format( "&%s(service.factoryPid.marker=%s)", filter, factoryPid );
         }
 
-        final Configuration[] configurations = m_configurationAdmin.listConfigurations( filter );
+        final Configuration[] configurations = configurationAdmin.listConfigurations( filter );
 
         if( configurations == null || configurations.length == 0 )
         {

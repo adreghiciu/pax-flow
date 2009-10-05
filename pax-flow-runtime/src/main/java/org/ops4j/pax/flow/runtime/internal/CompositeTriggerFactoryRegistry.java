@@ -14,20 +14,20 @@ public class CompositeTriggerFactoryRegistry
     implements TriggerFactoryRegistry
 {
 
-    private Iterable<TriggerFactoryRegistry> m_registries;
+    private Iterable<TriggerFactoryRegistry> registries;
 
     @Inject
     public CompositeTriggerFactoryRegistry( final Iterable<TriggerFactoryRegistry> registries )
     {
         // VALIDATE
-        m_registries = registries;
+        this.registries = registries;
     }
 
     public TriggerFactory get( final TriggerType type )
     {
         if( type != null )
         {
-            for( TriggerFactoryRegistry registry : m_registries )
+            for( TriggerFactoryRegistry registry : registries )
             {
                 final TriggerFactory factory = registry.get( type );
                 if( factory != null )

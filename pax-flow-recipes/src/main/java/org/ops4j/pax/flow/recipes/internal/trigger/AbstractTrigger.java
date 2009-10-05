@@ -37,42 +37,42 @@ public abstract class AbstractTrigger<T extends Trigger>
 
     private final Log LOG = LogFactory.getLog( this.getClass() );
 
-    private final TriggerName m_name;
-    private final ExecutionTarget m_target;
+    private final TriggerName name;
+    private final ExecutionTarget target;
 
-    private boolean m_started;
+    private boolean started;
 
     public AbstractTrigger( final TriggerName name,
                             final ExecutionTarget target )
     {
         // VALIDATE
-        m_name = name;
-        m_target = target;
+        this.name = name;
+        this.target = target;
     }
 
     public TriggerName name()
     {
-        return m_name;
+        return name;
     }
 
     public T start()
         throws Exception
     {
-        m_started = true;
+        started = true;
 
         return itself();
     }
 
     public T stop()
     {
-        m_started = false;
+        started = false;
 
         return itself();
     }
 
     protected boolean isStarted()
     {
-        return m_started;
+        return started;
     }
 
     protected abstract T itself();
@@ -88,7 +88,7 @@ public abstract class AbstractTrigger<T extends Trigger>
         try
         {
             LOG.debug( String.format( "[%s] fires now %2$tH:%2$tM:%2$tS:%2$tL", this, System.currentTimeMillis() ) );
-            m_target.execute( executionContext );
+            target.execute( executionContext );
         }
         catch( Throwable ignore )
         {

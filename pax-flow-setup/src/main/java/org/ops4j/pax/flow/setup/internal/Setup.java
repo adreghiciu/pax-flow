@@ -45,16 +45,16 @@ public class Setup
 
     private static final Log LOG = LogFactory.getLog( Setup.class );
 
-    private Scheduler m_scheduler;
-    private final BundleContext m_bundleContext;
+    private Scheduler scheduler;
+    private final BundleContext bundleContext;
 
     @Inject
     public Setup( final Scheduler scheduler,
                   final BundleContext bundleContext )
     {
 
-        m_scheduler = scheduler;
-        m_bundleContext = bundleContext;
+        this.scheduler = scheduler;
+        this.bundleContext = bundleContext;
 
         setupWatchRegistryForJobDescriptionsFlow();
         setupJobDescriptionScanningFlow();
@@ -66,7 +66,7 @@ public class Setup
     {
         try
         {
-            m_scheduler.schedule(
+            scheduler.schedule(
                 immutableJobDescription(
                     jobName( "watchRegistryForJobDescriptions (default setup)" ),
                     WatchRegistryForJobDescriptions.Factory.TYPE,
@@ -90,12 +90,12 @@ public class Setup
     {
         try
         {
-            m_scheduler.schedule(
+            scheduler.schedule(
                 immutableJobDescription(
                     jobName( "scanFileSystemForJobDescriptions (default setup)" ),
                     ScanDirectoryForJobDescriptions.Factory.TYPE,
                     immutableConfiguration(
-                        frameworkPropertiesConfiguration( m_bundleContext ),
+                        frameworkPropertiesConfiguration( bundleContext ),
                         configurationProperty(
                             ScanDirectoryForJobDescriptions.Factory.DIRECTORY,
                             "${default.directory.jobs:${default.directory:./conf}/jobs/active}"
@@ -103,7 +103,7 @@ public class Setup
                     ),
                     FixedRateTimer.Factory.TYPE,
                     immutableConfiguration(
-                        frameworkPropertiesConfiguration( m_bundleContext ),
+                        frameworkPropertiesConfiguration( bundleContext ),
                         configurationProperty( FixedRateTimer.Factory.INITIAL_DELAY, "${default.initialDelay:0s}" ),
                         configurationProperty( FixedRateTimer.Factory.REPEAT_PERIOD, "${default.repeatPeriod:10s}" )
                     )

@@ -53,12 +53,12 @@ public class FixedRateTimer
 
     private static final Log LOG = LogFactory.getLog( FixedRateTimer.class );
 
-    private final ScheduledExecutorService m_executorService;
+    private final ScheduledExecutorService executorService;
 
-    private final long m_initialDelay;
-    private final long m_repeatPeriod;
+    private final long initialDelay;
+    private final long repeatPeriod;
 
-    private ScheduledFuture<?> m_scheduledFuture;
+    private ScheduledFuture<?> scheduledFuture;
 
     public FixedRateTimer( final TriggerName name,
                            final ExecutionTarget target,
@@ -68,9 +68,9 @@ public class FixedRateTimer
     {
         super( name, target );
         // VALIDATE
-        m_executorService = executorService;
-        m_initialDelay = initialDelay;
-        m_repeatPeriod = repeatPeriod;
+        this.executorService = executorService;
+        this.initialDelay = initialDelay;
+        this.repeatPeriod = repeatPeriod;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class FixedRateTimer
         {
             LOG.debug( String.format( "Starting [%s]", this ) );
             super.start();
-            m_scheduledFuture = m_executorService.scheduleAtFixedRate(
+            scheduledFuture = executorService.scheduleAtFixedRate(
                 new Runnable()
                 {
                     public void run()
@@ -89,8 +89,8 @@ public class FixedRateTimer
                         fire();
                     }
                 },
-                m_initialDelay,
-                m_repeatPeriod,
+                initialDelay,
+                repeatPeriod,
                 TimeUnit.MILLISECONDS
             );
         }
@@ -103,7 +103,7 @@ public class FixedRateTimer
         if( isStarted() )
         {
             LOG.debug( String.format( "Stopping [%s]", this ) );
-            m_scheduledFuture.cancel( true );
+            scheduledFuture.cancel( true );
             super.stop();
         }
         return itself();
@@ -120,8 +120,8 @@ public class FixedRateTimer
     {
         return String.format(
             "[%s ms] elapsed (initial delay of [%s ms])",
-            m_repeatPeriod,
-            m_initialDelay
+            repeatPeriod,
+            initialDelay
         );
     }
 
@@ -139,15 +139,15 @@ public class FixedRateTimer
         public static final PropertyName INITIAL_DELAY = propertyName( "initialDelay" );
         public static final PropertyName REPEAT_PERIOD = propertyName( "repeatPeriod" );
 
-        private final ScheduledExecutorService m_executorService;
+        private final ScheduledExecutorService executorService;
 
-        private long m_counter;
+        private long counter;
 
         @Inject
         public Factory( final ScheduledExecutorService executorService )
         {
             // VALIDATE
-            m_executorService = executorService;
+            this.executorService = executorService;
         }
 
         public TriggerType type()
@@ -165,9 +165,9 @@ public class FixedRateTimer
             final String repeatPeriod = config.optional( REPEAT_PERIOD, String.class, "10s" );
 
             return new FixedRateTimer(
-                triggerName( String.format( "%s::%d", type(), m_counter++ ) ),
+                triggerName( String.format( "%s::%d", type(), counter++ ) ),
                 target,
-                m_executorService,
+                executorService,
                 TimerUtils.convertToMillis( initialDelay ),
                 TimerUtils.convertToMillis( repeatPeriod )
             );
@@ -176,7 +176,7 @@ public class FixedRateTimer
         @Override
         public String toString()
         {
-            return String.format( "Trigger factory for type [%s] (%d instances)", type(), m_counter );
+            return String.format( "Trigger factory for type [%s] (%d instances)", type(), counter );
         }
 
         public static Map<String, String> attributes()

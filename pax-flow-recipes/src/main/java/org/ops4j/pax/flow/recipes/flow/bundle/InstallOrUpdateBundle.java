@@ -35,10 +35,10 @@ public class InstallOrUpdateBundle
     public static final PropertyName URL = propertyName( "url" );
     public static final PropertyName BUNDLE = propertyName( "bundle" );
 
-    private final BundleContext m_bundleContext;
-    private final PropertyName m_urlPropertyName;
-    private final PropertyName m_bundlePropertyName;
-    private final boolean m_autoStart;
+    private final BundleContext bundleContext;
+    private final PropertyName urlPropertyName;
+    private final PropertyName bundlePropertyName;
+    private final boolean autoStart;
 
     @Inject
     public InstallOrUpdateBundle( final BundleContext bundleContext,
@@ -55,26 +55,26 @@ public class InstallOrUpdateBundle
                                   final boolean autoStart )
     {
         // VALIDATE
-        m_bundleContext = bundleContext;
-        m_urlPropertyName = urlPropertyName == null ? URL : urlPropertyName;
-        m_bundlePropertyName = bundlePropertyName == null ? BUNDLE : bundlePropertyName;
-        m_autoStart = autoStart;
+        this.bundleContext = bundleContext;
+        this.urlPropertyName = urlPropertyName == null ? URL : urlPropertyName;
+        this.bundlePropertyName = bundlePropertyName == null ? BUNDLE : bundlePropertyName;
+        this.autoStart = autoStart;
     }
 
     public void run( final ExecutionContext context )
         throws Exception
     {
-        final URL url = typedExecutionContext( context ).mandatory( m_urlPropertyName, URL.class );
-        Bundle bundle = BundleUtils.getBundle( m_bundleContext, url.toExternalForm() );
+        final URL url = typedExecutionContext( context ).mandatory( urlPropertyName, URL.class );
+        Bundle bundle = BundleUtils.getBundle( bundleContext, url.toExternalForm() );
         if( bundle == null )
         {
-            bundle = m_bundleContext.installBundle( url.toExternalForm(), url.openStream() );
-            if( m_autoStart )
+            bundle = bundleContext.installBundle( url.toExternalForm(), url.openStream() );
+            if( autoStart )
             {
                 bundle.start();
             }
         }
-        context.add( ExecutionProperty.executionProperty( m_bundlePropertyName, bundle ) );
+        context.add( ExecutionProperty.executionProperty( bundlePropertyName, bundle ) );
     }
 
     @Override
@@ -93,15 +93,15 @@ public class InstallOrUpdateBundle
         public static final PropertyName BUNDLE_PROPERTY = propertyName( "bundlePropertyName" );
         public static final PropertyName AUTO_START = propertyName( "autoStart" );
 
-        private final BundleContext m_bundleContext;
+        private final BundleContext bundleContext;
 
-        private long m_counter;
+        private long counter;
 
         @Inject
-        public Factory( final BundleContext transformer )
+        public Factory( final BundleContext bundleContext )
         {
             // VALIDATE
-            m_bundleContext = transformer;
+            this.bundleContext = bundleContext;
         }
 
         public FlowType type()
@@ -122,7 +122,7 @@ public class InstallOrUpdateBundle
             }
 
             return new InstallOrUpdateBundle(
-                m_bundleContext,
+                bundleContext,
                 urlProperty == null ? null : propertyName( urlProperty ),
                 bundleProperty == null ? null : propertyName( bundleProperty ),
                 autoStart == null ? true : Boolean.valueOf( autoStart )
@@ -132,7 +132,7 @@ public class InstallOrUpdateBundle
         @Override
         public String toString()
         {
-            return format( "Flow factory for type [%s] (%d instances)", type(), m_counter );
+            return format( "Flow factory for type [%s] (%d instances)", type(), counter );
         }
 
         public static Map<String, String> attributes()

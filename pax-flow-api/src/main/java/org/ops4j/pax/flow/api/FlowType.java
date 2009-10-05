@@ -26,17 +26,17 @@ package org.ops4j.pax.flow.api;
 public class FlowType
 {
 
-    private final String m_type;
+    private final String type;
 
     public FlowType( final String type )
     {
         // VALIDATE
-        m_type = type;
+        this.type = type;
     }
 
     public String value()
     {
-        return m_type;
+        return type;
     }
 
     @Override
@@ -53,13 +53,13 @@ public class FlowType
 
         final FlowType that = (FlowType) o;
 
-        return m_type.equals( that.m_type );
+        return type.equals( that.type );
     }
 
     @Override
     public int hashCode()
     {
-        return m_type.hashCode();
+        return type.hashCode();
     }
 
     @Override

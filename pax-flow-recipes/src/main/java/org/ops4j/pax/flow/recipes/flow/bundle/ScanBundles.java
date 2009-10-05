@@ -48,23 +48,23 @@ public class ScanBundles
     public static final PropertyName MODIFIED = PropertyName.propertyName( "modified" );
     public static final PropertyName DELETED = PropertyName.propertyName( "deleted" );
 
-    private final ProvisionService m_provisionService;
-    private final String m_url;
+    private final ProvisionService provisionService;
+    private final String url;
 
     public ScanBundles( final FlowName flowName,
                         final ProvisionService provisionService,
                         final String url )
     {
         super( flowName );
-        m_provisionService = provisionService;
-        m_url = url;
+        this.provisionService = provisionService;
+        this.url = url;
     }
 
     @Override
     protected void run( final ExecutionContext context )
         throws Exception
     {
-        final List<ScannedBundle> scannedBundles = m_provisionService.scan( m_url );
+        final List<ScannedBundle> scannedBundles = provisionService.scan( url );
 
         // TODO figure out how to use generics
         final Map<URL, Long> previousUrls = new HashMap<URL, Long>(
@@ -108,7 +108,7 @@ public class ScanBundles
         final String message = format(
             "Found %d added, %d modified, %d deleted bundles while scanning url [%s]",
             added.size(), modified.size(), deleted.size(),
-            m_url
+            url
         );
         if( added.size() > 0 || modified.size() > 0 || deleted.size() > 0 )
         {
@@ -128,15 +128,15 @@ public class ScanBundles
 
         public static final PropertyName URL = propertyName( "url" );
 
-        private final ProvisionService m_provisionService;
+        private final ProvisionService provisionService;
 
-        private long m_counter;
+        private long counter;
 
         @Inject
         public Factory( final ProvisionService provisionService )
         {
             // VALIDATE
-            m_provisionService = provisionService;
+            this.provisionService = provisionService;
         }
 
         public FlowType type()
@@ -149,8 +149,8 @@ public class ScanBundles
             final TypedConfiguration cfg = typedConfiguration( configuration );
 
             return new ScanBundles(
-                flowName( format( "%s::%d", type(), m_counter++ ) ),
-                m_provisionService,
+                flowName( format( "%s::%d", type(), counter++ ) ),
+                provisionService,
                 cfg.mandatory( URL, String.class )
             );
         }
@@ -158,7 +158,7 @@ public class ScanBundles
         @Override
         public String toString()
         {
-            return format( "Flow factory for type [%s] (%d instances)", type(), m_counter );
+            return format( "Flow factory for type [%s] (%d instances)", type(), counter );
         }
 
         public static Map<String, String> attributes()

@@ -40,7 +40,7 @@ public class Test003RuntimeSetup
 {
 
     @org.ops4j.pax.exam.Inject
-    private BundleContext m_bundleContext;
+    private BundleContext bundleContext;
 
     /**
      * Tests that runtime setup bundle is activated without problems (exceptions).
@@ -48,7 +48,7 @@ public class Test003RuntimeSetup
     @Test
     public void runtimeSetupStarts()
     {
-        final Injector injector = createInjector( osgiModule( m_bundleContext ), new GuiceSetup() );
+        final Injector injector = createInjector( osgiModule( bundleContext ), new GuiceSetup() );
 
         injector.injectMembers( this );
     }

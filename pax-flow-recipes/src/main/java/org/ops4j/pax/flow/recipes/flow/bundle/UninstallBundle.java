@@ -33,8 +33,8 @@ public class UninstallBundle
 
     public static final PropertyName URL = propertyName( "url" );
 
-    private final BundleContext m_bundleContext;
-    private final PropertyName m_urlPropertyName;
+    private final BundleContext bundleContext;
+    private final PropertyName urlPropertyName;
 
     public UninstallBundle( final BundleContext bundleContext )
     {
@@ -46,15 +46,15 @@ public class UninstallBundle
                             final PropertyName urlPropertyName )
     {
         // VALIDATE
-        m_bundleContext = bundleContext;
-        m_urlPropertyName = urlPropertyName == null ? URL : urlPropertyName;
+        this.bundleContext = bundleContext;
+        this.urlPropertyName = urlPropertyName == null ? URL : urlPropertyName;
     }
 
     public void run( final ExecutionContext context )
         throws Exception
     {
-        final URL url = typedExecutionContext( context ).mandatory( m_urlPropertyName, URL.class );
-        Bundle bundle = BundleUtils.getBundle( m_bundleContext, url.toExternalForm() );
+        final URL url = typedExecutionContext( context ).mandatory( urlPropertyName, URL.class );
+        Bundle bundle = BundleUtils.getBundle( bundleContext, url.toExternalForm() );
         if( bundle != null )
         {
             bundle.uninstall();
@@ -75,15 +75,15 @@ public class UninstallBundle
 
         public static final PropertyName URL_PROPERTY = propertyName( "urlPropertyName" );
 
-        private final BundleContext m_bundleContext;
+        private final BundleContext bundleContext;
 
-        private long m_counter;
+        private long counter;
 
         @Inject
-        public Factory( final BundleContext transformer )
+        public Factory( final BundleContext bundleContext )
         {
             // VALIDATE
-            m_bundleContext = transformer;
+            this.bundleContext = bundleContext;
         }
 
         public FlowType type()
@@ -98,7 +98,7 @@ public class UninstallBundle
             final String urlProperty = cfg.optional( URL_PROPERTY, String.class );
 
             return new UninstallBundle(
-                m_bundleContext,
+                bundleContext,
                 urlProperty == null ? null : propertyName( urlProperty )
             );
         }
@@ -106,7 +106,7 @@ public class UninstallBundle
         @Override
         public String toString()
         {
-            return format( "Flow factory for type [%s] (%d instances)", type(), m_counter );
+            return format( "Flow factory for type [%s] (%d instances)", type(), counter );
         }
 
         public static Map<String, String> attributes()

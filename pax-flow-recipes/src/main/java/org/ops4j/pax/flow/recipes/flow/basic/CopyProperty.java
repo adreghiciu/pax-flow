@@ -17,30 +17,30 @@ public class CopyProperty<T>
     implements Flow
 {
 
-    private final PropertyName m_source;
-    private final PropertyName m_target;
-    private final Class<T> m_propertyType;
+    private final PropertyName source;
+    private final PropertyName target;
+    private final Class<T> propertyType;
 
     public CopyProperty( final PropertyName source,
                          final PropertyName target,
                          final Class<T> propertyType )
     {
         // VALIDATE
-        m_source = source;
-        m_target = target;
-        m_propertyType = propertyType;
+        this.source = source;
+        this.target = target;
+        this.propertyType = propertyType;
     }
 
     public void run( final ExecutionContext context )
     {
-        final T source = typedExecutionContext( context ).mandatory( m_source, m_propertyType );
-        context.add( executionProperty( m_target, source ) );
+        final T source = typedExecutionContext( context ).mandatory( this.source, propertyType );
+        context.add( executionProperty( target, source ) );
     }
 
     @Override
     public String toString()
     {
-        return String.format( "Copy property [%s] -> [%s]", m_source, m_target );
+        return String.format( "Copy property [%s] -> [%s]", source, target );
     }
 
 }

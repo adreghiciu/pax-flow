@@ -26,17 +26,17 @@ package org.ops4j.pax.flow.api;
 public class TriggerType
 {
 
-    private final String m_type;
+    private final String type;
 
     public TriggerType( final String type )
     {
         // VALIDATE
-        m_type = type;
+        this.type = type;
     }
 
     public String value()
     {
-        return m_type;
+        return type;
     }
 
     @Override
@@ -53,13 +53,13 @@ public class TriggerType
 
         final TriggerType that = (TriggerType) o;
 
-        return m_type.equals( that.m_type );
+        return type.equals( that.type );
     }
 
     @Override
     public int hashCode()
     {
-        return m_type.hashCode();
+        return type.hashCode();
     }
 
     @Override

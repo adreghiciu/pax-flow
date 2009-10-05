@@ -45,13 +45,13 @@ public class Test001ManualTrigger
 {
 
     @org.ops4j.pax.exam.Inject
-    private BundleContext m_bundleContext;
+    private BundleContext bundleContext;
 
     @Test
     public void executeTrigger()
         throws Exception
     {
-        final Injector injector = createInjector( osgiModule( m_bundleContext ), new GuiceSetup() );
+        final Injector injector = createInjector( osgiModule( bundleContext ), new GuiceSetup() );
 
         injector.injectMembers( this );
 

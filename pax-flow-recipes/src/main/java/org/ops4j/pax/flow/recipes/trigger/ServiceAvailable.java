@@ -58,8 +58,7 @@ public class ServiceAvailable
 
     private static final Log LOG = LogFactory.getLog( ServiceAvailable.class );
 
-    private final ServiceRegistry m_serviceRegistry;
-    private final String m_description;
+    private final String description;
 
     public ServiceAvailable( final TriggerName name,
                              final ExecutionTarget target,
@@ -69,7 +68,6 @@ public class ServiceAvailable
     {
         super( name, target );
         // VALIDATE
-        m_serviceRegistry = serviceRegistry;
         serviceRegistry.watch(
             serviceClass,
             serviceFilter == null ? null : ldap( serviceFilter ),
@@ -92,16 +90,16 @@ public class ServiceAvailable
                 }
             }
         );
-        m_description = format( "Service of type [%s] is available%s",
-                                serviceClass,
-                                serviceFilter == null ? "" : format( " (filter: %s", serviceFilter )
+        description = format( "Service of type [%s] is available%s",
+                              serviceClass,
+                              serviceFilter == null ? "" : format( " (filter: %s", serviceFilter )
         );
     }
 
     @Override
     public String toString()
     {
-        return m_description;
+        return description;
     }
 
     @Override
@@ -124,18 +122,18 @@ public class ServiceAvailable
         public static final PropertyName WATCHED_SERVICE_TYPE = propertyName( "watchedServiceType" );
         public static final PropertyName WATCHED_SERVICE_FILTER = propertyName( "watchedServiceFilter" );
 
-        private final BundleContext m_bundleContext;
-        private final ServiceRegistry m_serviceRegistry;
+        private final BundleContext bundleContext;
+        private final ServiceRegistry serviceRegistry;
 
-        private long m_counter;
+        private long counter;
 
         @Inject
         public Factory( final BundleContext bundleContext,
                         final ServiceRegistry serviceRegistry )
         {
             // VALIDATE
-            m_bundleContext = bundleContext;
-            m_serviceRegistry = serviceRegistry;
+            this.bundleContext = bundleContext;
+            this.serviceRegistry = serviceRegistry;
         }
 
         public TriggerType type()
@@ -153,12 +151,12 @@ public class ServiceAvailable
             final String serviceClassName = config.mandatory( WATCHED_SERVICE_TYPE, String.class );
             final String serviceFilter = config.optional( WATCHED_SERVICE_FILTER, String.class );
 
-            final Class serviceClass = m_bundleContext.getBundle().loadClass( serviceClassName );
+            final Class serviceClass = bundleContext.getBundle().loadClass( serviceClassName );
 
             return new ServiceAvailable(
-                triggerName( format( "%s::%d", type(), m_counter++ ) ),
+                triggerName( format( "%s::%d", type(), counter++ ) ),
                 target,
-                m_serviceRegistry,
+                serviceRegistry,
                 serviceClass,
                 serviceFilter
             );
@@ -167,7 +165,7 @@ public class ServiceAvailable
         @Override
         public String toString()
         {
-            return format( "Trigger factory for type [%s] (%d instances)", type(), m_counter );
+            return format( "Trigger factory for type [%s] (%d instances)", type(), counter );
         }
 
         public static Map<String, String> attributes()

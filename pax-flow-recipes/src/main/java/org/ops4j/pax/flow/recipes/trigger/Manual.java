@@ -69,7 +69,7 @@ public class Manual
 
         public static final TriggerType TYPE = triggerType( Manual.class );
 
-        private long m_counter;
+        private long counter;
 
         public TriggerType type()
         {
@@ -80,7 +80,7 @@ public class Manual
                               final ExecutionTarget target )
         {
             return new Manual(
-                triggerName( String.format( "%s::%d", type(), m_counter++ ) ),
+                triggerName( String.format( "%s::%d", type(), counter++ ) ),
                 target
             );
         }
@@ -88,7 +88,7 @@ public class Manual
         @Override
         public String toString()
         {
-            return String.format( "Trigger factory for type [%s] (%d instances)", type(), m_counter );
+            return String.format( "Trigger factory for type [%s] (%d instances)", type(), counter );
         }
 
         public static Map<String, String> attributes()

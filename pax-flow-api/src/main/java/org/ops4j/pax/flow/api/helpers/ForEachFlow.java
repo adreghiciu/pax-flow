@@ -1,7 +1,5 @@
 package org.ops4j.pax.flow.api.helpers;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import static org.ops4j.pax.flow.api.ExecutionProperty.*;
 import org.ops4j.pax.flow.api.Flow;
@@ -19,13 +17,9 @@ public class ForEachFlow
     implements Flow
 {
 
-    private static final Log LOG = LogFactory.getLog( ForEachFlow.class );
-
-    private final Flow m_iterableFlow;
-    private final PropertyName m_iterablePropertyName;
-    private final PropertyName m_iteratorPropertyName;
-
-    private Thread m_thread;
+    private final Flow iterableFlow;
+    private final PropertyName iterablePropertyName;
+    private final PropertyName iteratorPropertyName;
 
     public ForEachFlow( final PropertyName iterablePropertyName, final PropertyName iteratorPropertyName,
                         final Flow iterableFlow
@@ -33,9 +27,9 @@ public class ForEachFlow
     {
         super();
         // VALIDATE
-        m_iterableFlow = iterableFlow;
-        m_iterablePropertyName = iterablePropertyName;
-        m_iteratorPropertyName = iteratorPropertyName;
+        this.iterableFlow = iterableFlow;
+        this.iterablePropertyName = iterablePropertyName;
+        this.iteratorPropertyName = iteratorPropertyName;
     }
 
     public ForEachFlow( final FlowName flowName,
@@ -45,23 +39,23 @@ public class ForEachFlow
     {
         super( flowName );
         // VALIDATE
-        m_iterableFlow = iterableFlow;
-        m_iterablePropertyName = iterablePropertyName;
-        m_iteratorPropertyName = iteratorPropertyName;
+        this.iterableFlow = iterableFlow;
+        this.iterablePropertyName = iterablePropertyName;
+        this.iteratorPropertyName = iteratorPropertyName;
     }
 
     public void run( final ExecutionContext context )
         throws Exception
     {
         final Iterable<?> iterable =
-            typedExecutionContext( context ).optional( m_iterablePropertyName, Iterable.class );
+            typedExecutionContext( context ).optional( iterablePropertyName, Iterable.class );
 
         if( iterable != null )
         {
             for( Object object : iterable )
             {
-                context.add( executionProperty( m_iteratorPropertyName, object ) );
-                m_iterableFlow.execute( context );
+                context.add( executionProperty( iteratorPropertyName, object ) );
+                iterableFlow.execute( context );
             }
         }
     }
