@@ -244,21 +244,21 @@ public class DefaultTransformer
         implements ExecutionTarget
     {
 
-        private final JobDescription m_description;
+        private final JobDescription description;
 
-        final PersistentExecutionContext m_executionContext;
+        final PersistentExecutionContext executionContext;
 
         public FlowScheduler( final JobDescription description )
         {
-            m_description = description;
-            m_executionContext = new PersistentExecutionContext();
+            this.description = description;
+            executionContext = new PersistentExecutionContext();
         }
 
         public FlowScheduler( final JobDescription description,
                               final PersistentExecutionContext executionContext )
         {
-            m_description = description;
-            m_executionContext = executionContext;
+            this.description = description;
+            this.executionContext = executionContext;
         }
 
         public void execute( final ExecutionContext executionContext )
@@ -270,26 +270,26 @@ public class DefaultTransformer
                     {
                         try
                         {
-                            LOG.debug( format( "Starting flow of type [%s]", m_description.flowType() ) );
-                            final FlowFactory flowFactory = flowFactoryRegistry.get( m_description.flowType() );
+                            LOG.debug( format( "Starting flow of type [%s]", description.flowType() ) );
+                            final FlowFactory flowFactory = flowFactoryRegistry.get( description.flowType() );
                             if( flowFactory == null )
                             {
                                 LOG.warn(
-                                    format( "Could not find a flow factory of type [%s]", m_description.flowType() )
+                                    format( "Could not find a flow factory of type [%s]", description.flowType() )
                                 );
                             }
                             else
                             {
-                                final Flow flow = flowFactory.create( m_description.flowConfiguration() );
-                                FlowScheduler.this.m_executionContext.useTransientContext( executionContext );
-                                flow.execute( FlowScheduler.this.m_executionContext );
+                                final Flow flow = flowFactory.create( description.flowConfiguration() );
+                                FlowScheduler.this.executionContext.useTransientContext( executionContext );
+                                flow.execute( FlowScheduler.this.executionContext );
                                 LOG.debug( format( "Finished execution of [%s]", flow ) );
                             }
                         }
                         catch( Throwable ignore )
                         {
                             LOG.warn(
-                                format( "Execution of [%s] could not be completed.", m_description.flowType() ),
+                                format( "Execution of [%s] could not be completed.", description.flowType() ),
                                 ignore
                             );
                         }
@@ -301,7 +301,7 @@ public class DefaultTransformer
 
         public PersistentExecutionContext getExecutionContext()
         {
-            return m_executionContext;
+            return executionContext;
         }
 
     }

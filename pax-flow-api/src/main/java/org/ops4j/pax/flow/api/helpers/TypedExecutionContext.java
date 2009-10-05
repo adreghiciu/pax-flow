@@ -15,13 +15,13 @@ import static org.ops4j.pax.swissbox.converter.JavaConverter.*;
 public class TypedExecutionContext
 {
 
-    private final ExecutionContext m_context;
+    private final ExecutionContext context;
     private final Converter converter;
 
     private TypedExecutionContext( final ExecutionContext context )
     {
         // VALIDATE
-        m_context = context;
+        this.context = context;
         // TODO shall we get the converter as input?
         converter = javaConverter();
     }
@@ -30,7 +30,7 @@ public class TypedExecutionContext
                             final Class<T> propertyType )
     {
         // VALIDATE property name / type
-        Object value = m_context.get( propertyName );
+        Object value = context.get( propertyName );
 
         if( value == null )
         {
@@ -79,7 +79,7 @@ public class TypedExecutionContext
                            final T defaultValue )
     {
         // VALIDATE property name / type
-        Object value = m_context.get( propertyName, defaultValue );
+        Object value = context.get( propertyName, defaultValue );
 
         if( value != null && !propertyType.isAssignableFrom( value.getClass() ) )
         {
@@ -89,18 +89,11 @@ public class TypedExecutionContext
             }
             catch( Exception e )
             {
-                throw new IllegalStateException(
-                    format(
-                        "Property [%s] with value [%s] cannot be converted to type [%s].",
-                        propertyName, value, propertyType.getName()
-                    )
-                );
+                return null;
             }
             if( value != null && !propertyType.isAssignableFrom( value.getClass() ) )
             {
-                throw new IllegalStateException(
-                    format( "Property [%s] must be of type [%s].", propertyName, propertyType.getName() )
-                );
+                return null;
             }
         }
 

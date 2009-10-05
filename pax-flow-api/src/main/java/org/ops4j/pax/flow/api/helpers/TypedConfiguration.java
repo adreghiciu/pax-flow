@@ -15,13 +15,13 @@ import static org.ops4j.pax.swissbox.converter.JavaConverter.*;
 public class TypedConfiguration
 {
 
-    private final Configuration m_configuration;
+    private final Configuration configuration;
     private final Converter converter;
 
     private TypedConfiguration( final Configuration configuration )
     {
         // VALIDATE
-        m_configuration = configuration;
+        this.configuration = configuration;
         // TODO shall we get the converter as input?
         converter = javaConverter();
     }
@@ -30,7 +30,7 @@ public class TypedConfiguration
                             final Class<T> propertyType )
     {
         // VALIDATE property name / type
-        Object value = m_configuration.get( propertyName );
+        Object value = configuration.get( propertyName );
 
         if( value == null )
         {
@@ -79,7 +79,7 @@ public class TypedConfiguration
                            final T defaultValue )
     {
         // VALIDATE property name / type
-        Object value = m_configuration.get( propertyName, defaultValue );
+        Object value = configuration.get( propertyName, defaultValue );
 
         if( value != null && !propertyType.isAssignableFrom( value.getClass() ) )
         {
@@ -89,18 +89,11 @@ public class TypedConfiguration
             }
             catch( Exception e )
             {
-                throw new IllegalStateException(
-                    format(
-                        "Property [%s] with value [%s] cannot be converted to type [%s].",
-                        propertyName, value, propertyType.getName()
-                    )
-                );
+                return null;
             }
             if( value != null && !propertyType.isAssignableFrom( value.getClass() ) )
             {
-                throw new IllegalStateException(
-                    format( "Property [%s] must be of type [%s].", propertyName, propertyType.getName() )
-                );
+                return null;
             }
         }
 

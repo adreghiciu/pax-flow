@@ -1,31 +1,17 @@
 package org.ops4j.pax.flow.recipes.flow.cm;
 
-import java.io.IOException;
+import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.net.URL;
 import java.util.Properties;
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonToken;
-import org.ops4j.pax.flow.api.Configuration;
-import org.ops4j.pax.flow.api.ConfigurationProperty;
-import static org.ops4j.pax.flow.api.ConfigurationProperty.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.flow.api.ExecutionContext;
 import static org.ops4j.pax.flow.api.ExecutionProperty.*;
 import org.ops4j.pax.flow.api.Flow;
-import org.ops4j.pax.flow.api.FlowType;
-import static org.ops4j.pax.flow.api.FlowType.*;
-import static org.ops4j.pax.flow.api.JobName.*;
 import org.ops4j.pax.flow.api.PropertyName;
 import static org.ops4j.pax.flow.api.PropertyName.*;
-import org.ops4j.pax.flow.api.TriggerType;
-import static org.ops4j.pax.flow.api.TriggerType.*;
 import org.ops4j.pax.flow.api.helpers.CancelableFlow;
-import org.ops4j.pax.flow.api.helpers.ImmutableConfiguration;
-import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
-import org.ops4j.pax.flow.api.helpers.ImmutableJobDescription;
-import static org.ops4j.pax.flow.api.helpers.ImmutableJobDescription.*;
 import org.ops4j.pax.flow.api.helpers.TypedExecutionContext;
 import static org.ops4j.pax.flow.api.helpers.TypedExecutionContext.*;
 
@@ -39,6 +25,8 @@ public class ParsePropertiesFileAsConfiguration
     implements Flow
 {
 
+    private static final Log LOG = LogFactory.getLog( ParsePropertiesFileAsConfiguration.class );
+
     public static final PropertyName FILE = propertyName( "file" );
 
     public static final PropertyName CONFIGURATION = propertyName( "configuration" );
@@ -47,7 +35,40 @@ public class ParsePropertiesFileAsConfiguration
     protected void run( final ExecutionContext context )
         throws Exception
     {
-        final InputStream source = typedExecutionContext( context ).mandatory( FILE, InputStream.class );
+
+        final TypedExecutionContext executionContext = typedExecutionContext( context );
+
+        InputStream source = null;
+
+        // try to transform files with a "link" extension to an "link:" URL
+        final File file = executionContext.optional( FILE, File.class );
+        if( file != null )
+        {
+            if( file.getName().endsWith( ".link" ) )
+            {
+                String url = null;
+                try
+                {
+                    url = "link:" + file.toURI().toURL().toExternalForm();
+                    source = new URL( url ).openStream();
+                }
+                catch( Exception ignore )
+                {
+                    // probably "link" protocol is not installed
+                    LOG.debug(
+                        String.format(
+                            "Could not transform [%s] into an [%s]. Reason [%s].",
+                            file.getPath(), url, ignore.getMessage()
+                        )
+                    );
+                }
+            }
+        }
+
+        if( source == null )
+        {
+            source = executionContext.mandatory( FILE, InputStream.class );
+        }
 
         final Properties properties = new Properties();
         properties.load( source );
@@ -58,7 +79,7 @@ public class ParsePropertiesFileAsConfiguration
     @Override
     public String toString()
     {
-        return "Parse Properties file as configuration";
+        return "Parse properties file as configuration";
     }
 
 }
