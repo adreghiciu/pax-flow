@@ -59,6 +59,7 @@ public class ServiceWatcher
     private static final Log LOG = LogFactory.getLog( ServiceWatcher.class );
 
     public static final PropertyName SERVICE = propertyName( "service" );
+    public static final PropertyName ATTRIBUTES = propertyName( "attributes" );
     public static final PropertyName EVENT = propertyName( "event" );
 
     public static final String ADDED = "ADDED";
@@ -88,6 +89,7 @@ public class ServiceWatcher
 
                     final DefaultExecutionContext executionContext = defaultExecutionContext();
                     executionContext.add( executionProperty( SERVICE, service ) );
+                    executionContext.add( executionProperty( ATTRIBUTES, anImport.attributes() ) );
                     executionContext.add( executionProperty( EVENT, ADDED ) );
 
                     fire( executionContext );

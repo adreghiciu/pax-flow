@@ -21,6 +21,20 @@ public class SequentialFlow
 
     private final Flow[] flows;
 
+    public SequentialFlow( final Flow... flows )
+    {
+        super();
+
+        if( flows == null )
+        {
+            this.flows = new Flow[0];
+        }
+        else
+        {
+            this.flows = flows;
+        }
+    }
+
     public SequentialFlow( final FlowName flowName,
                            final Flow... flows )
     {
