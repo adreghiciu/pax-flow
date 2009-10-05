@@ -39,6 +39,8 @@ public class ParseJsonJobDescription
     implements Flow
 {
 
+    public static final String DEFAULT_TRIGGER_SUFFIX = ".defaultTrigger";
+
     public static final PropertyName FILE = propertyName( "file" );
     public static final PropertyName JOB_NAME = propertyName( "jobName" );
 
@@ -116,6 +118,12 @@ public class ParseJsonJobDescription
         finally
         {
             jp.close();
+        }
+
+        if( triggerType == null && flowType != null )
+        {
+            triggerType = triggerType( flowType.value() + DEFAULT_TRIGGER_SUFFIX );
+            triggerConfig = flowConfig;
         }
 
         if( flowType != null && triggerType != null )

@@ -22,19 +22,27 @@ import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.inject.Inject;
+import org.osgi.framework.BundleContext;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.pax.flow.api.Configuration;
+import static org.ops4j.pax.flow.api.ConfigurationProperty.*;
+import org.ops4j.pax.flow.api.ExecutionTarget;
 import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.FlowName;
 import static org.ops4j.pax.flow.api.FlowName.*;
 import org.ops4j.pax.flow.api.FlowType;
 import static org.ops4j.pax.flow.api.FlowType.*;
+import org.ops4j.pax.flow.api.TriggerType;
+import static org.ops4j.pax.flow.api.TriggerType.*;
+import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
 import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.api.helpers.SwitchFlow;
 import static org.ops4j.pax.flow.api.helpers.SwitchFlow.SwitchCase.*;
 import org.ops4j.pax.flow.recipes.flow.basic.CopyProperty;
+import org.ops4j.pax.flow.recipes.flow.job.ParseJsonJobDescription;
 import org.ops4j.pax.flow.recipes.trigger.ServiceWatcher;
+import org.ops4j.peaberry.ServiceRegistry;
 
 /**
  * JAVADOC
@@ -130,6 +138,51 @@ public class WatchRegistryForConfigurations
             final Map<String, String> attributes = new HashMap<String, String>();
 
             attributes.put( "flowType", TYPE.toString() );
+
+            return attributes;
+        }
+
+    }
+
+    public static class DefaultTriggerFactory
+        extends ServiceWatcher.Factory
+    {
+
+        public static final TriggerType TYPE = triggerType( WatchRegistryForConfigurations.class,
+                                                            ParseJsonJobDescription.DEFAULT_TRIGGER_SUFFIX
+        );
+
+        @Inject
+        public DefaultTriggerFactory( final BundleContext bundleContext,
+                                      final ServiceRegistry serviceRegistry )
+        {
+            super( bundleContext, serviceRegistry );
+        }
+
+        public TriggerType type()
+        {
+            return TYPE;
+        }
+
+        public ServiceWatcher create( final Configuration configuration,
+                                      final ExecutionTarget target )
+            throws ClassNotFoundException
+        {
+            return super.create(
+                immutableConfiguration(
+                    configuration,
+                    configurationProperty( WATCHED_SERVICE_TYPE, Dictionary.class.getName() ),
+                    configurationProperty( WATCHED_SERVICE_FILTER, "(service.pid=*)")
+                ),
+                target
+            );
+        }
+
+        public static Map<String, String> attributes()
+        {
+            final Map<String, String> attributes = new HashMap<String, String>();
+
+            attributes.put( "triggerType", TYPE.toString() );
 
             return attributes;
         }

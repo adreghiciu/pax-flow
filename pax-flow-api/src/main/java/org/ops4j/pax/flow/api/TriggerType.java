@@ -81,4 +81,13 @@ public class TriggerType
         return new TriggerType( name );
     }
 
+    public static TriggerType triggerType( final Class<?> type,
+                                           final String suffix)
+    {
+        // VALIDATE
+        String name = type.getSimpleName();
+        name = name.substring( 0, 1 ).toLowerCase() + name.substring( 1 );
+        return new TriggerType( name + suffix );
+    }
+
 }

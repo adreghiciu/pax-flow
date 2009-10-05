@@ -1,4 +1,4 @@
-package org.ops4j.pax.flow.recipes.flow.bundle;
+package org.ops4j.pax.flow.recipes.flow.paxscanner;
 
 import static java.lang.String.*;
 import java.util.HashMap;
@@ -16,6 +16,8 @@ import org.ops4j.pax.flow.api.helpers.ForEachFlow;
 import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
 import static org.ops4j.pax.flow.api.helpers.TypedConfiguration.*;
+import org.ops4j.pax.flow.recipes.flow.bundle.InstallOrUpdateBundle;
+import org.ops4j.pax.flow.recipes.flow.bundle.UninstallBundle;
 import org.ops4j.pax.scanner.ProvisionService;
 
 /**

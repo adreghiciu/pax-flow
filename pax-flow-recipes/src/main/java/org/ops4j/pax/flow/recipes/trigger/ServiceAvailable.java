@@ -92,7 +92,7 @@ public class ServiceAvailable
         );
         description = format( "Service of type [%s] is available%s",
                               serviceClass.getName(),
-                              serviceFilter == null ? "" : format( " (filter: %s", serviceFilter )
+                              serviceFilter == null ? "" : format( " (filter: %s)", serviceFilter )
         );
     }
 

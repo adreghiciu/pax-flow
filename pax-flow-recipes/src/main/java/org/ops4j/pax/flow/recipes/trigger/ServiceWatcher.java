@@ -112,7 +112,7 @@ public class ServiceWatcher
         );
         description = format( "Watch service of type [%s]%s",
                               serviceClass.getName(),
-                              serviceFilter == null ? "" : format( " (filter: %s", serviceFilter )
+                              serviceFilter == null ? "" : format( " (filter: %s)", serviceFilter )
         );
     }
 

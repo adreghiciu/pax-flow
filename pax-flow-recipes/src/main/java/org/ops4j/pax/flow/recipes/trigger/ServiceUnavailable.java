@@ -87,7 +87,7 @@ public class ServiceUnavailable
         );
         description = format( "Service of type [%s] is unavailable%s",
                               serviceClass.getName(),
-                              serviceFilter == null ? "" : format( " (filter: %s", serviceFilter )
+                              serviceFilter == null ? "" : format( " (filter: %s)", serviceFilter )
         );
     }
 
