@@ -17,7 +17,6 @@ import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.api.helpers.SwitchFlow;
 import static org.ops4j.pax.flow.api.helpers.SwitchFlow.SwitchCase.*;
 import org.ops4j.pax.flow.recipes.trigger.BundleContentWatcher;
-import org.ops4j.pax.flow.recipes.trigger.ServiceWatcher;
 
 /**
  * JAVADOC
@@ -35,9 +34,9 @@ public class WatchBundlesForConfigurations
         super(
             flowName,
             new SwitchFlow(
-                ServiceWatcher.EVENT,
+                BundleContentWatcher.EVENT,
                 switchCase(
-                    ServiceWatcher.ADDED,
+                    BundleContentWatcher.ADDED,
                     new ForEachFlow(
                         BundleContentWatcher.URLS, ParsePropertiesFileAsConfiguration.FILE,
                         new SequentialFlow(
@@ -53,7 +52,7 @@ public class WatchBundlesForConfigurations
                     )
                 ),
                 switchCase(
-                    ServiceWatcher.REMOVED,
+                    BundleContentWatcher.REMOVED,
                     new ForEachFlow(
                         BundleContentWatcher.URLS, ParsePropertiesFileAsConfiguration.FILE,
                         new SequentialFlow(
