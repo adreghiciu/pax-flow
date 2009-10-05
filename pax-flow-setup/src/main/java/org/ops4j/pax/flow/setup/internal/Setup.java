@@ -31,8 +31,8 @@ import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableJobDescription.*;
 import org.ops4j.pax.flow.recipes.flow.job.ScanDirectoryForJobDescriptions;
 import org.ops4j.pax.flow.recipes.flow.job.WatchRegistryForJobDescriptions;
+import org.ops4j.pax.flow.recipes.trigger.ServiceWatcher;
 import org.ops4j.pax.flow.recipes.trigger.Timer;
-import org.ops4j.pax.flow.recipes.trigger.ServiceAvailable;
 
 /**
  * JAVADOC
@@ -71,10 +71,10 @@ public class Setup
                     jobName( "watchRegistryForJobDescriptions (default setup)" ),
                     WatchRegistryForJobDescriptions.Factory.TYPE,
                     withoutConfiguration(),
-                    ServiceAvailable.Factory.TYPE,
+                    ServiceWatcher.Factory.TYPE,
                     immutableConfiguration(
                         configurationProperty(
-                            ServiceAvailable.Factory.WATCHED_SERVICE_TYPE, JobDescription.class.getName()
+                            ServiceWatcher.Factory.WATCHED_SERVICE_TYPE, JobDescription.class.getName()
                         )
                     )
                 )
