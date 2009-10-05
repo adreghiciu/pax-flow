@@ -83,7 +83,9 @@ public class ParseJsonJobDescription
                         {
                             triggerType = triggerType( jp.getText() );
                         }
-                        else if( "config".equals( currentName ) || "configuration".equals( currentName ) )
+                        else if( "config".equals( currentName )
+                                 || "configuration".equals( currentName )
+                                 || "configuredWith".equals( currentName ) )
                         {
                             triggerConfig = parseConfig( jp );
                         }
@@ -101,7 +103,9 @@ public class ParseJsonJobDescription
                         {
                             flowType = flowType( jp.getText() );
                         }
-                        else if( "config".equals( currentName ) || "configuration".equals( currentName ) )
+                        else if( "config".equals( currentName )
+                                 || "configuration".equals( currentName )
+                                 || "configuredWith".equals( currentName ) )
                         {
                             flowConfig = parseConfig( jp );
                         }
@@ -143,9 +147,32 @@ public class ParseJsonJobDescription
             final String currentName = jp.getCurrentName();
             jp.nextToken();
 
-            properties.add( configurationProperty( propertyName( currentName ), jp.getText() ) );
+            if( jp.getCurrentToken() == JsonToken.START_ARRAY )
+            {
+                properties.add(
+                    configurationProperty( propertyName( currentName ), parseArray( jp ) )
+                );
+            }
+            else
+            {
+                properties.add(
+                    configurationProperty( propertyName( currentName ), jp.getText() )
+                );
+            }
         }
         return immutableConfiguration( properties );
+    }
+
+    private String[] parseArray( final JsonParser jp )
+        throws IOException
+    {
+        final Collection<String> array = new ArrayList<String>();
+
+        while( jp.nextToken() != JsonToken.END_ARRAY )
+        {
+            array.add( jp.getText() );
+        }
+        return array.toArray( new String[array.size()] );
     }
 
     @Override

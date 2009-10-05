@@ -46,11 +46,12 @@ public class ParsePropertiesFileAsConfiguration
         {
             if( file.getName().endsWith( ".link" ) )
             {
-                String url = null;
+                URL url = null;
+                String urlAsString = null;
                 try
                 {
-                    url = "link:" + file.toURI().toURL().toExternalForm();
-                    source = new URL( url ).openStream();
+                    urlAsString = "link:" + file.toURI().toURL().toExternalForm();
+                    url = new URL( urlAsString );
                 }
                 catch( Exception ignore )
                 {
@@ -58,9 +59,13 @@ public class ParsePropertiesFileAsConfiguration
                     LOG.debug(
                         String.format(
                             "Could not transform [%s] into an [%s]. Reason [%s].",
-                            file.getPath(), url, ignore.getMessage()
+                            file.getPath(), urlAsString, ignore.getMessage()
                         )
                     );
+                }
+                if( url != null )
+                {
+                    source = url.openStream();
                 }
             }
         }

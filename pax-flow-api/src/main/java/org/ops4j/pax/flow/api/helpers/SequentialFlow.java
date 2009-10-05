@@ -54,10 +54,28 @@ public class SequentialFlow
                 flow.execute( context );
             }
         }
-        catch( Exception e )
+        catch( Exception ignore )
         {
             final long duration = System.currentTimeMillis() - startTime;
-            LOG.warn( format( "Execution of flow [%s] failed after %d millis ", name(), duration ), e );
+            if( ignore instanceof NullPointerException )
+            {
+                LOG.warn(
+                    format(
+                        "Execution of flow [%s] failed after %d millis.",
+                        name(), duration
+                    ),
+                    ignore
+                );
+            }
+            else
+            {
+                LOG.warn(
+                    format(
+                        "Execution of flow [%s] failed after %d millis. Reason [%s].",
+                        name(), duration, ignore.getMessage()
+                    )
+                );
+            }
         }
         final long duration = System.currentTimeMillis() - startTime;
         LOG.debug( format( "Flow [%s] executed successfully in %d millis", name(), duration ) );

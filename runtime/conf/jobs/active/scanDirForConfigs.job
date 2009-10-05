@@ -10,7 +10,8 @@
   "do" : {
        "flow" : "scanDirectoryForConfigurations",
        "config" : {
-         "directory" : "../runtime/conf/configs"
+         "directory" : "../runtime/conf/configs",
+         "includes" : [ "*.cfg", "*.link" ]
        }
   }
 
