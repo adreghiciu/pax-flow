@@ -46,7 +46,7 @@ public class UpdateConfiguration
         final TypedExecutionContext executionContext = typedExecutionContext( context );
         final String pid = executionContext.mandatory( PID, String.class );
         final String factoryPid = executionContext.optional( FACTORY_PID, String.class );
-        final Hashtable properties = new Hashtable();
+        final Hashtable<String,Object> properties = new Hashtable<String, Object>();
         properties.putAll( executionContext.mandatory( CONFIGURATION, Hashtable.class ) );
 
         String filter = String.format( "(service.pid=%s)", pid );
