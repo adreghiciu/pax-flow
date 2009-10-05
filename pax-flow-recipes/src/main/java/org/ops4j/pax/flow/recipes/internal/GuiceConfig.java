@@ -35,7 +35,7 @@ import org.ops4j.pax.flow.recipes.flow.cm.WatchBundlesForConfigurations;
 import org.ops4j.pax.flow.recipes.flow.bundle.ScanBundles;
 import org.ops4j.pax.flow.recipes.trigger.BundleContentWatcher;
 import org.ops4j.pax.flow.recipes.trigger.BundleManifestWatcher;
-import org.ops4j.pax.flow.recipes.trigger.FixedRateTimer;
+import org.ops4j.pax.flow.recipes.trigger.Timer;
 import org.ops4j.pax.flow.recipes.trigger.Manual;
 import org.ops4j.pax.flow.recipes.trigger.ServiceAvailable;
 import org.ops4j.pax.flow.recipes.trigger.ServiceUnavailable;
@@ -95,10 +95,10 @@ public class GuiceConfig
             );
 
         bind( export( TriggerFactory.class ) )
-            .annotatedWith( named( FixedRateTimer.Factory.class.getName() ) )
+            .annotatedWith( named( Timer.Factory.class.getName() ) )
             .toProvider(
-                service( FixedRateTimer.Factory.class )
-                    .attributes( FixedRateTimer.Factory.attributes() )
+                service( Timer.Factory.class )
+                    .attributes( Timer.Factory.attributes() )
                     .export()
             );
 

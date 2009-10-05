@@ -31,7 +31,7 @@ import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableJobDescription.*;
 import org.ops4j.pax.flow.recipes.flow.job.ScanDirectoryForJobDescriptions;
 import org.ops4j.pax.flow.recipes.flow.job.WatchRegistryForJobDescriptions;
-import org.ops4j.pax.flow.recipes.trigger.FixedRateTimer;
+import org.ops4j.pax.flow.recipes.trigger.Timer;
 import org.ops4j.pax.flow.recipes.trigger.ServiceAvailable;
 
 /**
@@ -101,11 +101,11 @@ public class Setup
                             "${default.directory.jobs:${default.directory:./conf}/jobs/active}"
                         )
                     ),
-                    FixedRateTimer.Factory.TYPE,
+                    Timer.Factory.TYPE,
                     immutableConfiguration(
                         frameworkPropertiesConfiguration( bundleContext ),
-                        configurationProperty( FixedRateTimer.Factory.INITIAL_DELAY, "${default.initialDelay:0s}" ),
-                        configurationProperty( FixedRateTimer.Factory.REPEAT_PERIOD, "${default.repeatPeriod:10s}" )
+                        configurationProperty( Timer.Factory.INITIAL_DELAY, "${default.initialDelay:0s}" ),
+                        configurationProperty( Timer.Factory.REPEAT_PERIOD, "${default.repeatPeriod:10s}" )
                     )
                 )
             );

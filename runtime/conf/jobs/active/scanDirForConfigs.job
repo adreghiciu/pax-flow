@@ -1,7 +1,7 @@
 {
 
   "when" : {
-    "trigger" : "fixedRateTimer",
+    "trigger" : "timer",
     "config" : {
       "repeatPeriod" : "10s"
     }
