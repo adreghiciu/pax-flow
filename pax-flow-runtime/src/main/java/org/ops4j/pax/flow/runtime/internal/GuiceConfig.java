@@ -6,7 +6,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.FlowFactoryRegistry;
-import org.ops4j.pax.flow.api.Transformer;
+import org.ops4j.pax.flow.api.Scheduler;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.api.TriggerFactoryRegistry;
 import static org.ops4j.peaberry.Peaberry.*;
@@ -43,10 +43,10 @@ public class GuiceConfig extends AbstractModule
 
         // TODO make number of threads configurable
         bind( ExecutorService.class ).toInstance( Executors.newFixedThreadPool( 10 ) );
-        bind( export( Transformer.class ) ).toProvider(
-            service( DefaultTransformer.class ).attributes( DefaultTransformer.attributes() ).export()
+        bind( export( Scheduler.class ) ).toProvider(
+            service( DefaultScheduler.class ).attributes( DefaultScheduler.attributes() ).export()
         );
-        bind( DefaultTransformer.class ).in( Singleton.class );
+        bind( DefaultScheduler.class ).in( Singleton.class );
     }
 
 }

@@ -5,7 +5,7 @@ import org.ops4j.pax.flow.api.ExecutionContext;
 import org.ops4j.pax.flow.api.Flow;
 import org.ops4j.pax.flow.api.JobDescription;
 import org.ops4j.pax.flow.api.PropertyName;
-import org.ops4j.pax.flow.api.Transformer;
+import org.ops4j.pax.flow.api.Scheduler;
 import org.ops4j.pax.flow.api.helpers.CancelableFlow;
 import static org.ops4j.pax.flow.api.helpers.TypedExecutionContext.*;
 
@@ -21,13 +21,13 @@ public class RescheduleJob
 
     public static final PropertyName JOB_DESCRIPTION = PropertyName.propertyName( "jobDescription" );
 
-    private final Transformer m_transformer;
+    private final Scheduler m_scheduler;
 
     @Inject
-    public RescheduleJob( final Transformer transformer )
+    public RescheduleJob( final Scheduler scheduler )
     {
         // VALIDATE
-        m_transformer = transformer;
+        m_scheduler = scheduler;
     }
 
     public void run( final ExecutionContext context )
@@ -36,7 +36,7 @@ public class RescheduleJob
         final JobDescription description = typedExecutionContext( context ).mandatory(
             JOB_DESCRIPTION, JobDescription.class
         );
-        m_transformer.reschedule( description );
+        m_scheduler.reschedule( description );
     }
 
     @Override

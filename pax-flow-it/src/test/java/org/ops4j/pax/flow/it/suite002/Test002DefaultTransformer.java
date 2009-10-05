@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
-import org.ops4j.pax.flow.api.Transformer;
+import org.ops4j.pax.flow.api.Scheduler;
 import org.ops4j.pax.flow.it.Cfg;
 import static org.ops4j.peaberry.Peaberry.*;
 
@@ -43,7 +43,7 @@ public class Test002DefaultTransformer
     private BundleContext m_bundleContext;
 
     /**
-     * Tests that runtime bundle is activated without problems (exceptions) and a {@link Transformer} service gets
+     * Tests that runtime bundle is activated without problems (exceptions) and a {@link org.ops4j.pax.flow.api.Scheduler} service gets
      * registered.
      */
     @Test
@@ -53,7 +53,7 @@ public class Test002DefaultTransformer
 
         injector.injectMembers( this );
 
-        injector.getInstance( Transformer.class );
+        injector.getInstance( Scheduler.class );
     }
 
     public static class GuiceSetup
@@ -63,7 +63,7 @@ public class Test002DefaultTransformer
         @Override
         protected void configure()
         {
-            bind( Transformer.class ).toProvider( service( Transformer.class ).single() );
+            bind( Scheduler.class ).toProvider( service( Scheduler.class ).single() );
         }
 
     }

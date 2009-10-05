@@ -11,7 +11,7 @@ import static org.ops4j.pax.flow.api.FlowName.*;
 import org.ops4j.pax.flow.api.FlowType;
 import static org.ops4j.pax.flow.api.FlowType.*;
 import org.ops4j.pax.flow.api.JobDescription;
-import org.ops4j.pax.flow.api.Transformer;
+import org.ops4j.pax.flow.api.Scheduler;
 import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.api.helpers.SwitchFlow;
 import static org.ops4j.pax.flow.api.helpers.SwitchFlow.SwitchCase.*;
@@ -29,7 +29,7 @@ public class WatchRegistryForJobDescriptions
 {
 
     public WatchRegistryForJobDescriptions( final FlowName flowName,
-                                            final Transformer transformer )
+                                            final Scheduler scheduler )
     {
         super(
             flowName,
@@ -38,8 +38,8 @@ public class WatchRegistryForJobDescriptions
             ),
             new SwitchFlow(
                 ServiceWatcher.EVENT,
-                switchCase( ServiceWatcher.ADDED, new ScheduleJob( transformer ) ),
-                switchCase( ServiceWatcher.REMOVED, new UnscheduleJob( transformer ) )
+                switchCase( ServiceWatcher.ADDED, new ScheduleJob( scheduler ) ),
+                switchCase( ServiceWatcher.REMOVED, new UnscheduleJob( scheduler ) )
             )
         );
     }
@@ -50,15 +50,15 @@ public class WatchRegistryForJobDescriptions
 
         public static final FlowType TYPE = flowType( WatchRegistryForJobDescriptions.class );
 
-        private final Transformer m_transformer;
+        private final Scheduler m_scheduler;
 
         private long m_counter;
 
         @Inject
-        public Factory( final Transformer transformer )
+        public Factory( final Scheduler scheduler )
         {
             // VALIDATE
-            m_transformer = transformer;
+            m_scheduler = scheduler;
         }
 
         public FlowType type()
@@ -70,7 +70,7 @@ public class WatchRegistryForJobDescriptions
         {
             return new WatchRegistryForJobDescriptions(
                 flowName( String.format( "%s::%d", type(), m_counter++ ) ),
-                m_transformer
+                m_scheduler
             );
         }
 

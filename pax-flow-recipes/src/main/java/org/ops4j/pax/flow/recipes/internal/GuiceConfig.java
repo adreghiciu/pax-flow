@@ -25,7 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.pax.flow.api.FlowFactory;
-import org.ops4j.pax.flow.api.Transformer;
+import org.ops4j.pax.flow.api.Scheduler;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.recipes.flow.bundle.SyncBundlesWithScanner;
 import org.ops4j.pax.flow.recipes.flow.job.ScanDirectoryForJobDescriptions;
@@ -118,7 +118,7 @@ public class GuiceConfig
                     .export()
             );
 
-        bind( Transformer.class ).toProvider( service( Transformer.class ).single() );
+        bind( Scheduler.class ).toProvider( service( Scheduler.class ).single() );
 
         bind( export( FlowFactory.class ) )
             .annotatedWith( named( WatchRegistryForJobDescriptions.Factory.class.getName() ) )

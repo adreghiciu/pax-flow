@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
-import org.ops4j.pax.flow.api.Transformer;
+import org.ops4j.pax.flow.api.Scheduler;
 import org.ops4j.pax.flow.it.Cfg;
 import static org.ops4j.peaberry.Peaberry.*;
 
@@ -60,7 +60,7 @@ public class Test003RuntimeSetup
         @Override
         protected void configure()
         {
-            bind( Transformer.class ).toProvider( service( Transformer.class ).single() );
+            bind( Scheduler.class ).toProvider( service( Scheduler.class ).single() );
         }
 
     }

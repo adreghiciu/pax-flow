@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.apache.commons.logging.Log;
@@ -17,7 +20,7 @@ import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.FlowFactoryRegistry;
 import org.ops4j.pax.flow.api.JobDescription;
 import org.ops4j.pax.flow.api.JobName;
-import org.ops4j.pax.flow.api.Transformer;
+import org.ops4j.pax.flow.api.Scheduler;
 import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.api.TriggerFactoryRegistry;
@@ -30,11 +33,11 @@ import org.ops4j.peaberry.activation.Stop;
  * @author Alin Dreghiciu
  */
 @Singleton
-public class DefaultTransformer
-    implements Transformer
+public class DefaultScheduler
+    implements Scheduler
 {
 
-    private static final Log LOG = LogFactory.getLog( DefaultTransformer.class );
+    private static final Log LOG = LogFactory.getLog( DefaultScheduler.class );
 
     private final Map<JobName, Job> jobs;
 
@@ -44,7 +47,7 @@ public class DefaultTransformer
     private final TriggerFactoryRegistry triggerFactoryRegistry;
 
     @Inject
-    public DefaultTransformer( final ExecutorService executorService,
+    public DefaultScheduler( final ExecutorService executorService,
                                final FlowFactoryRegistry flowFactoryRegistry,
                                final TriggerFactoryRegistry triggerFactoryRegistry )
     {
@@ -245,58 +248,73 @@ public class DefaultTransformer
     {
 
         private final JobDescription description;
+        private final Lock lock;
 
         final PersistentExecutionContext executionContext;
 
         public FlowScheduler( final JobDescription description )
         {
-            this.description = description;
-            executionContext = new PersistentExecutionContext();
+            this( description, new PersistentExecutionContext() );
         }
 
         public FlowScheduler( final JobDescription description,
                               final PersistentExecutionContext executionContext )
         {
             this.description = description;
+            this.lock = new ReentrantLock( true );
             this.executionContext = executionContext;
         }
 
         public void execute( final ExecutionContext executionContext )
         {
-            executorService.submit(
-                new Callable<Object>()
-                {
-                    public Object call()
+            // wait till a previous invocation for this job (trigger/flow) combination finishes
+            lock.lock();
+            try
+            {
+                final Future<Object> future = executorService.submit(
+                    new Callable<Object>()
                     {
-                        try
+                        public Object call()
                         {
-                            LOG.debug( format( "Starting flow of type [%s]", description.flowType() ) );
-                            final FlowFactory flowFactory = flowFactoryRegistry.get( description.flowType() );
-                            if( flowFactory == null )
+                            try
+                            {
+                                LOG.debug( format( "Starting flow of type [%s]", description.flowType() ) );
+                                final FlowFactory flowFactory = flowFactoryRegistry.get( description.flowType() );
+                                if( flowFactory == null )
+                                {
+                                    LOG.warn(
+                                        format( "Could not find a flow factory of type [%s]", description.flowType() )
+                                    );
+                                }
+                                else
+                                {
+                                    final Flow flow = flowFactory.create( description.flowConfiguration() );
+                                    FlowScheduler.this.executionContext.useTransientContext( executionContext );
+                                    flow.execute( FlowScheduler.this.executionContext );
+                                    LOG.debug( format( "Finished execution of [%s]", flow ) );
+                                }
+                            }
+                            catch( Throwable ignore )
                             {
                                 LOG.warn(
-                                    format( "Could not find a flow factory of type [%s]", description.flowType() )
+                                    format( "Execution of [%s] could not be completed.", description.flowType() ),
+                                    ignore
                                 );
                             }
-                            else
-                            {
-                                final Flow flow = flowFactory.create( description.flowConfiguration() );
-                                FlowScheduler.this.executionContext.useTransientContext( executionContext );
-                                flow.execute( FlowScheduler.this.executionContext );
-                                LOG.debug( format( "Finished execution of [%s]", flow ) );
-                            }
+                            return null;
                         }
-                        catch( Throwable ignore )
-                        {
-                            LOG.warn(
-                                format( "Execution of [%s] could not be completed.", description.flowType() ),
-                                ignore
-                            );
-                        }
-                        return null;
                     }
-                }
-            );
+                );
+                future.get();
+            }
+            catch( Exception ignore )
+            {
+                // ignore
+            }
+            finally
+            {
+                lock.unlock();
+            }
         }
 
         public PersistentExecutionContext getExecutionContext()

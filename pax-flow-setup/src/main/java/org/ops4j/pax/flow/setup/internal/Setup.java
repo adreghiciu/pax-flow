@@ -25,7 +25,7 @@ import org.osgi.framework.BundleContext;
 import static org.ops4j.pax.flow.api.ConfigurationProperty.*;
 import org.ops4j.pax.flow.api.JobDescription;
 import static org.ops4j.pax.flow.api.JobName.*;
-import org.ops4j.pax.flow.api.Transformer;
+import org.ops4j.pax.flow.api.Scheduler;
 import static org.ops4j.pax.flow.api.helpers.FrameworkPropertiesConfiguration.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
 import static org.ops4j.pax.flow.api.helpers.ImmutableJobDescription.*;
@@ -45,15 +45,15 @@ public class Setup
 
     private static final Log LOG = LogFactory.getLog( Setup.class );
 
-    private Transformer m_transformer;
+    private Scheduler m_scheduler;
     private final BundleContext m_bundleContext;
 
     @Inject
-    public Setup( final Transformer transformer,
+    public Setup( final Scheduler scheduler,
                   final BundleContext bundleContext )
     {
 
-        m_transformer = transformer;
+        m_scheduler = scheduler;
         m_bundleContext = bundleContext;
 
         setupWatchRegistryForJobDescriptionsFlow();
@@ -66,7 +66,7 @@ public class Setup
     {
         try
         {
-            m_transformer.schedule(
+            m_scheduler.schedule(
                 immutableJobDescription(
                     jobName( "watchRegistryForJobDescriptions (default setup)" ),
                     WatchRegistryForJobDescriptions.Factory.TYPE,
@@ -90,7 +90,7 @@ public class Setup
     {
         try
         {
-            m_transformer.schedule(
+            m_scheduler.schedule(
                 immutableJobDescription(
                     jobName( "scanFileSystemForJobDescriptions (default setup)" ),
                     ScanDirectoryForJobDescriptions.Factory.TYPE,

@@ -23,7 +23,7 @@ package org.ops4j.pax.flow.api;
  *
  * @author Alin Dreghiciu
  */
-public interface Transformer
+public interface Scheduler
 {
 
     void schedule( JobDescription jobDescription )

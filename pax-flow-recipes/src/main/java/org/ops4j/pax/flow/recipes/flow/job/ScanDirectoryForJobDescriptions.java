@@ -14,7 +14,7 @@ import org.ops4j.pax.flow.api.FlowType;
 import static org.ops4j.pax.flow.api.FlowType.*;
 import org.ops4j.pax.flow.api.PropertyName;
 import static org.ops4j.pax.flow.api.PropertyName.*;
-import org.ops4j.pax.flow.api.Transformer;
+import org.ops4j.pax.flow.api.Scheduler;
 import org.ops4j.pax.flow.api.helpers.ForEachFlow;
 import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
@@ -33,7 +33,7 @@ public class ScanDirectoryForJobDescriptions
 {
 
     public ScanDirectoryForJobDescriptions( final FlowName flowName,
-                                            final Transformer transformer,
+                                            final Scheduler scheduler,
                                             final File directory,
                                             final String[] includes,
                                             final String[] excludes )
@@ -47,7 +47,7 @@ public class ScanDirectoryForJobDescriptions
                     flowName( format( "%s::%s", flowName, "Process Added" ) ), // TODO do we need a name?
                     new ExtractFileNameFromFile( ParseJsonJobDescription.FILE, ParseJsonJobDescription.JOB_NAME ),
                     new ParseJsonJobDescription(),
-                    new ScheduleJob( transformer )
+                    new ScheduleJob( scheduler )
                 )
             ),
             new ForEachFlow(
@@ -56,7 +56,7 @@ public class ScanDirectoryForJobDescriptions
                     flowName( format( "%s::%s", flowName, "Process Modified" ) ), // TODO do we need a name?
                     new ExtractFileNameFromFile( ParseJsonJobDescription.FILE, ParseJsonJobDescription.JOB_NAME ),
                     new ParseJsonJobDescription(),
-                    new RescheduleJob( transformer )
+                    new RescheduleJob( scheduler )
                 )
             ),
             new ForEachFlow(
@@ -64,7 +64,7 @@ public class ScanDirectoryForJobDescriptions
                 new SequentialFlow(
                     flowName( format( "%s::%s", flowName, "Process Deleted" ) ), // TODO do we need a name?
                     new ExtractFileNameFromFile( ParseJsonJobDescription.FILE, UnscheduleJob.JOB_NAME ),
-                    new UnscheduleJob( transformer )
+                    new UnscheduleJob( scheduler )
                 )
             )
         );
@@ -80,15 +80,15 @@ public class ScanDirectoryForJobDescriptions
         public static final PropertyName INCLUDES = propertyName( "includes" );
         public static final PropertyName EXCLUDES = propertyName( "excludes" );
 
-        private final Transformer m_transformer;
+        private final Scheduler m_scheduler;
 
         private long m_counter;
 
         @Inject
-        public Factory( final Transformer transformer )
+        public Factory( final Scheduler scheduler )
         {
             // VALIDATE
-            m_transformer = transformer;
+            m_scheduler = scheduler;
         }
 
         public FlowType type()
@@ -102,7 +102,7 @@ public class ScanDirectoryForJobDescriptions
 
             return new ScanDirectoryForJobDescriptions(
                 flowName( format( "%s::%d", type(), m_counter++ ) ),
-                m_transformer,
+                m_scheduler,
                 new File( cfg.mandatory( DIRECTORY, String.class ) ),
                 cfg.optional( INCLUDES, String[].class ),
                 cfg.optional( EXCLUDES, String[].class )

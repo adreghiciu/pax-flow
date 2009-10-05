@@ -19,7 +19,7 @@ package org.ops4j.pax.flow.setup.internal;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
-import org.ops4j.pax.flow.api.Transformer;
+import org.ops4j.pax.flow.api.Scheduler;
 import static org.ops4j.peaberry.Peaberry.*;
 
 /**
@@ -34,7 +34,7 @@ public class GuiceConfig
     @Override
     protected void configure()
     {
-        bind( Transformer.class ).toProvider( service( Transformer.class ).single() );
+        bind( Scheduler.class ).toProvider( service( Scheduler.class ).single() );
         bind( Setup.class ).in( Singleton.class );
     }
 
