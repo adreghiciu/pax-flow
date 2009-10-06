@@ -104,4 +104,10 @@ public class TriggersGuiceConfig
             );
     }
 
+    @Override
+    public String toString()
+    {
+        return "Triggers";
+    }
+
 }

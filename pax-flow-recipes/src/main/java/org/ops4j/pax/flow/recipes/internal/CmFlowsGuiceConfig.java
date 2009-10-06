@@ -78,4 +78,10 @@ public class CmFlowsGuiceConfig
         }
     }
 
+    @Override
+    public String toString()
+    {
+        return "Configuration Admin Flows";
+    }
+
 }

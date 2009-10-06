@@ -58,4 +58,10 @@ public class PaxScannerFlowsGuiceConfig
             );
     }
 
+    @Override
+    public String toString()
+    {
+        return "Pax Runner Flows";
+    }
+
 }

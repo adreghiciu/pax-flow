@@ -55,4 +55,10 @@ public class JobFlowsGuiceConfig
             );
     }
 
+    @Override
+    public String toString()
+    {
+        return "Job Flows";
+    }
+
 }

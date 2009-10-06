@@ -18,7 +18,9 @@
 
 package org.ops4j.pax.flow.recipes.internal;
 
+import static java.lang.String.*;
 import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.flow.api.Scheduler;
@@ -42,10 +44,23 @@ public class GuiceConfig
 
         install( new TriggersGuiceConfig() );
         install( new JobFlowsGuiceConfig() );
-        install( new CmFlowsGuiceConfig() );
-        install( new PaxScannerFlowsGuiceConfig() );
+
+        optionalInstall( new CmFlowsGuiceConfig() );
+        optionalInstall( new PaxScannerFlowsGuiceConfig() );
 
         LOG.info( "Registered built-in flows and triggers" );
+    }
+
+    private void optionalInstall( final Module module )
+    {
+        try
+        {
+            install( module );
+        }
+        catch( Throwable ignore )
+        {
+            LOG.info( format( "Module [%s] could not be installed. Reason: %s", module, ignore ) );
+        }
     }
 
 }
