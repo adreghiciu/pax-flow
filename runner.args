@@ -6,15 +6,16 @@ mvn:org.ops4j.pax.flow/pax-flow-recipes@update
 mvn:org.ops4j.pax.flow/pax-flow-setup@update
 
 mvn:org.ops4j/peaberry.activation/1.2-SNAPSHOT@update
-#mvn:org.ops4j.pax.scanner/pax-scanner-all/1.1.0-SNAPSHOT@update
+mvn:org.ops4j.pax.scanner/pax-scanner-all/1.1.0-SNAPSHOT@update
 mvn:org.ops4j.pax.swissbox/pax-swissbox-converter/1.3.0-SNAPSHOT@update
 
 scan-file:file:runner.properties
 
-config
+config@1
+log@1
+
 prefs
 peaberry/1.1.1
-log
 url
 
 wrap:assembly:runtime/conf/bundle@nostart@update

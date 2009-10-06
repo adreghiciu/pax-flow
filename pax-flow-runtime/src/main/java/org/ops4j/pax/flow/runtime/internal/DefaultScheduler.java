@@ -112,7 +112,7 @@ public class DefaultScheduler
         final Job job = new Job( description, trigger, flowScheduler );
         jobs.put( description.name(), job );
 
-        LOG.info( format( "Scheduled job [%s] (%s)", description.name(), job ) );
+        LOG.info( format( "Scheduled job [%s]", description.name() ) );
 
         trigger.start();
     }
@@ -146,7 +146,7 @@ public class DefaultScheduler
         final Job job = new Job( description, trigger, flowScheduler );
         jobs.put( description.name(), job );
 
-        LOG.info( format( "Rescheduled job [%s] (%s)", description.name(), job ) );
+        LOG.info( format( "Rescheduled job [%s]", description.name() ) );
 
         trigger.start();
     }
