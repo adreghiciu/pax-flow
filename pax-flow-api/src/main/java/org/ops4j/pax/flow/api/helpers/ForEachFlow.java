@@ -21,7 +21,8 @@ public class ForEachFlow
     private final PropertyName iterablePropertyName;
     private final PropertyName iteratorPropertyName;
 
-    public ForEachFlow( final PropertyName iterablePropertyName, final PropertyName iteratorPropertyName,
+    public ForEachFlow( final PropertyName iterablePropertyName,
+                        final PropertyName iteratorPropertyName,
                         final Flow iterableFlow
     )
     {

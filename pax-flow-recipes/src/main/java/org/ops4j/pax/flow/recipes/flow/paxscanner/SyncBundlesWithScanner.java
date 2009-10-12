@@ -87,18 +87,12 @@ public class SyncBundlesWithScanner
         {
             final TypedConfiguration cfg = typedConfiguration( configuration );
 
-            String autoStart = cfg.optional( InstallOrUpdateBundle.Factory.AUTO_START, String.class );
-            if( "yes".equalsIgnoreCase( autoStart ) )
-            {
-                autoStart = "true";
-            }
-
             return new SyncBundlesWithScanner(
                 flowName( format( "%s::%d", type(), counter++ ) ),
                 bundleContext,
                 provisionService,
                 cfg.mandatory( ScanBundles.Factory.URL, String.class ),
-                autoStart == null ? true : Boolean.valueOf( autoStart )
+                cfg.optional( InstallOrUpdateBundle.Factory.AUTO_START, Boolean.class, true )
             );
         }
 
