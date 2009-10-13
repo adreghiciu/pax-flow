@@ -82,7 +82,7 @@ public class ServiceAvailable
 
                     final DefaultExecutionContext executionContext = defaultExecutionContext();
                     executionContext.add( executionProperty( ServiceWatcher.SERVICE, service ) );
-                    executionContext.add( executionProperty( ServiceWatcher.EVENT, ServiceWatcher.ADDED ) );
+                    executionContext.add( executionProperty( ServiceWatcher.EVENT, ServiceWatcher.NEW ) );
 
                     fire( executionContext );
 

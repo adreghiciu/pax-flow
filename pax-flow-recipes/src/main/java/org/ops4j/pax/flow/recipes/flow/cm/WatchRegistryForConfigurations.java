@@ -62,7 +62,7 @@ public class WatchRegistryForConfigurations
             new SwitchFlow(
                 ServiceWatcher.EVENT,
                 switchCase(
-                    ServiceWatcher.ADDED,
+                    ServiceWatcher.NEW,
                     new SequentialFlow(
                         new CopyProperty<Dictionary>(
                             ServiceWatcher.SERVICE, AddConfiguration.CONFIGURATION, Dictionary.class

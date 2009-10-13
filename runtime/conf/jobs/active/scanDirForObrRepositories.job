@@ -1,0 +1,18 @@
+{
+
+  "when" : {
+    "trigger" : "timer",
+    "config" : {
+      "repeatPeriod" : "10s"
+    }
+  },
+
+  "do" : {
+       "flow" : "scanDirectoryForObrRepositories",
+       "config" : {
+         "directory" : "../runtime/conf/obrs",
+         "includes" : [ "*.xml", "*.link" ]
+       }
+  }
+
+}

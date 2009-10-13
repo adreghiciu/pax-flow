@@ -66,7 +66,7 @@ public class RemoveObrRepository
     @Override
     public String toString()
     {
-        return "Schedule job available in execution context";
+        return "Remove obr repository from repository admin";
     }
     
 }

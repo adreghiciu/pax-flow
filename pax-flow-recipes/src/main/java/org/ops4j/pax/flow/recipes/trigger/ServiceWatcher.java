@@ -62,7 +62,7 @@ public class ServiceWatcher
     public static final PropertyName ATTRIBUTES = propertyName( "attributes" );
     public static final PropertyName EVENT = propertyName( "event" );
 
-    public static final String ADDED = "ADDED";
+    public static final String NEW = "NEW";
     public static final String REMOVED = "REMOVED";
 
     private final String description;
@@ -90,7 +90,7 @@ public class ServiceWatcher
                     final DefaultExecutionContext executionContext = defaultExecutionContext();
                     executionContext.add( executionProperty( SERVICE, service ) );
                     executionContext.add( executionProperty( ATTRIBUTES, anImport.attributes() ) );
-                    executionContext.add( executionProperty( EVENT, ADDED ) );
+                    executionContext.add( executionProperty( EVENT, NEW ) );
 
                     fire( executionContext );
 

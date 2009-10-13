@@ -38,7 +38,7 @@ public class WatchRegistryForJobDescriptions
             ),
             new SwitchFlow(
                 ServiceWatcher.EVENT,
-                switchCase( ServiceWatcher.ADDED, new ScheduleJob( scheduler ) ),
+                switchCase( ServiceWatcher.NEW, new ScheduleJob( scheduler ) ),
                 switchCase( ServiceWatcher.REMOVED, new UnscheduleJob( scheduler ) )
             )
         );

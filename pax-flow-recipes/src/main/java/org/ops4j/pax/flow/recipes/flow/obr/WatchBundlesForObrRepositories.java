@@ -41,6 +41,7 @@ import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
 import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.api.helpers.SwitchFlow;
 import static org.ops4j.pax.flow.api.helpers.SwitchFlow.SwitchCase.*;
+import org.ops4j.pax.flow.recipes.flow.basic.ReplaceLinkFileWithURL;
 import org.ops4j.pax.flow.recipes.trigger.BundleContentWatcher;
 
 /**
@@ -61,11 +62,12 @@ public class WatchBundlesForObrRepositories
             new SwitchFlow(
                 BundleContentWatcher.EVENT,
                 switchCase(
-                    BundleContentWatcher.ADDED,
+                    BundleContentWatcher.NEW,
                     new ForEachFlow(
                         BundleContentWatcher.URLS, AddObrRepository.REPOSITORY_URL,
                         new SequentialFlow(
-                            flowName( format( "%s::%s", flowName, "Added" ) ), // TODO do we need a name?
+                            flowName( format( "%s::%s", flowName, "New" ) ), // TODO do we need a name?
+                            new ReplaceLinkFileWithURL( AddObrRepository.REPOSITORY_URL ),
                             new AddObrRepository( repositoryAdmin )
                         )
                     )
@@ -75,7 +77,8 @@ public class WatchBundlesForObrRepositories
                     new ForEachFlow(
                         BundleContentWatcher.URLS, RemoveObrRepository.REPOSITORY_URL,
                         new SequentialFlow(
-                            flowName( format( "%s::%s", flowName, "Deleted" ) ), // TODO do we need a name?
+                            flowName( format( "%s::%s", flowName, "Removed" ) ), // TODO do we need a name?
+                            new ReplaceLinkFileWithURL( RemoveObrRepository.REPOSITORY_URL ),
                             new RemoveObrRepository( repositoryAdmin )
                         )
                     )

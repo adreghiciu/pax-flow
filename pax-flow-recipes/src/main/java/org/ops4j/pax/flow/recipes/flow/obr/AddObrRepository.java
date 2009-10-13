@@ -66,7 +66,7 @@ public class AddObrRepository
     @Override
     public String toString()
     {
-        return "Schedule job available in execution context";
+        return "Add obr repository to repository admin";
     }
     
 }

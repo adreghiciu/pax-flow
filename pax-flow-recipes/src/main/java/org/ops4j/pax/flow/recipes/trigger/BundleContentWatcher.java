@@ -64,7 +64,7 @@ public class BundleContentWatcher
     public static final PropertyName URLS = propertyName( "manifestEntries" );
     public static final PropertyName EVENT = propertyName( "event" );
 
-    public static final String ADDED = "ADDED";
+    public static final String NEW = "NEW";
     public static final String REMOVED = "REMOVED";
 
     private final BundleWatcher<URL> bundleWatcher;
@@ -97,7 +97,7 @@ public class BundleContentWatcher
                     final DefaultExecutionContext executionContext = defaultExecutionContext();
                     executionContext.add( executionProperty( BUNDLE, bundle ) );
                     executionContext.add( executionProperty( URLS, urls ) );
-                    executionContext.add( executionProperty( EVENT, ADDED ) );
+                    executionContext.add( executionProperty( EVENT, NEW ) );
 
                     fire( executionContext );
                 }

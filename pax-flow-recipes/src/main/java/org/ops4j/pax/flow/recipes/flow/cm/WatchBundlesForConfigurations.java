@@ -36,11 +36,11 @@ public class WatchBundlesForConfigurations
             new SwitchFlow(
                 BundleContentWatcher.EVENT,
                 switchCase(
-                    BundleContentWatcher.ADDED,
+                    BundleContentWatcher.NEW,
                     new ForEachFlow(
                         BundleContentWatcher.URLS, ParsePropertiesFileAsConfiguration.FILE,
                         new SequentialFlow(
-                            flowName( format( "%s::%s", flowName, "Added" ) ), // TODO do we need a name?
+                            flowName( format( "%s::%s", flowName, "New" ) ), // TODO do we need a name?
                             new DeterminePidFromURL(
                                 ParsePropertiesFileAsConfiguration.FILE,
                                 AddConfiguration.PID,
@@ -56,7 +56,7 @@ public class WatchBundlesForConfigurations
                     new ForEachFlow(
                         BundleContentWatcher.URLS, ParsePropertiesFileAsConfiguration.FILE,
                         new SequentialFlow(
-                            flowName( format( "%s::%s", flowName, "Deleted" ) ), // TODO do we need a name?
+                            flowName( format( "%s::%s", flowName, "Removed" ) ), // TODO do we need a name?
                             new DeterminePidFromURL(
                                 ParsePropertiesFileAsConfiguration.FILE,
                                 RemoveConfiguration.PID,

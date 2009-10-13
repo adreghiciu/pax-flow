@@ -36,9 +36,9 @@ public class ListDirectory
     public static final PropertyName FILES = PropertyName.propertyName( "files" );
     public static final PropertyName TIMESTAMPS = PropertyName.propertyName( "timestamps" );
 
-    public static final PropertyName ADDED = PropertyName.propertyName( "added" );
+    public static final PropertyName NEW = PropertyName.propertyName( "new" );
     public static final PropertyName MODIFIED = PropertyName.propertyName( "modified" );
-    public static final PropertyName DELETED = PropertyName.propertyName( "deleted" );
+    public static final PropertyName REMOVED = PropertyName.propertyName( "removed" );
 
     private final File directory;
     private final Pattern[] includes;
@@ -83,9 +83,9 @@ public class ListDirectory
             typedExecutionContext( context ).optional( TIMESTAMPS, Map.class, new HashMap<File, Long>() )
         );
 
-        final Collection<File> added = new ArrayList<File>();
-        final Collection<File> modified = new ArrayList<File>();
-        final Collection<File> deleted = new ArrayList<File>( previousFiles.keySet() );
+        final Collection<File> newFiles = new ArrayList<File>();
+        final Collection<File> modifiedFiles = new ArrayList<File>();
+        final Collection<File> removedFiles = new ArrayList<File>( previousFiles.keySet() );
 
         for( Map.Entry<File, Long> entry : files.entrySet() )
         {
@@ -97,28 +97,28 @@ public class ListDirectory
             {
                 if( timestamp == null )
                 {
-                    added.add( entry.getKey() );
+                    newFiles.add( entry.getKey() );
                 }
                 else if( entry.getKey().lastModified() > timestamp )
                 {
-                    modified.add( entry.getKey() );
+                    modifiedFiles.add( entry.getKey() );
                 }
-                deleted.remove( entry.getKey() );
+                removedFiles.remove( entry.getKey() );
             }
         }
 
         context.add( persistentExecutionProperty( TIMESTAMPS, files ) );
         context.add( executionProperty( FILES, files ) );
-        context.add( executionProperty( ADDED, added ) );
-        context.add( executionProperty( MODIFIED, modified ) );
-        context.add( executionProperty( DELETED, deleted ) );
+        context.add( executionProperty( NEW, newFiles ) );
+        context.add( executionProperty( MODIFIED, modifiedFiles ) );
+        context.add( executionProperty( REMOVED, removedFiles ) );
 
         final String message = format(
-            "Found %d added, %d modified, %d deleted files in [%s]",
-            added.size(), modified.size(), deleted.size(),
+            "Found %d new, %d modified, %d deleted files in [%s]",
+            newFiles.size(), modifiedFiles.size(), removedFiles.size(),
             directory
         );
-        if( added.size() > 0 || modified.size() > 0 || deleted.size() > 0 )
+        if( newFiles.size() > 0 || modifiedFiles.size() > 0 || removedFiles.size() > 0 )
         {
             LOG.info( message );
         }

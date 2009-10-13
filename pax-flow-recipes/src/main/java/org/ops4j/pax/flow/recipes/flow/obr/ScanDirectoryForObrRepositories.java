@@ -23,7 +23,6 @@ import static java.lang.String.*;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.inject.Inject;
-import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.obr.RepositoryAdmin;
 import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.Flow;
@@ -39,6 +38,7 @@ import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
 import static org.ops4j.pax.flow.api.helpers.TypedConfiguration.*;
 import org.ops4j.pax.flow.recipes.flow.basic.ListDirectory;
+import org.ops4j.pax.flow.recipes.flow.basic.ReplaceLinkFileWithURL;
 
 /**
  * JAVADOC
@@ -51,18 +51,19 @@ public class ScanDirectoryForObrRepositories
 {
 
     public ScanDirectoryForObrRepositories( final FlowName flowName,
-                                           final RepositoryAdmin repositoryAdmin,
-                                           final File directory,
-                                           final String[] includes,
-                                           final String[] excludes )
+                                            final RepositoryAdmin repositoryAdmin,
+                                            final File directory,
+                                            final String[] includes,
+                                            final String[] excludes )
     {
         super(
             flowName,
             new ListDirectory( directory, includes, excludes ),
             new ForEachFlow(
-                ListDirectory.ADDED, AddObrRepository.REPOSITORY_URL,
+                ListDirectory.NEW, AddObrRepository.REPOSITORY_URL,
                 new SequentialFlow(
-                    flowName( format( "%s::%s", flowName, "Added" ) ), // TODO do we need a name?
+                    flowName( format( "%s::%s", flowName, "New" ) ), // TODO do we need a name?
+                    new ReplaceLinkFileWithURL( AddObrRepository.REPOSITORY_URL ),
                     new AddObrRepository( repositoryAdmin )
                 )
             ),
@@ -70,13 +71,15 @@ public class ScanDirectoryForObrRepositories
                 ListDirectory.MODIFIED, AddObrRepository.REPOSITORY_URL,
                 new SequentialFlow(
                     flowName( format( "%s::%s", flowName, "Modified" ) ), // TODO do we need a name?
+                    new ReplaceLinkFileWithURL( AddObrRepository.REPOSITORY_URL ),
                     new AddObrRepository( repositoryAdmin )
                 )
             ),
             new ForEachFlow(
-                ListDirectory.DELETED, RemoveObrRepository.REPOSITORY_URL,
+                ListDirectory.REMOVED, RemoveObrRepository.REPOSITORY_URL,
                 new SequentialFlow(
-                    flowName( format( "%s::%s", flowName, "Deleted" ) ), // TODO do we need a name?
+                    flowName( format( "%s::%s", flowName, "Removed" ) ), // TODO do we need a name?
+                    new ReplaceLinkFileWithURL( RemoveObrRepository.REPOSITORY_URL ),
                     new RemoveObrRepository( repositoryAdmin )
                 )
             )

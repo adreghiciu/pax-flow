@@ -45,7 +45,7 @@ public class SyncBundlesWithScanner
                 url
             ),
             new ForEachFlow(
-                ScanBundles.ADDED, InstallOrUpdateBundle.URL,
+                ScanBundles.NEW, InstallOrUpdateBundle.URL,
                 new InstallOrUpdateBundle( bundleContext, autoStart, startLevel )
             ),
             new ForEachFlow(
@@ -53,7 +53,7 @@ public class SyncBundlesWithScanner
                 new InstallOrUpdateBundle( bundleContext, false, startLevel )
             ),
             new ForEachFlow(
-                ScanBundles.DELETED, UninstallBundle.URL,
+                ScanBundles.REMOVED, UninstallBundle.URL,
                 new UninstallBundle( bundleContext )
             )
         );

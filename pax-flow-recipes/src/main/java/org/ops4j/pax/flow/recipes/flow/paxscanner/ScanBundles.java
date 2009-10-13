@@ -44,9 +44,9 @@ public class ScanBundles
     public static final PropertyName URLS = PropertyName.propertyName( "urls" );
     public static final PropertyName TIMESTAMPS = PropertyName.propertyName( "timestamps" );
 
-    public static final PropertyName ADDED = PropertyName.propertyName( "added" );
+    public static final PropertyName NEW = PropertyName.propertyName( "new" );
     public static final PropertyName MODIFIED = PropertyName.propertyName( "modified" );
-    public static final PropertyName DELETED = PropertyName.propertyName( "deleted" );
+    public static final PropertyName REMOVED = PropertyName.propertyName( "removed" );
 
     private final ProvisionService provisionService;
     private final String url;
@@ -70,11 +70,11 @@ public class ScanBundles
         final Map<URL, Long> previousUrls = new HashMap<URL, Long>(
             typedExecutionContext( context ).optional( TIMESTAMPS, Map.class, new HashMap<URL, Long>() )
         );
-        final Map<URL, Long> newUrls = new HashMap<URL, Long>();
+        final Map<URL, Long> urls = new HashMap<URL, Long>();
 
-        final Collection<URL> added = new ArrayList<URL>();
-        final Collection<URL> modified = new ArrayList<URL>();
-        final Collection<URL> deleted = new ArrayList<URL>( previousUrls.keySet() );
+        final Collection<URL> newUrls = new ArrayList<URL>();
+        final Collection<URL> modifiedUrls = new ArrayList<URL>();
+        final Collection<URL> removedUrls = new ArrayList<URL>( previousUrls.keySet() );
 
         for( ScannedBundle scannedBundle : scannedBundles )
         {
@@ -84,33 +84,33 @@ public class ScanBundles
             // TODO support for proxy?
             final URLConnection urlConnection = url.openConnection();
 
-            newUrls.put( url, urlConnection.getLastModified() );
+            urls.put( url, urlConnection.getLastModified() );
 
             final Long timestamp = previousUrls.get( url );
 
             if( timestamp == null )
             {
-                added.add( url );
+                newUrls.add( url );
             }
             else if( urlConnection.getLastModified() > timestamp )
             {
-                modified.add( url );
+                modifiedUrls.add( url );
             }
-            deleted.remove( url );
+            removedUrls.remove( url );
         }
 
-        context.add( persistentExecutionProperty( TIMESTAMPS, newUrls ) );
-        context.add( executionProperty( URLS, newUrls ) );
-        context.add( executionProperty( ADDED, added ) );
-        context.add( executionProperty( MODIFIED, modified ) );
-        context.add( executionProperty( DELETED, deleted ) );
+        context.add( persistentExecutionProperty( TIMESTAMPS, urls ) );
+        context.add( executionProperty( URLS, urls ) );
+        context.add( executionProperty( NEW, newUrls ) );
+        context.add( executionProperty( MODIFIED, modifiedUrls ) );
+        context.add( executionProperty( REMOVED, removedUrls ) );
 
         final String message = format(
-            "Found %d added, %d modified, %d deleted bundles while scanning url [%s]",
-            added.size(), modified.size(), deleted.size(),
+            "Found %d new, %d modified, %d deleted bundles while scanning url [%s]",
+            newUrls.size(), modifiedUrls.size(), removedUrls.size(),
             url
         );
-        if( added.size() > 0 || modified.size() > 0 || deleted.size() > 0 )
+        if( newUrls.size() > 0 || modifiedUrls.size() > 0 || removedUrls.size() > 0 )
         {
             LOG.info( message );
         }

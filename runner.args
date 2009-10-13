@@ -16,6 +16,6 @@ log@1
 
 prefs
 peaberry/1.1.1
-url
+url@1
 
 wrap:assembly:runtime/conf/bundle@nostart@update
