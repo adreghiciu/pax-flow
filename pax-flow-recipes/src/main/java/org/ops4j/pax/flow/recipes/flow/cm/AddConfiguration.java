@@ -99,6 +99,6 @@ public class AddConfiguration
     @Override
     public String toString()
     {
-        return "Schedule job available in execution context";
+        return "Add configuration to config admin";
     }
 }

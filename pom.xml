@@ -105,6 +105,13 @@
         <artifactId>pax-scanner-service</artifactId>
         <version>${pax.scanner.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>org.apache.felix.bundlerepository</artifactId>
+        <version>1.4.1</version>
+      </dependency>
+      
       <!-- Peaberry / Guice -->
       <dependency>
         <groupId>org.ops4j</groupId>

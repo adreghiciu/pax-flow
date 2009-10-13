@@ -39,26 +39,28 @@ public class InstallOrUpdateBundle
     private final PropertyName urlPropertyName;
     private final PropertyName bundlePropertyName;
     private final boolean autoStart;
+    private final long startLevel;
 
-    @Inject
     public InstallOrUpdateBundle( final BundleContext bundleContext,
-                                  final boolean autoStart )
+                                  final boolean autoStart,
+                                  final long startLevel )
     {
         // VALIDATE
-        this( bundleContext, null, null, autoStart );
+        this( bundleContext, null, null, autoStart, startLevel );
     }
 
-    @Inject
     public InstallOrUpdateBundle( final BundleContext bundleContext,
                                   final PropertyName urlPropertyName,
                                   final PropertyName bundlePropertyName,
-                                  final boolean autoStart )
+                                  final boolean autoStart,
+                                  final long startLevel )
     {
         // VALIDATE
         this.bundleContext = bundleContext;
         this.urlPropertyName = urlPropertyName == null ? URL : urlPropertyName;
         this.bundlePropertyName = bundlePropertyName == null ? BUNDLE : bundlePropertyName;
         this.autoStart = autoStart;
+        this.startLevel = startLevel;
     }
 
     public void run( final ExecutionContext context )
@@ -92,6 +94,7 @@ public class InstallOrUpdateBundle
         public static final PropertyName URL_PROPERTY = propertyName( "urlPropertyName" );
         public static final PropertyName BUNDLE_PROPERTY = propertyName( "bundlePropertyName" );
         public static final PropertyName AUTO_START = propertyName( "autoStart" );
+        public static final PropertyName START_LEVEL = propertyName( "startLevel" );
 
         private final BundleContext bundleContext;
 
@@ -113,19 +116,17 @@ public class InstallOrUpdateBundle
         {
             final TypedConfiguration cfg = typedConfiguration( configuration );
 
-            final String urlProperty = cfg.optional( URL_PROPERTY, String.class );
-            final String bundleProperty = cfg.optional( BUNDLE_PROPERTY, String.class );
-            String autoStart = cfg.optional( AUTO_START, String.class );
-            if( "yes".equalsIgnoreCase( autoStart ) )
-            {
-                autoStart = "true";
-            }
+            final PropertyName urlPropertyName = cfg.optional( URL_PROPERTY, PropertyName.class );
+            final PropertyName bundlePropertyName = cfg.optional( BUNDLE_PROPERTY, PropertyName.class );
+            final boolean autoStart = cfg.optional( AUTO_START, boolean.class, true );
+            final long startLevel = cfg.optional( START_LEVEL, long.class, 5L );
 
             return new InstallOrUpdateBundle(
                 bundleContext,
-                urlProperty == null ? null : propertyName( urlProperty ),
-                bundleProperty == null ? null : propertyName( bundleProperty ),
-                autoStart == null ? true : Boolean.valueOf( autoStart )
+                urlPropertyName,
+                bundlePropertyName,
+                autoStart,
+                startLevel
             );
         }
 

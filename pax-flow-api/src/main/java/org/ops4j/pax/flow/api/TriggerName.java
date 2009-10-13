@@ -26,6 +26,8 @@ package org.ops4j.pax.flow.api;
 public class TriggerName
 {
 
+    public static final String DEFAULT_TRIGGER_SUFFIX = ".defaultTrigger";
+
     private final String name;
 
     public TriggerName( final String name )

@@ -19,12 +19,12 @@ import static org.ops4j.pax.flow.api.helpers.TypedExecutionContext.*;
  *
  * @author Alin Dreghiciu
  */
-public class DeleteConfiguration
+public class RemoveConfiguration
     extends CancelableFlow
     implements Flow
 {
 
-    private static final Log LOG = LogFactory.getLog( DeleteConfiguration.class );
+    private static final Log LOG = LogFactory.getLog( RemoveConfiguration.class );
 
     public static final PropertyName CONFIGURATION = propertyName( "configuration" );
     public static final PropertyName PID = propertyName( "pid" );
@@ -33,7 +33,7 @@ public class DeleteConfiguration
     private final ConfigurationAdmin configurationAdmin;
 
     @Inject
-    public DeleteConfiguration( final ConfigurationAdmin configurationAdmin )
+    public RemoveConfiguration( final ConfigurationAdmin configurationAdmin )
     {
         // VALIDATE
         this.configurationAdmin = configurationAdmin;
@@ -84,6 +84,6 @@ public class DeleteConfiguration
     @Override
     public String toString()
     {
-        return "Schedule job available in execution context";
+        return "Delete configuration from config admin";
     }
 }

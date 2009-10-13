@@ -96,6 +96,6 @@ public class UpdateConfiguration
     @Override
     public String toString()
     {
-        return "Schedule job available in execution context";
+        return "Update configuration in config admin";
     }
 }

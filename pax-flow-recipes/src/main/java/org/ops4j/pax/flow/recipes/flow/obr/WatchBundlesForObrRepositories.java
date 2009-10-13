@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-package org.ops4j.pax.flow.recipes.flow.cm;
+package org.ops4j.pax.flow.recipes.flow.obr;
 
-import java.util.Dictionary;
+import static java.lang.String.*;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.inject.Inject;
 import org.osgi.framework.BundleContext;
-import org.osgi.service.cm.ConfigurationAdmin;
+import org.osgi.service.obr.RepositoryAdmin;
 import org.ops4j.pax.flow.api.Configuration;
 import static org.ops4j.pax.flow.api.ConfigurationProperty.*;
 import org.ops4j.pax.flow.api.ExecutionTarget;
@@ -36,61 +36,48 @@ import static org.ops4j.pax.flow.api.FlowType.*;
 import org.ops4j.pax.flow.api.TriggerName;
 import org.ops4j.pax.flow.api.TriggerType;
 import static org.ops4j.pax.flow.api.TriggerType.*;
+import org.ops4j.pax.flow.api.helpers.ForEachFlow;
 import static org.ops4j.pax.flow.api.helpers.ImmutableConfiguration.*;
 import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.api.helpers.SwitchFlow;
 import static org.ops4j.pax.flow.api.helpers.SwitchFlow.SwitchCase.*;
-import org.ops4j.pax.flow.recipes.flow.basic.CopyProperty;
-import org.ops4j.pax.flow.recipes.trigger.ServiceWatcher;
-import org.ops4j.peaberry.ServiceRegistry;
+import org.ops4j.pax.flow.recipes.trigger.BundleContentWatcher;
 
 /**
  * JAVADOC
  *
  * @author Alin Dreghiciu
  */
-public class WatchRegistryForConfigurations
+public class WatchBundlesForObrRepositories
     extends SequentialFlow
     implements Flow
 {
 
-    public WatchRegistryForConfigurations( final FlowName flowName,
-                                           final ConfigurationAdmin configurationAdmin )
+    public WatchBundlesForObrRepositories( final FlowName flowName,
+                                           final RepositoryAdmin repositoryAdmin )
     {
         super(
             flowName,
             new SwitchFlow(
-                ServiceWatcher.EVENT,
+                BundleContentWatcher.EVENT,
                 switchCase(
-                    ServiceWatcher.ADDED,
-                    new SequentialFlow(
-                        new CopyProperty<Dictionary>(
-                            ServiceWatcher.SERVICE, AddConfiguration.CONFIGURATION, Dictionary.class
-                        ),
-                        new DeterminePidFromMap(
-                            ServiceWatcher.ATTRIBUTES,
-                            "service.pid",
-                            "service.factoryPid",
-                            AddConfiguration.PID,
-                            AddConfiguration.FACTORY_PID
-                        ),
-                        new AddConfiguration( configurationAdmin )
+                    BundleContentWatcher.ADDED,
+                    new ForEachFlow(
+                        BundleContentWatcher.URLS, AddObrRepository.REPOSITORY_URL,
+                        new SequentialFlow(
+                            flowName( format( "%s::%s", flowName, "Added" ) ), // TODO do we need a name?
+                            new AddObrRepository( repositoryAdmin )
+                        )
                     )
                 ),
                 switchCase(
-                    ServiceWatcher.REMOVED,
-                    new SequentialFlow(
-                        new CopyProperty<Dictionary>(
-                            ServiceWatcher.SERVICE, UpdateConfiguration.CONFIGURATION, Dictionary.class
-                        ),
-                        new DeterminePidFromMap(
-                            ServiceWatcher.ATTRIBUTES,
-                            "service.pid",
-                            "service.factoryPid",
-                            RemoveConfiguration.PID,
-                            RemoveConfiguration.FACTORY_PID
-                        ),
-                        new RemoveConfiguration( configurationAdmin )
+                    BundleContentWatcher.REMOVED,
+                    new ForEachFlow(
+                        BundleContentWatcher.URLS, RemoveObrRepository.REPOSITORY_URL,
+                        new SequentialFlow(
+                            flowName( format( "%s::%s", flowName, "Deleted" ) ), // TODO do we need a name?
+                            new RemoveObrRepository( repositoryAdmin )
+                        )
                     )
                 )
             )
@@ -101,17 +88,17 @@ public class WatchRegistryForConfigurations
         implements FlowFactory
     {
 
-        public static final FlowType TYPE = flowType( WatchRegistryForConfigurations.class );
+        public static final FlowType TYPE = flowType( WatchBundlesForObrRepositories.class );
 
-        private final ConfigurationAdmin configurationAdmin;
+        private final RepositoryAdmin repositoryAdmin;
 
         private long counter;
 
         @Inject
-        public Factory( final ConfigurationAdmin configurationAdmin )
+        public Factory( final RepositoryAdmin repositoryAdmin )
         {
             // VALIDATE
-            this.configurationAdmin = configurationAdmin;
+            this.repositoryAdmin = repositoryAdmin;
         }
 
         public FlowType type()
@@ -119,11 +106,11 @@ public class WatchRegistryForConfigurations
             return TYPE;
         }
 
-        public WatchRegistryForConfigurations create( final Configuration configuration )
+        public WatchBundlesForObrRepositories create( final Configuration configuration )
         {
-            return new WatchRegistryForConfigurations(
+            return new WatchBundlesForObrRepositories(
                 flowName( String.format( "%s::%d", type(), counter++ ) ),
-                configurationAdmin
+                repositoryAdmin
             );
         }
 
@@ -145,18 +132,17 @@ public class WatchRegistryForConfigurations
     }
 
     public static class DefaultTriggerFactory
-        extends ServiceWatcher.Factory
+        extends BundleContentWatcher.Factory
     {
 
-        public static final TriggerType TYPE = triggerType( WatchRegistryForConfigurations.class,
+        public static final TriggerType TYPE = triggerType( WatchBundlesForObrRepositories.class,
                                                             TriggerName.DEFAULT_TRIGGER_SUFFIX
         );
 
         @Inject
-        public DefaultTriggerFactory( final BundleContext bundleContext,
-                                      final ServiceRegistry serviceRegistry )
+        public DefaultTriggerFactory( final BundleContext bundleContext )
         {
-            super( bundleContext, serviceRegistry );
+            super( bundleContext );
         }
 
         public TriggerType type()
@@ -164,15 +150,14 @@ public class WatchRegistryForConfigurations
             return TYPE;
         }
 
-        public ServiceWatcher create( final Configuration configuration,
-                                      final ExecutionTarget target )
-            throws ClassNotFoundException
+        public BundleContentWatcher create( final Configuration configuration,
+                                            final ExecutionTarget target )
         {
             return super.create(
                 immutableConfiguration(
                     configuration,
-                    configurationProperty( WATCHED_SERVICE_TYPE, Dictionary.class.getName() ),
-                    configurationProperty( WATCHED_SERVICE_FILTER, "(service.pid=*)" )
+                    configurationProperty( PATH, "META-INF/obr" ),
+                    configurationProperty( PATTERN, "*.xml" )
                 ),
                 target
             );

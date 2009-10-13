@@ -19,6 +19,7 @@ import org.ops4j.pax.flow.api.JobDescription;
 import static org.ops4j.pax.flow.api.JobName.*;
 import org.ops4j.pax.flow.api.PropertyName;
 import static org.ops4j.pax.flow.api.PropertyName.*;
+import org.ops4j.pax.flow.api.TriggerName;
 import org.ops4j.pax.flow.api.TriggerType;
 import static org.ops4j.pax.flow.api.TriggerType.*;
 import org.ops4j.pax.flow.api.helpers.CancelableFlow;
@@ -38,8 +39,6 @@ public class ParseJsonJobDescription
     extends CancelableFlow
     implements Flow
 {
-
-    public static final String DEFAULT_TRIGGER_SUFFIX = ".defaultTrigger";
 
     public static final PropertyName FILE = propertyName( "file" );
     public static final PropertyName JOB_NAME = propertyName( "jobName" );
@@ -122,7 +121,7 @@ public class ParseJsonJobDescription
 
         if( triggerType == null && flowType != null )
         {
-            triggerType = triggerType( flowType.value() + DEFAULT_TRIGGER_SUFFIX );
+            triggerType = triggerType( flowType.value() + TriggerName.DEFAULT_TRIGGER_SUFFIX );
             triggerConfig = flowConfig;
         }
 

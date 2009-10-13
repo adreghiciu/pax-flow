@@ -59,23 +59,21 @@ public class CmFlowsGuiceConfig
                     .export()
             );
 
-        {
-            bind( export( FlowFactory.class ) )
-                .annotatedWith( named( WatchRegistryForConfigurations.Factory.class.getName() ) )
-                .toProvider(
-                    service( WatchRegistryForConfigurations.Factory.class )
-                        .attributes( WatchRegistryForConfigurations.Factory.attributes() )
-                        .export()
-                );
+        bind( export( FlowFactory.class ) )
+            .annotatedWith( named( WatchRegistryForConfigurations.Factory.class.getName() ) )
+            .toProvider(
+                service( WatchRegistryForConfigurations.Factory.class )
+                    .attributes( WatchRegistryForConfigurations.Factory.attributes() )
+                    .export()
+            );
 
-            bind( export( TriggerFactory.class ) )
-                .annotatedWith( named( WatchRegistryForConfigurations.DefaultTriggerFactory.class.getName() ) )
-                .toProvider(
-                    service( WatchRegistryForConfigurations.DefaultTriggerFactory.class )
-                        .attributes( WatchRegistryForConfigurations.DefaultTriggerFactory.attributes() )
-                        .export()
-                );
-        }
+        bind( export( TriggerFactory.class ) )
+            .annotatedWith( named( WatchRegistryForConfigurations.DefaultTriggerFactory.class.getName() ) )
+            .toProvider(
+                service( WatchRegistryForConfigurations.DefaultTriggerFactory.class )
+                    .attributes( WatchRegistryForConfigurations.DefaultTriggerFactory.attributes() )
+                    .export()
+            );
     }
 
     @Override

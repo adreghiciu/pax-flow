@@ -59,10 +59,10 @@ public class WatchBundlesForConfigurations
                             flowName( format( "%s::%s", flowName, "Deleted" ) ), // TODO do we need a name?
                             new DeterminePidFromURL(
                                 ParsePropertiesFileAsConfiguration.FILE,
-                                DeleteConfiguration.PID,
-                                DeleteConfiguration.FACTORY_PID
+                                RemoveConfiguration.PID,
+                                RemoveConfiguration.FACTORY_PID
                             ),
-                            new DeleteConfiguration( configurationAdmin )
+                            new RemoveConfiguration( configurationAdmin )
                         )
                     )
                 )
