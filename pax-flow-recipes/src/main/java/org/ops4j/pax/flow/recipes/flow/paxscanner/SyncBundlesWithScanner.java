@@ -34,7 +34,8 @@ public class SyncBundlesWithScanner
                                    final BundleContext bundleContext,
                                    final ProvisionService provisionService,
                                    final String url,
-                                   final boolean autoStart )
+                                   final boolean autoStart,
+                                   final long startLevel )
     {
         super(
             flowName,
@@ -45,11 +46,11 @@ public class SyncBundlesWithScanner
             ),
             new ForEachFlow(
                 ScanBundles.ADDED, InstallOrUpdateBundle.URL,
-                new InstallOrUpdateBundle( bundleContext, autoStart )
+                new InstallOrUpdateBundle( bundleContext, autoStart, startLevel )
             ),
             new ForEachFlow(
                 ScanBundles.MODIFIED, InstallOrUpdateBundle.URL,
-                new InstallOrUpdateBundle( bundleContext, false )
+                new InstallOrUpdateBundle( bundleContext, false, startLevel )
             ),
             new ForEachFlow(
                 ScanBundles.DELETED, UninstallBundle.URL,
@@ -92,7 +93,8 @@ public class SyncBundlesWithScanner
                 bundleContext,
                 provisionService,
                 cfg.mandatory( ScanBundles.Factory.URL, String.class ),
-                cfg.optional( InstallOrUpdateBundle.Factory.AUTO_START, Boolean.class, true )
+                cfg.optional( InstallOrUpdateBundle.Factory.AUTO_START, Boolean.class, true ),
+                cfg.optional( InstallOrUpdateBundle.Factory.START_LEVEL, long.class, 5L )
             );
         }
 
