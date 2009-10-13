@@ -118,8 +118,8 @@ public class InstallOrUpdateBundle
 
             final PropertyName urlPropertyName = cfg.optional( URL_PROPERTY, PropertyName.class );
             final PropertyName bundlePropertyName = cfg.optional( BUNDLE_PROPERTY, PropertyName.class );
-            final boolean autoStart = cfg.optional( AUTO_START, boolean.class, true );
-            final long startLevel = cfg.optional( START_LEVEL, long.class, 5L );
+            final Boolean autoStart = cfg.optional( AUTO_START, Boolean.class, true );
+            final Long startLevel = cfg.optional( START_LEVEL, Long.class, 5L );
 
             return new InstallOrUpdateBundle(
                 bundleContext,

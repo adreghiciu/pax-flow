@@ -88,13 +88,17 @@ public class SyncBundlesWithScanner
         {
             final TypedConfiguration cfg = typedConfiguration( configuration );
 
+            final String url = cfg.mandatory( ScanBundles.Factory.URL, String.class );
+            final Boolean autoStart = cfg.optional( InstallOrUpdateBundle.Factory.AUTO_START, Boolean.class, true );
+            final Long startLevel = cfg.optional( InstallOrUpdateBundle.Factory.START_LEVEL, Long.class, 5L );
+            
             return new SyncBundlesWithScanner(
                 flowName( format( "%s::%d", type(), counter++ ) ),
                 bundleContext,
                 provisionService,
-                cfg.mandatory( ScanBundles.Factory.URL, String.class ),
-                cfg.optional( InstallOrUpdateBundle.Factory.AUTO_START, Boolean.class, true ),
-                cfg.optional( InstallOrUpdateBundle.Factory.START_LEVEL, long.class, 5L )
+                url,
+                autoStart,
+                startLevel
             );
         }
 

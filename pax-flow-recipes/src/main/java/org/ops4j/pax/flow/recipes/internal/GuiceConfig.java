@@ -47,6 +47,7 @@ public class GuiceConfig
 
         optionalInstall( new CmFlowsGuiceConfig() );
         optionalInstall( new PaxScannerFlowsGuiceConfig() );
+        optionalInstall( new ObrFlowsGuiceConfig() );
 
         LOG.info( "Registered built-in flows and triggers" );
     }
