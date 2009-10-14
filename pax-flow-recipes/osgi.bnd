@@ -24,7 +24,10 @@ Export-Package:\
   ${bundle.namespace}.trigger.*; version="${pom.version}"
 
 Private-Package:\
-  ${bundle.namespace}.internal.*
+  ${bundle.namespace}.internal.*,\
+  org.osgi.impl.bundle.obr.resource,\
+  org.kxml2.io; -split-package:=merge-first,\
+  org.xmlpull.v1; -split-package:=merge-first
 
 Embed-Dependency:\
   *; scope=compile; type=!pom; inline=true
