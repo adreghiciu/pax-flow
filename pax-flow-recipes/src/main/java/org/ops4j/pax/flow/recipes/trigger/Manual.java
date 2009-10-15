@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.ExecutionTarget;
+import org.ops4j.pax.flow.api.RunNow;
 import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.api.TriggerName;
@@ -37,7 +38,7 @@ import org.ops4j.pax.flow.recipes.internal.trigger.AbstractTrigger;
  */
 public class Manual
     extends AbstractTrigger<Manual>
-    implements Trigger
+    implements Trigger, RunNow<Manual>
 {
 
     public Manual( final TriggerName name,
@@ -100,6 +101,12 @@ public class Manual
             return attributes;
         }
 
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Triggered manually";
     }
 
 }

@@ -1,0 +1,16 @@
+{
+
+  "when" : {
+    "trigger" : "manual"
+  },
+
+  "do" : {
+       "flow" : "regenerateObrRepositoryFromDirectory",
+       "config" : {
+         "directory" : "../runtime/repository",
+         "includes" : [ "*.jar" ],
+         "repository" : "../runtime/conf/obrs/generatedObr.xml"
+       }
+  }
+
+}

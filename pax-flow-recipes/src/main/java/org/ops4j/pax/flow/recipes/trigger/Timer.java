@@ -30,6 +30,7 @@ import org.ops4j.pax.flow.api.Configuration;
 import org.ops4j.pax.flow.api.ExecutionTarget;
 import org.ops4j.pax.flow.api.PropertyName;
 import static org.ops4j.pax.flow.api.PropertyName.*;
+import org.ops4j.pax.flow.api.RunNow;
 import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.TriggerFactory;
 import org.ops4j.pax.flow.api.TriggerName;
@@ -48,7 +49,7 @@ import org.ops4j.pax.flow.recipes.internal.trigger.TimerUtils;
  */
 public class Timer
     extends AbstractTrigger<Timer>
-    implements Trigger
+    implements Trigger, RunNow<Timer>
 {
 
     private static final Log LOG = LogFactory.getLog( Timer.class );
@@ -71,6 +72,12 @@ public class Timer
         this.executorService = executorService;
         this.initialDelay = initialDelay;
         this.repeatPeriod = repeatPeriod;
+    }
+
+    @Override
+    public Timer fire()
+    {
+        return super.fire();
     }
 
     @Override

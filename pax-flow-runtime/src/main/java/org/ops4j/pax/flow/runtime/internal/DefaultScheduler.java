@@ -20,6 +20,7 @@ import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.FlowFactoryRegistry;
 import org.ops4j.pax.flow.api.JobDescription;
 import org.ops4j.pax.flow.api.JobName;
+import org.ops4j.pax.flow.api.RunNow;
 import org.ops4j.pax.flow.api.Scheduler;
 import org.ops4j.pax.flow.api.Trigger;
 import org.ops4j.pax.flow.api.TriggerFactory;
@@ -233,12 +234,39 @@ public class DefaultScheduler
         }
     }
 
+    public void runNow( final int id )
+    {
+        Job job = null;
+
+        for( Job entry : jobs.values() )
+        {
+            if( entry.id == id )
+            {
+                job = entry;
+                break;
+            }
+        }
+
+        if( job == null )
+        {
+            System.out.println( format( "There is no job with id [%s]", id ) );
+        }
+        else if( !( job.trigger instanceof RunNow ) )
+        {
+            System.out.println( "Specified job does not support 'runNow'" );
+        }
+        else
+        {
+            ( (RunNow) job.trigger ).fire();
+        }
+    }
+
     public static Map<String, ?> attributes()
     {
         final Map<String, Object> attributes = new HashMap<String, Object>();
 
         attributes.put( "osgi.command.scope", "flow" );
-        attributes.put( "osgi.command.function", new String[]{ "start", "stop", "list", "detail" } );
+        attributes.put( "osgi.command.function", new String[]{ "start", "stop", "list", "detail", "runNow" } );
 
         return attributes;
     }
