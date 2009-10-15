@@ -108,7 +108,7 @@ public class ListDirectory
         }
 
         context.add( persistentExecutionProperty( TIMESTAMPS, files ) );
-        context.add( executionProperty( FILES, files ) );
+        context.add( executionProperty( FILES, files.keySet() ) );
         context.add( executionProperty( NEW, newFiles ) );
         context.add( executionProperty( MODIFIED, modifiedFiles ) );
         context.add( executionProperty( REMOVED, removedFiles ) );

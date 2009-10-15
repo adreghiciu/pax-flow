@@ -209,16 +209,7 @@ public class DefaultScheduler
 
     public void detail( final int id )
     {
-        Job job = null;
-
-        for( Job entry : jobs.values() )
-        {
-            if( entry.id == id )
-            {
-                job = entry;
-                break;
-            }
-        }
+        final Job job = getJobById( id );
 
         if( job == null )
         {
@@ -236,16 +227,7 @@ public class DefaultScheduler
 
     public void runNow( final int id )
     {
-        Job job = null;
-
-        for( Job entry : jobs.values() )
-        {
-            if( entry.id == id )
-            {
-                job = entry;
-                break;
-            }
-        }
+        final Job job = getJobById( id );
 
         if( job == null )
         {
@@ -261,12 +243,43 @@ public class DefaultScheduler
         }
     }
 
+    public void remove( final int id )
+        throws Exception
+    {
+        final Job job = getJobById( id );
+
+        if( job == null )
+        {
+            System.out.println( format( "There is no job with id [%s]", id ) );
+        }
+        else
+        {
+            unschedule( job.jobDescription.name() );
+        }
+    }
+
+    private Job getJobById( final int id )
+    {
+        Job job = null;
+
+        for( Job entry : jobs.values() )
+        {
+            if( entry.id == id )
+            {
+                job = entry;
+                break;
+            }
+        }
+        return job;
+    }
+
     public static Map<String, ?> attributes()
     {
         final Map<String, Object> attributes = new HashMap<String, Object>();
 
         attributes.put( "osgi.command.scope", "flow" );
-        attributes.put( "osgi.command.function", new String[]{ "start", "stop", "list", "detail", "runNow" } );
+        attributes.put( "osgi.command.function",
+                        new String[]{ "start", "stop", "list", "detail", "runNow", "remove" } );
 
         return attributes;
     }
