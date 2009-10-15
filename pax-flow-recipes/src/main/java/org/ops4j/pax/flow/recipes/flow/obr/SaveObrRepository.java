@@ -77,6 +77,8 @@ public class SaveObrRepository
         pw.println( "<?xml-stylesheet type='text/xsl' href='http://www2.osgi.org/www/obr2html.xsl'?>" );
 
         tag.print( 0, pw );
+
+        pw.close();
     }
 
     @Override

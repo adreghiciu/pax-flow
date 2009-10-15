@@ -57,7 +57,7 @@ public class RemoveObrResource
         final RepositoryImpl repo = executionContext.mandatory( REPOSITORY, RepositoryImpl.class );
         final File bundle = executionContext.mandatory( BUNDLE, File.class );
 
-        final URL bundleUrl = bundle.toURI().toURL();
+        final URL bundleUrl = bundle.getAbsoluteFile().getCanonicalFile().toURI().toURL();
 
         final Iterator iterator = repo.getResourceList().iterator();
         while( iterator.hasNext() )

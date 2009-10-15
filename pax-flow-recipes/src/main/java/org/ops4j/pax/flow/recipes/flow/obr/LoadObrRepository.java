@@ -54,8 +54,12 @@ public class LoadObrRepository
         throws Exception
     {
         final RepositoryImpl repo = new RepositoryImpl( repository.toURI().toURL() );
-        repo.refresh();
 
+        if( repository.exists() )
+        {
+            repo.refresh();
+        }
+        
         context.add( executionProperty( REPOSITORY, repo ) );
     }
 

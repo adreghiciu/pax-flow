@@ -1,0 +1,19 @@
+{
+
+  "when" : {
+    "trigger" : "timer",
+    "config" : {
+      "repeatPeriod" : "10s"
+    }
+  },
+
+  "do" : {
+       "flow" : "generateObrRepositoryFromDirectory",
+       "config" : {
+         "directory" : "../runtime/repository",
+         "includes" : [ "*.jar" ],
+         "repository" : "../runtime/conf/obrs/generatedObr.xml"
+       }
+  }
+
+}

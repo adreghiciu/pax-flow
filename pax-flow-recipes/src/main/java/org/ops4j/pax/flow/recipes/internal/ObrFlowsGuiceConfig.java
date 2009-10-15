@@ -23,6 +23,7 @@ import static com.google.inject.name.Names.*;
 import org.osgi.service.obr.RepositoryAdmin;
 import org.ops4j.pax.flow.api.FlowFactory;
 import org.ops4j.pax.flow.api.TriggerFactory;
+import org.ops4j.pax.flow.recipes.flow.obr.GenerateObrRepositoryFromDirectory;
 import org.ops4j.pax.flow.recipes.flow.obr.ScanDirectoryForObrRepositories;
 import org.ops4j.pax.flow.recipes.flow.obr.WatchBundlesForObrRepositories;
 import static org.ops4j.peaberry.Peaberry.*;
@@ -63,6 +64,14 @@ public class ObrFlowsGuiceConfig
             .toProvider(
                 service( WatchBundlesForObrRepositories.DefaultTriggerFactory.class )
                     .attributes( WatchBundlesForObrRepositories.DefaultTriggerFactory.attributes() )
+                    .export()
+            );
+
+        bind( export( FlowFactory.class ) )
+            .annotatedWith( named( GenerateObrRepositoryFromDirectory.Factory.class.getName() ) )
+            .toProvider(
+                service( GenerateObrRepositoryFromDirectory.Factory.class )
+                    .attributes( GenerateObrRepositoryFromDirectory.Factory.attributes() )
                     .export()
             );
 

@@ -31,6 +31,8 @@ import org.ops4j.pax.flow.api.FlowType;
 import static org.ops4j.pax.flow.api.FlowType.*;
 import org.ops4j.pax.flow.api.PropertyName;
 import static org.ops4j.pax.flow.api.PropertyName.*;
+import org.ops4j.pax.flow.api.helpers.ConditionalFlow;
+import static org.ops4j.pax.flow.api.helpers.ConditionalFlow.*;
 import org.ops4j.pax.flow.api.helpers.ForEachFlow;
 import org.ops4j.pax.flow.api.helpers.SequentialFlow;
 import org.ops4j.pax.flow.api.helpers.TypedConfiguration;
@@ -55,21 +57,39 @@ public class GenerateObrRepositoryFromDirectory
     {
         super(
             flowName,
-            new LoadObrRepository( repositoryFile == null ? new File( directory, "obr.xml" ) : repositoryFile ),
             new ListDirectory( directory, includes, excludes ),
-            new ForEachFlow(
-                ListDirectory.NEW, AddObrResource.BUNDLE,
-                new AddObrResource()
-            ),
-            new ForEachFlow(
-                ListDirectory.MODIFIED, AddObrResource.BUNDLE,
-                new AddObrResource()
-            ),
-            new ForEachFlow(
-                ListDirectory.REMOVED, RemoveObrResource.BUNDLE,
-                new RemoveObrResource()
-            ),
-            new SaveObrRepository( repositoryFile == null ? new File( directory, "obr.xml" ) : repositoryFile )
+            new ConditionalFlow(
+                or(
+                    not( collectionIsEmpty( ListDirectory.NEW ) ),
+                    not( collectionIsEmpty( ListDirectory.MODIFIED ) ),
+                    not( collectionIsEmpty( ListDirectory.REMOVED ) )
+                ),
+                new SequentialFlow(
+                    new LoadObrRepository( repositoryFile == null ? new File( directory, "obr.xml" ) : repositoryFile ),
+                    new ConditionalFlow(
+                        not( collectionIsEmpty( ListDirectory.NEW ) ),
+                        new ForEachFlow(
+                            ListDirectory.NEW, AddObrResource.BUNDLE,
+                            new AddObrResource()
+                        )
+                    ),
+                    new ConditionalFlow(
+                        not( collectionIsEmpty( ListDirectory.MODIFIED ) ),
+                        new ForEachFlow(
+                            ListDirectory.MODIFIED, AddObrResource.BUNDLE,
+                            new AddObrResource()
+                        )
+                    ),
+                    new ConditionalFlow(
+                        not( collectionIsEmpty( ListDirectory.REMOVED ) ),
+                        new ForEachFlow(
+                            ListDirectory.REMOVED, RemoveObrResource.BUNDLE,
+                            new RemoveObrResource()
+                        )
+                    ),
+                    new SaveObrRepository( repositoryFile == null ? new File( directory, "obr.xml" ) : repositoryFile )
+                )
+            )
         );
     }
 
